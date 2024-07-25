@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="22505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="d2f-QV-zxd">
+    <device id="ipad11_0rounded" orientation="landscape" layout="fullscreen" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22504"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Tab Bar View Controller-->
+        <scene sceneID="A1S-Di-LOL">
+            <objects>
+                <tabBarController storyboardIdentifier="TabBarViewController" id="6G7-Db-gx9" customClass="TabBarViewController" customModule="RecipeNavigator" customModuleProvider="target" sceneMemberID="viewController">
+                    <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="kJo-fu-0SR">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="49"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </tabBar>
+                    <connections>
+                        <segue destination="YQd-yy-mko" kind="relationship" relationship="viewControllers" id="qMU-eU-6h0"/>
+                        <segue destination="1Vm-yU-TaW" kind="relationship" relationship="viewControllers" id="xPQ-1g-Agb"/>
+                    </connections>
+                </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="GLS-lU-cDL" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-195" y="-749"/>
+        </scene>
+        <!--RecipeListNavigationController-->
+        <scene sceneID="Xo6-7d-cHa">
+            <objects>
+                <viewControllerPlaceholder storyboardName="Main_iPhone" referencedIdentifier="RecipeListNavigationController" id="YQd-yy-mko" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Item" id="GwR-cV-DH0"/>
+                </viewControllerPlaceholder>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="eSL-Qd-EKc" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="411" y="-920"/>
+        </scene>
+        <!--SettingsNavigationController-->
+        <scene sceneID="XQt-fu-hYJ">
+            <objects>
+                <viewControllerPlaceholder storyboardName="Main_iPhone" referencedIdentifier="SettingsNavigationController" id="1Vm-yU-TaW" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Item" id="kTh-gd-463"/>
+                </viewControllerPlaceholder>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="2Rn-DZ-IMT" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="408" y="-589"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="eA9-G6-PSz">
+            <objects>
+                <navigationController id="GAD-8r-HUP" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="eu1-k0-4TH">
+                        <rect key="frame" x="0.0" y="24" width="873.5" height="50"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="57r-wH-F9h" kind="relationship" relationship="rootViewController" id="vay-5f-ZLA"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="nJe-K1-Xz2" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-195" y="30"/>
+        </scene>
+        <!--RecipeViewerViewController-->
+        <scene sceneID="B0c-8q-3l2">
+            <objects>
+                <viewControllerPlaceholder storyboardName="Main_iPhone" referencedIdentifier="RecipeViewerViewController" id="57r-wH-F9h" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="6Fl-h8-FdX"/>
+                </viewControllerPlaceholder>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="zsp-Ct-89B" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="407" y="29"/>
+        </scene>
+        <!--Split View Controller-->
+        <scene sceneID="wnd-0q-3dq">
+            <objects>
+                <splitViewController primaryBackgroundStyle="sidebar" id="d2f-QV-zxd" sceneMemberID="viewController">
+                    <connections>
+                        <segue destination="6G7-Db-gx9" kind="relationship" relationship="masterViewController" id="Ryv-v8-3bM"/>
+                        <segue destination="GAD-8r-HUP" kind="relationship" relationship="detailViewController" id="kaS-1o-Dsg"/>
+                    </connections>
+                </splitViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="fEb-9Q-AVq" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-962" y="-365"/>
+        </scene>
+    </scenes>
+</document>

@@ -1,0 +1,17 @@
+//
+//  RecipeNavigator-Prefix.pch
+//  RecipeNavigator
+//
+//  Created by Clint Shank on 04/09/2024
+//  Copyright © 2024 Omni-Soft, Inc. All rights reserved.
+//
+
+#ifndef RecipeNavigator_Prefix_pch
+#define RecipeNavigator_Prefix_pch
+
+// Include any system framework and library headers here that should be included in all compilation units.
+// You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
+
+import GlobalDefinitions.swift
+
+#endif /* RecipeNavigator_Prefix_pch */

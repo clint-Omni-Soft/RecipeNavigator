@@ -1,0 +1,859 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		F4099B052BFC07D300339544 /* RecipeListViewControllerSectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4099B042BFC07D300339544 /* RecipeListViewControllerSectionCell.swift */; };
+		F4099B082BFC145600339544 /* SortOptionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4099B072BFC145600339544 /* SortOptionsViewController.swift */; };
+		F4099B0A2BFC19D600339544 /* RecipeListViewControllerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4099B092BFC19D600339544 /* RecipeListViewControllerCell.swift */; };
+		F40F5C962C24D79C006CA302 /* FileDescriptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F40F5C952C24D79C006CA302 /* FileDescriptor.swift */; };
+		F41EA6E02C20EDC200452CEF /* ScanRepoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F41EA6DF2C20EDC200452CEF /* ScanRepoViewController.swift */; };
+		F42177972BE2E51600B1D1AC /* HowToUseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F421778B2BE2E51600B1D1AC /* HowToUseViewController.swift */; };
+		F42177982BE2E51600B1D1AC /* DataStoreLocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F421778D2BE2E51600B1D1AC /* DataStoreLocationViewController.swift */; };
+		F42177992BE2E51600B1D1AC /* TransferProgressViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F421778F2BE2E51600B1D1AC /* TransferProgressViewController.swift */; };
+		F421779A2BE2E51600B1D1AC /* NasLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42177922BE2E51600B1D1AC /* NasLoginViewController.swift */; };
+		F421779B2BE2E51600B1D1AC /* NasDriveSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42177932BE2E51600B1D1AC /* NasDriveSelectorViewController.swift */; };
+		F440FD582BFE95010039E4E2 /* Halibut with Fennel F&W 2001.JPG in Resources */ = {isa = PBXBuildFile; fileRef = F440FD512BFE95010039E4E2 /* Halibut with Fennel F&W 2001.JPG */; };
+		F440FD592BFE95010039E4E2 /* How to Make a Sourdough Starter from Scratch.txt in Resources */ = {isa = PBXBuildFile; fileRef = F440FD522BFE95010039E4E2 /* How to Make a Sourdough Starter from Scratch.txt */; };
+		F440FD5A2BFE95010039E4E2 /* Mushroom Gravy from Scratch.rtf in Resources */ = {isa = PBXBuildFile; fileRef = F440FD532BFE95010039E4E2 /* Mushroom Gravy from Scratch.rtf */; };
+		F440FD5C2BFE95010039E4E2 /* Pumpkin Mousse W-T Crunch.pdf in Resources */ = {isa = PBXBuildFile; fileRef = F440FD552BFE95010039E4E2 /* Pumpkin Mousse W-T Crunch.pdf */; };
+		F440FD5E2BFE95010039E4E2 /* TexasRed.htm in Resources */ = {isa = PBXBuildFile; fileRef = F440FD572BFE95010039E4E2 /* TexasRed.htm */; };
+		F44842A12BCB236800FC1585 /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F44842A02BCB236800FC1585 /* Main_iPad.storyboard */; };
+		F44842A82BCB244B00FC1585 /* RecipeListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F44842A32BCB244B00FC1585 /* RecipeListViewController.swift */; };
+		F44842A92BCB244B00FC1585 /* RecipeViewerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F44842A52BCB244B00FC1585 /* RecipeViewerViewController.swift */; };
+		F44842AA2BCB244B00FC1585 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F44842A72BCB244B00FC1585 /* SettingsViewController.swift */; };
+		F49289112C389CC4008D538A /* QuickLookViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49289102C389CC4008D538A /* QuickLookViewController.swift */; };
+		F4AA6ABA2C407A650015ED86 /* RecipeDisplayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AA6AB92C407A650015ED86 /* RecipeDisplayViewController.swift */; };
+		F4B18F632BE988EB0013371F /* RecipeLocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B18F622BE988EB0013371F /* RecipeLocationViewController.swift */; };
+		F4B9822E2C26315500AEBBA1 /* KeywordManagerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B9822D2C26315500AEBBA1 /* KeywordManagerViewController.swift */; };
+		F4B982312C263AED00AEBBA1 /* RecipeKeywords.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B9822F2C263AED00AEBBA1 /* RecipeKeywords.swift */; };
+		F4B982322C263AED00AEBBA1 /* RecipeKeywords+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B982302C263AED00AEBBA1 /* RecipeKeywords+CoreDataProperties.swift */; };
+		F4C69BDA2BD9BF3100B7CD89 /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4C69BD92BD9BF3100B7CD89 /* TabBarViewController.swift */; };
+		F4C69BDF2BD9CAE600B7CD89 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = F4C69BE12BD9CAE600B7CD89 /* Localizable.strings */; };
+		F4DAA0552BFFFE7C001C13D4 /* Recipe.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4DAA0512BFFFE7C001C13D4 /* Recipe.swift */; };
+		F4DAA0562BFFFE7C001C13D4 /* Recipe+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4DAA0522BFFFE7C001C13D4 /* Recipe+CoreDataProperties.swift */; };
+		F4DAA0572BFFFE7C001C13D4 /* ViewerRecipes.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4DAA0532BFFFE7C001C13D4 /* ViewerRecipes.swift */; };
+		F4DAA0582BFFFE7C001C13D4 /* ViewerRecipes+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4DAA0542BFFFE7C001C13D4 /* ViewerRecipes+CoreDataProperties.swift */; };
+		F4E583382BE1BF4F00D8153A /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E583372BE1BF4F00D8153A /* AboutViewController.swift */; };
+		F4F311E32BDB114500665440 /* PleaseWaitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F311E22BDB114500665440 /* PleaseWaitViewController.swift */; };
+		F4F311E52BDB156C00665440 /* PleaseWait.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F4F311E42BDB156C00665440 /* PleaseWait.storyboard */; };
+		F4F96EA62BC9C91E00AD534F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F96EA52BC9C91E00AD534F /* AppDelegate.swift */; };
+		F4F96EAD2BC9C91E00AD534F /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F4F96EAB2BC9C91E00AD534F /* Main_iPhone.storyboard */; };
+		F4F96EAF2BC9C91F00AD534F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F4F96EAE2BC9C91F00AD534F /* Assets.xcassets */; };
+		F4F96EB22BC9C91F00AD534F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F4F96EB02BC9C91F00AD534F /* LaunchScreen.storyboard */; };
+		F4F96EC12BC9CA2C00AD534F /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F96EBD2BC9CA2C00AD534F /* Logger.swift */; };
+		F4F96EC22BC9CA2C00AD534F /* UIKitExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F96EBE2BC9CA2C00AD534F /* UIKitExtensions.swift */; };
+		F4F96EC32BC9CA2C00AD534F /* UIImage+Cropping.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F96EBF2BC9CA2C00AD534F /* UIImage+Cropping.swift */; };
+		F4F96EC42BC9CA2C00AD534F /* LogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F96EC02BC9CA2C00AD534F /* LogViewController.swift */; };
+		F4F96EC62BC9CAC900AD534F /* GlobalDefinitions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F96EC52BC9CAC900AD534F /* GlobalDefinitions.swift */; };
+		F4F96ECA2BC9FFCE00AD534F /* CommonExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F96EC82BC9FFCE00AD534F /* CommonExtensions.swift */; };
+		F4F96ECB2BC9FFCE00AD534F /* NavigatorCentral.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F96EC92BC9FFCE00AD534F /* NavigatorCentral.swift */; };
+		F4F96ECE2BCA001800AD534F /* NavigatorCentral.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F4F96ECC2BCA001800AD534F /* NavigatorCentral.xcdatamodeld */; };
+		F4F96ED62BCA013000AD534F /* ImageRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F96ED22BCA013000AD534F /* ImageRequest.swift */; };
+		F4F96ED72BCA013000AD534F /* ImageRequest+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F96ED32BCA013000AD534F /* ImageRequest+CoreDataProperties.swift */; };
+		F4F96EDD2BCA01A600AD534F /* SMBCentral.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F96ED92BCA01A600AD534F /* SMBCentral.swift */; };
+		F4F96EDE2BCA01A600AD534F /* CloudCentral.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F96EDA2BCA01A600AD534F /* CloudCentral.swift */; };
+		F4F96EDF2BCA01A600AD534F /* NASCentral.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F96EDB2BCA01A600AD534F /* NASCentral.swift */; };
+		F4F96EE02BCA01A600AD534F /* DeviceAccessControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F96EDC2BCA01A600AD534F /* DeviceAccessControl.swift */; };
+		F4F96EE32BCA01EA00AD534F /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4F96EE22BCA01EA00AD534F /* CoreData.framework */; };
+		F4F96EE52BCA020A00AD534F /* SMBClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4F96EE42BCA020A00AD534F /* SMBClient.framework */; };
+		F4F96EE62BCA020A00AD534F /* SMBClient.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F4F96EE42BCA020A00AD534F /* SMBClient.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		F4F96EE72BCA020A00AD534F /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				F4F96EE62BCA020A00AD534F /* SMBClient.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		F4099B042BFC07D300339544 /* RecipeListViewControllerSectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeListViewControllerSectionCell.swift; sourceTree = "<group>"; };
+		F4099B072BFC145600339544 /* SortOptionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortOptionsViewController.swift; sourceTree = "<group>"; };
+		F4099B092BFC19D600339544 /* RecipeListViewControllerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeListViewControllerCell.swift; sourceTree = "<group>"; };
+		F40F5C952C24D79C006CA302 /* FileDescriptor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileDescriptor.swift; sourceTree = "<group>"; };
+		F41EA6DF2C20EDC200452CEF /* ScanRepoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanRepoViewController.swift; sourceTree = "<group>"; };
+		F421778B2BE2E51600B1D1AC /* HowToUseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HowToUseViewController.swift; sourceTree = "<group>"; };
+		F421778D2BE2E51600B1D1AC /* DataStoreLocationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataStoreLocationViewController.swift; sourceTree = "<group>"; };
+		F421778F2BE2E51600B1D1AC /* TransferProgressViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransferProgressViewController.swift; sourceTree = "<group>"; };
+		F42177922BE2E51600B1D1AC /* NasLoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NasLoginViewController.swift; sourceTree = "<group>"; };
+		F42177932BE2E51600B1D1AC /* NasDriveSelectorViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NasDriveSelectorViewController.swift; sourceTree = "<group>"; };
+		F440FD512BFE95010039E4E2 /* Halibut with Fennel F&W 2001.JPG */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Halibut with Fennel F&W 2001.JPG"; sourceTree = "<group>"; };
+		F440FD522BFE95010039E4E2 /* How to Make a Sourdough Starter from Scratch.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "How to Make a Sourdough Starter from Scratch.txt"; sourceTree = "<group>"; };
+		F440FD532BFE95010039E4E2 /* Mushroom Gravy from Scratch.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = "Mushroom Gravy from Scratch.rtf"; sourceTree = "<group>"; };
+		F440FD552BFE95010039E4E2 /* Pumpkin Mousse W-T Crunch.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "Pumpkin Mousse W-T Crunch.pdf"; sourceTree = "<group>"; };
+		F440FD572BFE95010039E4E2 /* TexasRed.htm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = TexasRed.htm; sourceTree = "<group>"; };
+		F448429D2BCB0AFF00FC1585 /* RecipeNavigator.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RecipeNavigator.entitlements; sourceTree = "<group>"; };
+		F448429E2BCB0EE000FC1585 /* RecipeNavigator-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RecipeNavigator-Bridging-Header.h"; sourceTree = "<group>"; };
+		F448429F2BCB0EE000FC1585 /* RecipeNavigator-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RecipeNavigator-Prefix.pch"; sourceTree = "<group>"; };
+		F44842A02BCB236800FC1585 /* Main_iPad.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main_iPad.storyboard; sourceTree = "<group>"; };
+		F44842A32BCB244B00FC1585 /* RecipeListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecipeListViewController.swift; sourceTree = "<group>"; };
+		F44842A52BCB244B00FC1585 /* RecipeViewerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecipeViewerViewController.swift; sourceTree = "<group>"; };
+		F44842A72BCB244B00FC1585 /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
+		F49289102C389CC4008D538A /* QuickLookViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickLookViewController.swift; sourceTree = "<group>"; };
+		F4AA6AB92C407A650015ED86 /* RecipeDisplayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeDisplayViewController.swift; sourceTree = "<group>"; };
+		F4B18F622BE988EB0013371F /* RecipeLocationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeLocationViewController.swift; sourceTree = "<group>"; };
+		F4B9822D2C26315500AEBBA1 /* KeywordManagerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeywordManagerViewController.swift; sourceTree = "<group>"; };
+		F4B9822F2C263AED00AEBBA1 /* RecipeKeywords.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeKeywords.swift; sourceTree = "<group>"; };
+		F4B982302C263AED00AEBBA1 /* RecipeKeywords+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RecipeKeywords+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		F4C69BD92BD9BF3100B7CD89 /* TabBarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
+		F4C69BE02BD9CAE600B7CD89 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		F4C69BE42BD9CC9B00B7CD89 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		F4C69BE52BD9CC9B00B7CD89 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Main_iPhone.strings; sourceTree = "<group>"; };
+		F4C69BE62BD9CC9B00B7CD89 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		F4C69BE72BD9CCB300B7CD89 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		F4C69BE82BD9CCB300B7CD89 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Main_iPhone.strings; sourceTree = "<group>"; };
+		F4C69BE92BD9CCB300B7CD89 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
+		F4DAA0512BFFFE7C001C13D4 /* Recipe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Recipe.swift; sourceTree = "<group>"; };
+		F4DAA0522BFFFE7C001C13D4 /* Recipe+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Recipe+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		F4DAA0532BFFFE7C001C13D4 /* ViewerRecipes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewerRecipes.swift; sourceTree = "<group>"; };
+		F4DAA0542BFFFE7C001C13D4 /* ViewerRecipes+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewerRecipes+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		F4E583372BE1BF4F00D8153A /* AboutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
+		F4F311E22BDB114500665440 /* PleaseWaitViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PleaseWaitViewController.swift; sourceTree = "<group>"; };
+		F4F311E42BDB156C00665440 /* PleaseWait.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = PleaseWait.storyboard; sourceTree = "<group>"; };
+		F4F96EA22BC9C91E00AD534F /* RecipeNavigator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RecipeNavigator.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F4F96EA52BC9C91E00AD534F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		F4F96EAC2BC9C91E00AD534F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPhone.storyboard; sourceTree = "<group>"; };
+		F4F96EAE2BC9C91F00AD534F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		F4F96EB12BC9C91F00AD534F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		F4F96EB32BC9C91F00AD534F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F4F96EBD2BC9CA2C00AD534F /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
+		F4F96EBE2BC9CA2C00AD534F /* UIKitExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIKitExtensions.swift; sourceTree = "<group>"; };
+		F4F96EBF2BC9CA2C00AD534F /* UIImage+Cropping.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Cropping.swift"; sourceTree = "<group>"; };
+		F4F96EC02BC9CA2C00AD534F /* LogViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogViewController.swift; sourceTree = "<group>"; };
+		F4F96EC52BC9CAC900AD534F /* GlobalDefinitions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GlobalDefinitions.swift; sourceTree = "<group>"; };
+		F4F96EC82BC9FFCE00AD534F /* CommonExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommonExtensions.swift; sourceTree = "<group>"; };
+		F4F96EC92BC9FFCE00AD534F /* NavigatorCentral.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigatorCentral.swift; sourceTree = "<group>"; };
+		F4F96ECD2BCA001800AD534F /* NavigatorCentral.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = NavigatorCentral.xcdatamodel; sourceTree = "<group>"; };
+		F4F96ED22BCA013000AD534F /* ImageRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageRequest.swift; sourceTree = "<group>"; };
+		F4F96ED32BCA013000AD534F /* ImageRequest+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageRequest+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		F4F96ED92BCA01A600AD534F /* SMBCentral.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SMBCentral.swift; sourceTree = "<group>"; };
+		F4F96EDA2BCA01A600AD534F /* CloudCentral.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CloudCentral.swift; sourceTree = "<group>"; };
+		F4F96EDB2BCA01A600AD534F /* NASCentral.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NASCentral.swift; sourceTree = "<group>"; };
+		F4F96EDC2BCA01A600AD534F /* DeviceAccessControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceAccessControl.swift; sourceTree = "<group>"; };
+		F4F96EE22BCA01EA00AD534F /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		F4F96EE42BCA020A00AD534F /* SMBClient.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SMBClient.framework; path = "../ZKits/ZKits-Debug/SMBClient.framework"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		F4F96E9F2BC9C91E00AD534F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F4F96EE52BCA020A00AD534F /* SMBClient.framework in Frameworks */,
+				F4F96EE32BCA01EA00AD534F /* CoreData.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		F4099B032BFC077A00339544 /* RecipeListViewControllerCells */ = {
+			isa = PBXGroup;
+			children = (
+				F4099B042BFC07D300339544 /* RecipeListViewControllerSectionCell.swift */,
+				F4099B092BFC19D600339544 /* RecipeListViewControllerCell.swift */,
+			);
+			path = RecipeListViewControllerCells;
+			sourceTree = "<group>";
+		};
+		F4099B062BFC140F00339544 /* SortOptionsViewController */ = {
+			isa = PBXGroup;
+			children = (
+				F4099B072BFC145600339544 /* SortOptionsViewController.swift */,
+			);
+			path = SortOptionsViewController;
+			sourceTree = "<group>";
+		};
+		F41EA6DE2C20ED8B00452CEF /* ScanRepoViewController */ = {
+			isa = PBXGroup;
+			children = (
+				F40F5C952C24D79C006CA302 /* FileDescriptor.swift */,
+				F41EA6DF2C20EDC200452CEF /* ScanRepoViewController.swift */,
+			);
+			path = ScanRepoViewController;
+			sourceTree = "<group>";
+		};
+		F421778A2BE2E51600B1D1AC /* How to Use */ = {
+			isa = PBXGroup;
+			children = (
+				F421778B2BE2E51600B1D1AC /* HowToUseViewController.swift */,
+			);
+			path = "How to Use";
+			sourceTree = "<group>";
+		};
+		F421778C2BE2E51600B1D1AC /* Data Store Location */ = {
+			isa = PBXGroup;
+			children = (
+				F421778D2BE2E51600B1D1AC /* DataStoreLocationViewController.swift */,
+				F42177902BE2E51600B1D1AC /* NAS Drive Selector */,
+				F421778E2BE2E51600B1D1AC /* Transfer Progress */,
+			);
+			path = "Data Store Location";
+			sourceTree = "<group>";
+		};
+		F421778E2BE2E51600B1D1AC /* Transfer Progress */ = {
+			isa = PBXGroup;
+			children = (
+				F421778F2BE2E51600B1D1AC /* TransferProgressViewController.swift */,
+			);
+			path = "Transfer Progress";
+			sourceTree = "<group>";
+		};
+		F42177902BE2E51600B1D1AC /* NAS Drive Selector */ = {
+			isa = PBXGroup;
+			children = (
+				F42177932BE2E51600B1D1AC /* NasDriveSelectorViewController.swift */,
+				F42177912BE2E51600B1D1AC /* NAS Login Controller */,
+			);
+			path = "NAS Drive Selector";
+			sourceTree = "<group>";
+		};
+		F42177912BE2E51600B1D1AC /* NAS Login Controller */ = {
+			isa = PBXGroup;
+			children = (
+				F42177922BE2E51600B1D1AC /* NasLoginViewController.swift */,
+			);
+			path = "NAS Login Controller";
+			sourceTree = "<group>";
+		};
+		F440FD502BFE95010039E4E2 /* SampleRecipes */ = {
+			isa = PBXGroup;
+			children = (
+				F440FD512BFE95010039E4E2 /* Halibut with Fennel F&W 2001.JPG */,
+				F440FD522BFE95010039E4E2 /* How to Make a Sourdough Starter from Scratch.txt */,
+				F440FD532BFE95010039E4E2 /* Mushroom Gravy from Scratch.rtf */,
+				F440FD552BFE95010039E4E2 /* Pumpkin Mousse W-T Crunch.pdf */,
+				F440FD572BFE95010039E4E2 /* TexasRed.htm */,
+			);
+			path = SampleRecipes;
+			sourceTree = "<group>";
+		};
+		F44842A22BCB244B00FC1585 /* RecipeListViewController */ = {
+			isa = PBXGroup;
+			children = (
+				F44842A32BCB244B00FC1585 /* RecipeListViewController.swift */,
+				F4099B032BFC077A00339544 /* RecipeListViewControllerCells */,
+				F4099B062BFC140F00339544 /* SortOptionsViewController */,
+			);
+			path = RecipeListViewController;
+			sourceTree = "<group>";
+		};
+		F44842A42BCB244B00FC1585 /* RecipeViewerViewController */ = {
+			isa = PBXGroup;
+			children = (
+				F44842A52BCB244B00FC1585 /* RecipeViewerViewController.swift */,
+				F4AA6AB82C407A3B0015ED86 /* RecipeDisplayViewController */,
+			);
+			path = RecipeViewerViewController;
+			sourceTree = "<group>";
+		};
+		F44842A62BCB244B00FC1585 /* SettingsViewController */ = {
+			isa = PBXGroup;
+			children = (
+				F44842A72BCB244B00FC1585 /* SettingsViewController.swift */,
+				F4E583362BE1BF2C00D8153A /* About */,
+				F421778A2BE2E51600B1D1AC /* How to Use */,
+				F4B9822C2C26313100AEBBA1 /* KeywordManagerViewController */,
+				F421778C2BE2E51600B1D1AC /* Data Store Location */,
+				F4B18F612BE988B10013371F /* Recipe Location */,
+				F41EA6DE2C20ED8B00452CEF /* ScanRepoViewController */,
+			);
+			path = SettingsViewController;
+			sourceTree = "<group>";
+		};
+		F492890F2C389C40008D538A /* Quick Look */ = {
+			isa = PBXGroup;
+			children = (
+				F49289102C389CC4008D538A /* QuickLookViewController.swift */,
+			);
+			path = "Quick Look";
+			sourceTree = "<group>";
+		};
+		F49289122C389CD4008D538A /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				F4F96EBF2BC9CA2C00AD534F /* UIImage+Cropping.swift */,
+				F4F96EBE2BC9CA2C00AD534F /* UIKitExtensions.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		F49289132C389CE4008D538A /* Logger */ = {
+			isa = PBXGroup;
+			children = (
+				F4F96EBD2BC9CA2C00AD534F /* Logger.swift */,
+				F4F96EC02BC9CA2C00AD534F /* LogViewController.swift */,
+			);
+			path = Logger;
+			sourceTree = "<group>";
+		};
+		F4AA6AB82C407A3B0015ED86 /* RecipeDisplayViewController */ = {
+			isa = PBXGroup;
+			children = (
+				F4AA6AB92C407A650015ED86 /* RecipeDisplayViewController.swift */,
+			);
+			path = RecipeDisplayViewController;
+			sourceTree = "<group>";
+		};
+		F4B18F612BE988B10013371F /* Recipe Location */ = {
+			isa = PBXGroup;
+			children = (
+				F4B18F622BE988EB0013371F /* RecipeLocationViewController.swift */,
+			);
+			path = "Recipe Location";
+			sourceTree = "<group>";
+		};
+		F4B9822C2C26313100AEBBA1 /* KeywordManagerViewController */ = {
+			isa = PBXGroup;
+			children = (
+				F4B9822D2C26315500AEBBA1 /* KeywordManagerViewController.swift */,
+			);
+			path = KeywordManagerViewController;
+			sourceTree = "<group>";
+		};
+		F4E583362BE1BF2C00D8153A /* About */ = {
+			isa = PBXGroup;
+			children = (
+				F4E583372BE1BF4F00D8153A /* AboutViewController.swift */,
+			);
+			path = About;
+			sourceTree = "<group>";
+		};
+		F4F311E12BDB114500665440 /* Please Wait */ = {
+			isa = PBXGroup;
+			children = (
+				F4F311E22BDB114500665440 /* PleaseWaitViewController.swift */,
+			);
+			path = "Please Wait";
+			sourceTree = "<group>";
+		};
+		F4F96E992BC9C91E00AD534F = {
+			isa = PBXGroup;
+			children = (
+				F4F96EA42BC9C91E00AD534F /* RecipeNavigator */,
+				F4F96EA32BC9C91E00AD534F /* Products */,
+				F4F96EE12BCA01EA00AD534F /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		F4F96EA32BC9C91E00AD534F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F4F96EA22BC9C91E00AD534F /* RecipeNavigator.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F4F96EA42BC9C91E00AD534F /* RecipeNavigator */ = {
+			isa = PBXGroup;
+			children = (
+				F4F96EC52BC9CAC900AD534F /* GlobalDefinitions.swift */,
+				F4F96EB32BC9C91F00AD534F /* Info.plist */,
+				F448429D2BCB0AFF00FC1585 /* RecipeNavigator.entitlements */,
+				F448429E2BCB0EE000FC1585 /* RecipeNavigator-Bridging-Header.h */,
+				F448429F2BCB0EE000FC1585 /* RecipeNavigator-Prefix.pch */,
+				F4F96ED82BCA01A600AD534F /* External Devices */,
+				F4F96EBB2BC9C9C800AD534F /* Resources */,
+				F4F96EC72BC9FCC400AD534F /* NavigatorCentral */,
+				F4F96EB92BC9C99800AD534F /* User Interface */,
+			);
+			path = RecipeNavigator;
+			sourceTree = "<group>";
+		};
+		F4F96EB92BC9C99800AD534F /* User Interface */ = {
+			isa = PBXGroup;
+			children = (
+				F4C69BD92BD9BF3100B7CD89 /* TabBarViewController.swift */,
+				F4F96EBA2BC9C9AD00AD534F /* Application */,
+				F4F311E12BDB114500665440 /* Please Wait */,
+				F44842A22BCB244B00FC1585 /* RecipeListViewController */,
+				F44842A42BCB244B00FC1585 /* RecipeViewerViewController */,
+				F44842A62BCB244B00FC1585 /* SettingsViewController */,
+				F4F96EBC2BC9CA2C00AD534F /* Utilities */,
+			);
+			path = "User Interface";
+			sourceTree = "<group>";
+		};
+		F4F96EBA2BC9C9AD00AD534F /* Application */ = {
+			isa = PBXGroup;
+			children = (
+				F4F96EA52BC9C91E00AD534F /* AppDelegate.swift */,
+			);
+			path = Application;
+			sourceTree = "<group>";
+		};
+		F4F96EBB2BC9C9C800AD534F /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				F4F96EAE2BC9C91F00AD534F /* Assets.xcassets */,
+				F4C69BE12BD9CAE600B7CD89 /* Localizable.strings */,
+				F4F96EB02BC9C91F00AD534F /* LaunchScreen.storyboard */,
+				F44842A02BCB236800FC1585 /* Main_iPad.storyboard */,
+				F4F96EAB2BC9C91E00AD534F /* Main_iPhone.storyboard */,
+				F4F311E42BDB156C00665440 /* PleaseWait.storyboard */,
+				F440FD502BFE95010039E4E2 /* SampleRecipes */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		F4F96EBC2BC9CA2C00AD534F /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				F49289122C389CD4008D538A /* Extensions */,
+				F49289132C389CE4008D538A /* Logger */,
+				F492890F2C389C40008D538A /* Quick Look */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		F4F96EC72BC9FCC400AD534F /* NavigatorCentral */ = {
+			isa = PBXGroup;
+			children = (
+				F4F96EC92BC9FFCE00AD534F /* NavigatorCentral.swift */,
+				F4F96EC82BC9FFCE00AD534F /* CommonExtensions.swift */,
+				F4F96ECC2BCA001800AD534F /* NavigatorCentral.xcdatamodeld */,
+				F4F96ECF2BCA010300AD534F /* Entities */,
+			);
+			path = NavigatorCentral;
+			sourceTree = "<group>";
+		};
+		F4F96ECF2BCA010300AD534F /* Entities */ = {
+			isa = PBXGroup;
+			children = (
+				F4F96ED22BCA013000AD534F /* ImageRequest.swift */,
+				F4F96ED32BCA013000AD534F /* ImageRequest+CoreDataProperties.swift */,
+				F4DAA0512BFFFE7C001C13D4 /* Recipe.swift */,
+				F4DAA0522BFFFE7C001C13D4 /* Recipe+CoreDataProperties.swift */,
+				F4B9822F2C263AED00AEBBA1 /* RecipeKeywords.swift */,
+				F4B982302C263AED00AEBBA1 /* RecipeKeywords+CoreDataProperties.swift */,
+				F4DAA0532BFFFE7C001C13D4 /* ViewerRecipes.swift */,
+				F4DAA0542BFFFE7C001C13D4 /* ViewerRecipes+CoreDataProperties.swift */,
+			);
+			path = Entities;
+			sourceTree = "<group>";
+		};
+		F4F96ED82BCA01A600AD534F /* External Devices */ = {
+			isa = PBXGroup;
+			children = (
+				F4F96ED92BCA01A600AD534F /* SMBCentral.swift */,
+				F4F96EDA2BCA01A600AD534F /* CloudCentral.swift */,
+				F4F96EDB2BCA01A600AD534F /* NASCentral.swift */,
+				F4F96EDC2BCA01A600AD534F /* DeviceAccessControl.swift */,
+			);
+			path = "External Devices";
+			sourceTree = "<group>";
+		};
+		F4F96EE12BCA01EA00AD534F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				F4F96EE42BCA020A00AD534F /* SMBClient.framework */,
+				F4F96EE22BCA01EA00AD534F /* CoreData.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		F4F96EA12BC9C91E00AD534F /* RecipeNavigator */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F4F96EB62BC9C91F00AD534F /* Build configuration list for PBXNativeTarget "RecipeNavigator" */;
+			buildPhases = (
+				F4F96E9E2BC9C91E00AD534F /* Sources */,
+				F4F96E9F2BC9C91E00AD534F /* Frameworks */,
+				F4F96EA02BC9C91E00AD534F /* Resources */,
+				F4F96EE72BCA020A00AD534F /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = RecipeNavigator;
+			productName = RecipeNavigator;
+			productReference = F4F96EA22BC9C91E00AD534F /* RecipeNavigator.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		F4F96E9A2BC9C91E00AD534F /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1520;
+				LastUpgradeCheck = 1520;
+				TargetAttributes = {
+					F4F96EA12BC9C91E00AD534F = {
+						CreatedOnToolsVersion = 15.2;
+					};
+				};
+			};
+			buildConfigurationList = F4F96E9D2BC9C91E00AD534F /* Build configuration list for PBXProject "RecipeNavigator" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+				fr,
+				es,
+			);
+			mainGroup = F4F96E992BC9C91E00AD534F;
+			productRefGroup = F4F96EA32BC9C91E00AD534F /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				F4F96EA12BC9C91E00AD534F /* RecipeNavigator */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		F4F96EA02BC9C91E00AD534F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F4C69BDF2BD9CAE600B7CD89 /* Localizable.strings in Resources */,
+				F4F311E52BDB156C00665440 /* PleaseWait.storyboard in Resources */,
+				F440FD5C2BFE95010039E4E2 /* Pumpkin Mousse W-T Crunch.pdf in Resources */,
+				F4F96EB22BC9C91F00AD534F /* LaunchScreen.storyboard in Resources */,
+				F440FD582BFE95010039E4E2 /* Halibut with Fennel F&W 2001.JPG in Resources */,
+				F44842A12BCB236800FC1585 /* Main_iPad.storyboard in Resources */,
+				F440FD5E2BFE95010039E4E2 /* TexasRed.htm in Resources */,
+				F440FD5A2BFE95010039E4E2 /* Mushroom Gravy from Scratch.rtf in Resources */,
+				F4F96EAF2BC9C91F00AD534F /* Assets.xcassets in Resources */,
+				F4F96EAD2BC9C91E00AD534F /* Main_iPhone.storyboard in Resources */,
+				F440FD592BFE95010039E4E2 /* How to Make a Sourdough Starter from Scratch.txt in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		F4F96E9E2BC9C91E00AD534F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F4F96ECE2BCA001800AD534F /* NavigatorCentral.xcdatamodeld in Sources */,
+				F49289112C389CC4008D538A /* QuickLookViewController.swift in Sources */,
+				F42177972BE2E51600B1D1AC /* HowToUseViewController.swift in Sources */,
+				F4099B052BFC07D300339544 /* RecipeListViewControllerSectionCell.swift in Sources */,
+				F41EA6E02C20EDC200452CEF /* ScanRepoViewController.swift in Sources */,
+				F4F96EA62BC9C91E00AD534F /* AppDelegate.swift in Sources */,
+				F4C69BDA2BD9BF3100B7CD89 /* TabBarViewController.swift in Sources */,
+				F44842AA2BCB244B00FC1585 /* SettingsViewController.swift in Sources */,
+				F4F96ED62BCA013000AD534F /* ImageRequest.swift in Sources */,
+				F421779B2BE2E51600B1D1AC /* NasDriveSelectorViewController.swift in Sources */,
+				F4E583382BE1BF4F00D8153A /* AboutViewController.swift in Sources */,
+				F4B9822E2C26315500AEBBA1 /* KeywordManagerViewController.swift in Sources */,
+				F44842A92BCB244B00FC1585 /* RecipeViewerViewController.swift in Sources */,
+				F4DAA0552BFFFE7C001C13D4 /* Recipe.swift in Sources */,
+				F42177992BE2E51600B1D1AC /* TransferProgressViewController.swift in Sources */,
+				F4F96EC12BC9CA2C00AD534F /* Logger.swift in Sources */,
+				F4DAA0562BFFFE7C001C13D4 /* Recipe+CoreDataProperties.swift in Sources */,
+				F4F96EDF2BCA01A600AD534F /* NASCentral.swift in Sources */,
+				F4F96EDD2BCA01A600AD534F /* SMBCentral.swift in Sources */,
+				F44842A82BCB244B00FC1585 /* RecipeListViewController.swift in Sources */,
+				F4099B0A2BFC19D600339544 /* RecipeListViewControllerCell.swift in Sources */,
+				F4AA6ABA2C407A650015ED86 /* RecipeDisplayViewController.swift in Sources */,
+				F4F96EC22BC9CA2C00AD534F /* UIKitExtensions.swift in Sources */,
+				F4B18F632BE988EB0013371F /* RecipeLocationViewController.swift in Sources */,
+				F4F96EC42BC9CA2C00AD534F /* LogViewController.swift in Sources */,
+				F4DAA0582BFFFE7C001C13D4 /* ViewerRecipes+CoreDataProperties.swift in Sources */,
+				F421779A2BE2E51600B1D1AC /* NasLoginViewController.swift in Sources */,
+				F4F96EC32BC9CA2C00AD534F /* UIImage+Cropping.swift in Sources */,
+				F4F96EE02BCA01A600AD534F /* DeviceAccessControl.swift in Sources */,
+				F4B982312C263AED00AEBBA1 /* RecipeKeywords.swift in Sources */,
+				F40F5C962C24D79C006CA302 /* FileDescriptor.swift in Sources */,
+				F4F96ED72BCA013000AD534F /* ImageRequest+CoreDataProperties.swift in Sources */,
+				F42177982BE2E51600B1D1AC /* DataStoreLocationViewController.swift in Sources */,
+				F4F96ECA2BC9FFCE00AD534F /* CommonExtensions.swift in Sources */,
+				F4099B082BFC145600339544 /* SortOptionsViewController.swift in Sources */,
+				F4F96EDE2BCA01A600AD534F /* CloudCentral.swift in Sources */,
+				F4B982322C263AED00AEBBA1 /* RecipeKeywords+CoreDataProperties.swift in Sources */,
+				F4F96EC62BC9CAC900AD534F /* GlobalDefinitions.swift in Sources */,
+				F4DAA0572BFFFE7C001C13D4 /* ViewerRecipes.swift in Sources */,
+				F4F96ECB2BC9FFCE00AD534F /* NavigatorCentral.swift in Sources */,
+				F4F311E32BDB114500665440 /* PleaseWaitViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		F4C69BE12BD9CAE600B7CD89 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F4C69BE02BD9CAE600B7CD89 /* en */,
+				F4C69BE62BD9CC9B00B7CD89 /* fr */,
+				F4C69BE92BD9CCB300B7CD89 /* es */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		F4F96EAB2BC9C91E00AD534F /* Main_iPhone.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F4F96EAC2BC9C91E00AD534F /* Base */,
+				F4C69BE52BD9CC9B00B7CD89 /* fr */,
+				F4C69BE82BD9CCB300B7CD89 /* es */,
+			);
+			name = Main_iPhone.storyboard;
+			sourceTree = "<group>";
+		};
+		F4F96EB02BC9C91F00AD534F /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F4F96EB12BC9C91F00AD534F /* Base */,
+				F4C69BE42BD9CC9B00B7CD89 /* fr */,
+				F4C69BE72BD9CCB300B7CD89 /* es */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		F4F96EB42BC9C91F00AD534F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		F4F96EB52BC9C91F00AD534F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		F4F96EB72BC9C91F00AD534F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				CODE_SIGN_ENTITLEMENTS = RecipeNavigator/RecipeNavigator.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = YEJQTHXY7Y;
+				"EXCLUDED_ARCHS[sdk=*]" = x86_64;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
+				FRAMEWORK_SEARCH_PATHS = "../ZKits/ZKits-Debug";
+				GCC_PREFIX_HEADER = "Recipe Navigator/RecipeNavigator-Prefix.pch";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = RecipeNavigator/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Recipe Navigator";
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = NO;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.Omni-Soft.RecipeNavigator";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = "RecipeNavigator/RecipeNavigator-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		F4F96EB82BC9C91F00AD534F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				CODE_SIGN_ENTITLEMENTS = RecipeNavigator/RecipeNavigator.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = YEJQTHXY7Y;
+				FRAMEWORK_SEARCH_PATHS = "../ZKits/ZKits-Debug";
+				GCC_PREFIX_HEADER = "Recipe Navigator/RecipeNavigator-Prefix.pch";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = RecipeNavigator/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Recipe Navigator";
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = NO;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.Omni-Soft.RecipeNavigator";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = "RecipeNavigator/RecipeNavigator-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		F4F96E9D2BC9C91E00AD534F /* Build configuration list for PBXProject "RecipeNavigator" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F4F96EB42BC9C91F00AD534F /* Debug */,
+				F4F96EB52BC9C91F00AD534F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F4F96EB62BC9C91F00AD534F /* Build configuration list for PBXNativeTarget "RecipeNavigator" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F4F96EB72BC9C91F00AD534F /* Debug */,
+				F4F96EB82BC9C91F00AD534F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		F4F96ECC2BCA001800AD534F /* NavigatorCentral.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				F4F96ECD2BCA001800AD534F /* NavigatorCentral.xcdatamodel */,
+			);
+			currentVersion = F4F96ECD2BCA001800AD534F /* NavigatorCentral.xcdatamodel */;
+			path = NavigatorCentral.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = F4F96E9A2BC9C91E00AD534F /* Project object */;
+}
