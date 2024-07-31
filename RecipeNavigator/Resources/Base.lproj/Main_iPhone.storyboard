@@ -101,6 +101,12 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" clearButtonMode="always" translatesAutoresizingMaskIntoConstraints="NO" id="x7v-rd-pWs" userLabel="myTextField">
+                                <rect key="frame" x="16" y="92" width="382" height="34"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZCR-YN-7XL" userLabel="SortButton">
                                 <rect key="frame" x="16" y="92" width="382" height="35"/>
                                 <color key="backgroundColor" systemColor="systemGroupedBackgroundColor"/>
@@ -199,13 +205,14 @@
                     <navigationItem key="navigationItem" id="yvJ-8I-D4W"/>
                     <connections>
                         <outlet property="myTableView" destination="XCy-rZ-p77" id="dkk-sr-QRl"/>
+                        <outlet property="myTextField" destination="x7v-rd-pWs" id="jkg-Em-55C"/>
                         <outlet property="sortButton" destination="ZCR-YN-7XL" id="mfn-OH-eBU"/>
                         <segue destination="4Ek-Yj-T3A" kind="show" identifier="QuickLookViewController" id="czt-yx-Ek6"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WAF-1q-ufg" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="474" y="-2051"/>
+            <point key="canvasLocation" x="473.91304347826093" y="-2051.7857142857142"/>
         </scene>
         <!--Quick Look View Controller-->
         <scene sceneID="3G2-tg-1K7">

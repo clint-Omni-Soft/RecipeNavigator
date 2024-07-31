@@ -536,6 +536,39 @@ class NavigatorCentral: NSObject {
     }
     
     
+    func recipesWith(_ keywordArray: [String] ) -> [Recipe] {
+        var searchResults: [Recipe] = []
+        
+        for recipeArray in recipeArrayOfArrays {
+            for recipe in recipeArray {
+                if let filename = recipe.filename {
+                    var saveIt = true
+                    
+                    for keyword in keywordArray {
+                        if !keyword.isEmpty {
+                            if !filename.uppercased().contains( keyword.uppercased() ) {
+                                saveIt = false
+                                break
+                            }
+
+                        }
+
+                    }
+                    
+                    if saveIt {
+                        searchResults.append( recipe )
+                    }
+                    
+                }
+                
+            }
+            
+        }
+        
+        return searchResults
+    }
+    
+    
     func reloadData(_ delegate: NavigatorCentralDelegate ) {
         if !self.didOpenDatabase {
             logTrace( "ERROR!  Database NOT open yet!" )

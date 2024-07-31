@@ -16,6 +16,7 @@ class RecipeListViewController: UIViewController {
     // MARK: Public Variables
     
     @IBOutlet weak var myTableView: UITableView!
+    @IBOutlet weak var myTextField: UITextField!
     @IBOutlet weak var sortButton : UIButton!
     
     
@@ -40,6 +41,8 @@ class RecipeListViewController: UIViewController {
     private var sectionIndexTitles  : [String] = []
     private var sectionTitleIndexes : [Int]    = []
     private var showAllSections     = true
+    private var searchEnabled       = false
+    private var searchResults       : [Recipe] = []
     private let userDefaults        = UserDefaults.standard
 
     
@@ -72,6 +75,10 @@ class RecipeListViewController: UIViewController {
         super.viewDidLoad()
         
         self.navigationItem.title = NSLocalizedString( "Title.Recipes", comment: "Recipes" )
+        
+        myTextField.delegate      = self
+        myTextField.isHidden      = !searchEnabled
+        myTextField.returnKeyType = .done
     }
     
     
@@ -138,6 +145,26 @@ class RecipeListViewController: UIViewController {
 
 
     // MARK: Target / Action Methods
+    
+    @IBAction func searchToggleBarButtonTouched(_ sender : UIBarButtonItem ) {
+        searchEnabled = !searchEnabled
+        
+        logVerbose( "searchEnabled[ %@ ]", stringFor( searchEnabled ) )
+        myTextField.isHidden = !searchEnabled
+        sortButton .isHidden =  searchEnabled
+        
+        if searchEnabled {
+            myTextField.text = ""
+            myTextField.becomeFirstResponder()
+        }
+        else {
+            myTextField.resignFirstResponder()
+        }
+        
+        loadBarButtonItems()
+        myTableView.reloadData()
+    }
+    
     
     @IBAction func showAllBarButtonTouched(_ sender : UIBarButtonItem ) {
 //        logVerbose( "[ %@ ]", stringFor( showAllSections ) )
@@ -251,6 +278,9 @@ class RecipeListViewController: UIViewController {
             navigationItem.leftBarButtonItem = leftBarButtonItem
         }
         
+        let searchImage = UIImage(named: myTextField.isHidden ? "magnifyingGlass" : "hamburger" )
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem.init( image: searchImage, style: .plain, target: self, action: #selector( searchToggleBarButtonTouched(_:) ) )
     }
     
     
@@ -439,7 +469,7 @@ extension RecipeListViewController: UIPopoverPresentationControllerDelegate {
 extension RecipeListViewController: UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return ( navigatorCentral.numberOfRecipesLoaded == 0 ) ? 0 : navigatorCentral.recipeArrayOfArrays.count
+        return searchEnabled ? 1 : ( navigatorCentral.numberOfRecipesLoaded == 0 ) ? 0 : navigatorCentral.recipeArrayOfArrays.count
     }
     
     
@@ -455,7 +485,7 @@ extension RecipeListViewController: UITableViewDataSource {
         }
         
         let     recipeListCell = cell as! RecipeListViewControllerCell
-        let     recipe         = navigatorCentral.recipeAt( indexPath )
+        let     recipe         = searchEnabled ? searchResults[indexPath.row] : navigatorCentral.recipeAt( indexPath )
         
         recipeListCell.initializeWith( recipe )
 
@@ -465,6 +495,10 @@ extension RecipeListViewController: UITableViewDataSource {
     
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if searchEnabled {
+            return searchResults.count
+        }
+        
         if navigatorCentral.numberOfRecipesLoaded == 0 {
             return 0
         }
@@ -504,6 +538,10 @@ extension RecipeListViewController: UITableViewDelegate {
     
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        if searchEnabled {
+            return CGFloat.leastNormalMagnitude
+        }
+        
         var isHidden = true
         let sortType = navigatorCentral.sortDescriptor.0
 
@@ -535,11 +573,15 @@ extension RecipeListViewController: UITableViewDelegate {
     
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return navigatorCentral.sectionTitleArray[ section ]
+        return searchEnabled ? "" : navigatorCentral.sectionTitleArray[ section ]
     }
     
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        if searchEnabled {
+            return UITableViewCell.init()
+        }
+        
         guard let cell = tableView.dequeueReusableCell(withIdentifier: Constants.sectionHeaderID ) else {
             logTrace( "We FAILED to dequeueReusableCell!" )
             return UITableViewCell.init()
@@ -574,7 +616,7 @@ extension RecipeListViewController: UITableViewDelegate {
     private func promptForActionOnCellAt(_ indexPath: IndexPath ) {
         logTrace()
         let     alert  = UIAlertController.init( title: NSLocalizedString( "AlertTitle.ActionForRecipe", comment: "What would you like to do with this recipe?" ), message: nil, preferredStyle: .alert)
-        let     recipe = navigatorCentral.recipeAt( indexPath )
+        let     recipe = searchEnabled ? searchResults[indexPath.row] : navigatorCentral.recipeAt( indexPath )
 
         let quickLookAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.QuickLook", comment: "Quick Look" ), style: .default )
         { ( alertAction ) in
@@ -603,4 +645,74 @@ extension RecipeListViewController: UITableViewDelegate {
     }
 
 
+}
+
+
+
+// MARK: UITextFieldDelegate Methods
+
+extension RecipeListViewController: UITextFieldDelegate {
+    
+    func textFieldDidChangeSelection(_ textField: UITextField ) {
+        guard let searchText = textField.text else {
+            return
+        }
+        
+        if searchText.isEmpty {
+            searchResults = []
+            myTableView.reloadData()
+        }
+        else if searchText.count > 1 {
+            scanFor( searchText )
+        }
+        
+    }
+
+
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        if ( string == "\n" ) {
+            textField.resignFirstResponder()
+            return false
+        }
+        
+        return true
+    }
+    
+    
+    
+    // MARK: UITextFieldDelegate Utility Methods
+    
+    private func scanFor(_ searchString: String ) {
+        logVerbose( "[ %@ ]", searchString )
+        searchResults = navigatorCentral.recipesWith( searchString.components(separatedBy: " " ) )
+
+        let sortedRecipeArray = searchResults.sorted( by:
+                    { (recipe1, recipe2) -> Bool in
+                        recipe1.filename! < recipe2.filename!
+                    } )
+
+        searchResults = []
+        
+        // Discard duplicates
+        for sortedRecipe in sortedRecipeArray {
+            var saveIt = true
+            
+            for searchRecipe in searchResults {
+                if searchRecipe.guid == sortedRecipe.guid {
+                    saveIt = false
+                    break
+                }
+                
+            }
+            
+            if saveIt {
+                searchResults.append( sortedRecipe )
+            }
+                
+        }
+            
+        myTableView.reloadData()
+    }
+    
+    
 }
