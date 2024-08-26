@@ -50,7 +50,7 @@
             <objects>
                 <navigationController id="GAD-8r-HUP" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="eu1-k0-4TH">
-                        <rect key="frame" x="0.0" y="24" width="873.5" height="50"/>
+                        <rect key="frame" x="0.0" y="24" width="818.5" height="50"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>

@@ -329,8 +329,7 @@ class NavigatorCentral: NSObject {
         
     }
     
-    
-    
+        
     
     // MARK: Our Singleton (Public)
     
@@ -429,7 +428,7 @@ class NavigatorCentral: NSObject {
             return
         }
         
-        //        logTrace()
+//        logTrace()
         persistentContainer.viewContext.perform {
             for smbFile in smbFileArray {
                 let recipe  = NSEntityDescription.insertNewObject( forEntityName: EntityNames.recipe, into: self.managedObjectContext ) as! Recipe
@@ -456,8 +455,18 @@ class NavigatorCentral: NSObject {
             return
         }
         
-        //        logTrace()
+//        logTrace()
         persistentContainer.viewContext.perform {
+            
+            // First we clean out the viewer recipes
+            for recipe in self.viewerRecipeArray {
+                self.removeViewerDataFile( recipe.filename! )
+                self.viewerRecipesObject.removeFromRecipes( recipe )
+            }
+            
+            self.viewerRecipeArray = []
+            
+            // Then we delete all the recipes
             let flatArray = self.flatRecipeArray()
 
             for recipe in flatArray {
@@ -947,7 +956,7 @@ class NavigatorCentral: NSObject {
                 return ""
             }
             
-            //            logVerbose( "picturesDirectory[ %@ ]", picturesDirectoryURL.path )
+//            logVerbose( "picturesDirectory[ %@ ]", picturesDirectoryURL.path )
             return picturesDirectoryURL.path
         }
         
@@ -1101,6 +1110,36 @@ class NavigatorCentral: NSObject {
         }
         
         return fileCopied
+    }
+    
+    
+    private func createRecipeKeywordsObject() {
+        logTrace()
+        let object = NSEntityDescription.insertNewObject( forEntityName: EntityNames.recipeKeywords, into: self.managedObjectContext ) as! RecipeKeywords
+        
+        // Pull in our default list
+        var keywordString       = ""
+        var sortedKeywordArray  = Constants.recipeKeywords.components(separatedBy: GlobalConstants.separatorForRecipeKeywordString )
+        
+        // Keep it in alpha order
+        sortedKeywordArray = sortedKeywordArray.sorted(by: { (keyword1, keyword2) -> (Bool) in
+            return keyword1.uppercased() < keyword2.uppercased()
+        } )
+        
+        // Reconstruct the string (now sorted)
+        for keyword in sortedKeywordArray {
+            if !keywordString.isEmpty {
+                keywordString += GlobalConstants.separatorForRecipeKeywordString
+            }
+            
+            keywordString += keyword
+        }
+        
+        // Stick it in our singleton object
+        object.keywords = keywordString
+        saveContext()
+        
+        recipeKeywords = sortedKeywordArray
     }
     
     
@@ -1271,36 +1310,6 @@ class NavigatorCentral: NSObject {
         }
         
         return keywordString
-    }
-    
-    
-    private func createRecipeKeywordsObject() {
-        logTrace()
-        let object = NSEntityDescription.insertNewObject( forEntityName: EntityNames.recipeKeywords, into: self.managedObjectContext ) as! RecipeKeywords
-        
-        // Pull in our default list
-        var keywordString       = ""
-        var sortedKeywordArray  = Constants.recipeKeywords.components(separatedBy: GlobalConstants.separatorForRecipeKeywordString )
-        
-        // Keep it in alpha order
-        sortedKeywordArray = sortedKeywordArray.sorted(by: { (keyword1, keyword2) -> (Bool) in
-            return keyword1.uppercased() < keyword2.uppercased()
-        } )
-        
-        // Reconstruct the string (now sorted)
-        for keyword in sortedKeywordArray {
-            if !keywordString.isEmpty {
-                keywordString += GlobalConstants.separatorForRecipeKeywordString
-            }
-            
-            keywordString += keyword
-        }
-        
-        // Stick it in our singleton object
-        object.keywords = keywordString
-        saveContext()
-        
-        recipeKeywords = sortedKeywordArray
     }
     
     

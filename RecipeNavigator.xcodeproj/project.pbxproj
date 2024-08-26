@@ -365,8 +365,8 @@
 				F448429E2BCB0EE000FC1585 /* RecipeNavigator-Bridging-Header.h */,
 				F448429F2BCB0EE000FC1585 /* RecipeNavigator-Prefix.pch */,
 				F4F96ED82BCA01A600AD534F /* External Devices */,
-				F4F96EBB2BC9C9C800AD534F /* Resources */,
 				F4F96EC72BC9FCC400AD534F /* NavigatorCentral */,
+				F4F96EBB2BC9C9C800AD534F /* Resources */,
 				F4F96EB92BC9C99800AD534F /* User Interface */,
 			);
 			path = RecipeNavigator;
@@ -768,6 +768,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "Recipe Navigator";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIRequiredDeviceCapabilities = armv7;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -804,6 +805,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "Recipe Navigator";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIRequiredDeviceCapabilities = armv7;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";

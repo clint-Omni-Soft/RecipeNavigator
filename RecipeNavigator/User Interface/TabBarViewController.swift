@@ -224,7 +224,7 @@ extension TabBarViewController: NavigatorCentralDelegate {
         
         if didOpenDatabase {
             if UIDevice.current.userInterfaceIdiom == .pad {
-                notificationCenter.post( name: NSNotification.Name( rawValue: Notifications.ready ), object: self )
+                navigatorCentral.fetchRecipesWith( self )
             }
             
         }

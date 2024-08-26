@@ -25,13 +25,13 @@ class RecipeViewerViewController: UIViewController {
         static let recipeDisplay = "RecipeDisplayViewController"
     }
     
-    private var application                = UIApplication.shared
-    private var changingOrientation        = false
-    private var pageIndex                  = GlobalConstants.noSelection
+    private let appDelegate                 = UIApplication.shared.delegate as! AppDelegate
+    private var changingOrientation         = false
+    private var pageIndex                   = GlobalConstants.noSelection
     private var recipeDisplayViewControllers: [RecipeDisplayViewController] = []
-    private var watingForViewWillAppear    = true
-    private let navigatorCentral           = NavigatorCentral.sharedInstance
-    private let notificationCenter         = NotificationCenter.default
+    private var watingForViewWillAppear     = true
+    private let navigatorCentral            = NavigatorCentral.sharedInstance
+    private let notificationCenter          = NotificationCenter.default
 
     
     
@@ -54,8 +54,7 @@ class RecipeViewerViewController: UIViewController {
         logTrace()
         super.viewWillAppear( animated )
         
-        application.isIdleTimerDisabled = true
-        watingForViewWillAppear         = false
+        watingForViewWillAppear = false
 
         loadBarButtonItems()
         registerForNotifications()
@@ -80,7 +79,6 @@ class RecipeViewerViewController: UIViewController {
         super.viewWillDisappear(animated)
         
         notificationCenter.removeObserver( self )
-        application.isIdleTimerDisabled = false
     }
 
     
@@ -112,6 +110,12 @@ class RecipeViewerViewController: UIViewController {
     }
 
     
+    @objc func splitViewChanged( notification: NSNotification ) {
+        logTrace()
+        loadBarButtonItems()
+    }
+    
+    
     @objc func viewerRecipesUpdated( notification: NSNotification ) {
         logTrace()
         myPageViewController!.view.frame = viewPort.frame
@@ -136,6 +140,17 @@ class RecipeViewerViewController: UIViewController {
     }
 
     
+    @IBAction func showPrimaryBarButtonItemTouched(_ sender: UIBarButtonItem ) {
+        logTrace()
+        appDelegate.hidePrimaryView( false )
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5 ) {
+            self.loadBarButtonItems()
+        }
+        
+    }
+    
+    
     @IBAction func trashBarButtonItemTouched(_ sender : UIBarButtonItem ) {
         logTrace()
         let recipe = navigatorCentral.viewerRecipeArray[myPageControl.currentPage]
@@ -156,11 +171,23 @@ class RecipeViewerViewController: UIViewController {
     
     
     private func loadBarButtonItems() {
-        logTrace()
         let trashBarButtonItem = UIBarButtonItem.init(barButtonSystemItem: .trash, target: self, action: #selector( trashBarButtonItemTouched(_:) ) )
+        var rightBarButtonItemArray: [UIBarButtonItem] = []
         
-        navigationItem.leftBarButtonItem  = UIBarButtonItem.init( image: UIImage(named: "question" ), style: .plain, target: self, action: #selector( questionBarButtonTouched(_:) ) )
-        navigationItem.rightBarButtonItem = recipeDisplayViewControllers.count > 0 ? trashBarButtonItem : nil
+        if recipeDisplayViewControllers.count > 0 {
+            rightBarButtonItemArray.append( trashBarButtonItem )
+        }
+        
+        if appDelegate.hidePrimary && UIDevice.current.userInterfaceIdiom == .pad {
+            logTrace( "Adding showPrimary button" )
+            rightBarButtonItemArray.append( UIBarButtonItem.init(barButtonSystemItem: .organize, target: self, action: #selector( showPrimaryBarButtonItemTouched(_:) ) ) )
+        }
+        else {
+            logTrace()
+        }
+        
+        navigationItem.leftBarButtonItem   = UIBarButtonItem.init( image: UIImage(named: "question" ), style: .plain, target: self, action: #selector( questionBarButtonTouched(_:) ) )
+        navigationItem.rightBarButtonItems = rightBarButtonItemArray
     }
     
 
@@ -225,6 +252,7 @@ class RecipeViewerViewController: UIViewController {
     private func registerForNotifications() {
         logTrace()
         notificationCenter.addObserver( self, selector: #selector( ready(                notification: ) ), name: NSNotification.Name( rawValue: Notifications.ready                      ), object: nil )
+        notificationCenter.addObserver( self, selector: #selector( splitViewChanged(     notification: ) ), name: NSNotification.Name( rawValue: Notifications.splitViewChanged           ), object: nil )
         notificationCenter.addObserver( self, selector: #selector( viewerRecipesUpdated( notification: ) ), name: NSNotification.Name( rawValue: Notifications.viewerRecipesArrayReloaded ), object: nil )
     }
     

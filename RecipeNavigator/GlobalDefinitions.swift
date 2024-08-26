@@ -102,6 +102,7 @@ struct Notifications {
     static let recipeArrayReloaded          = "RecipeArrayReloaded"
     static let ready                        = "Ready"
     static let repoScanRequested            = "RepoScanRequested"
+    static let splitViewChanged             = "SplitViewChanged"
     static let transferringDatabase         = "TransferringDatabase"
     static let unableToConnect              = "UnableToConnect"
     static let updatingExternalDevice       = "UpdatingExternalDevice"
@@ -145,8 +146,8 @@ struct UserDefaultKeys {
     static let howToUseShown            = "HowToUseShown"
     static let lastAccessedRecipesGuid  = "LastAccessedPinsGuid"
     static let lastTabSelected          = "LastTabSelected"
-    static let networkPath              = "NetworkPath"
     static let networkAccessGranted     = "NetworkAccessGranted"
+    static let networkPath              = "NetworkPath"
     static let updatedOffline           = "UpdatedOffline"
 }
 

@@ -36,6 +36,8 @@ class RecipeListViewController: UIViewController {
         static let sortOptions = "SortOptionsViewController"
     }
     
+    private let appDelegate         = UIApplication.shared.delegate as! AppDelegate
+    private var application         = UIApplication.shared
     private let deviceAccessControl = DeviceAccessControl.sharedInstance
     private var navigatorCentral    = NavigatorCentral.sharedInstance
     private var sectionIndexTitles  : [String] = []
@@ -110,6 +112,12 @@ class RecipeListViewController: UIViewController {
         }
         
         registerForNotifications()
+        
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            application.isIdleTimerDisabled = false
+            logVerbose( "isIdleTimerDisabled[ %@ ]", stringFor( application.isIdleTimerDisabled ) )
+        }
+        
     }
     
     
@@ -118,6 +126,12 @@ class RecipeListViewController: UIViewController {
         super.viewWillDisappear( animated )
         
         NotificationCenter.default.removeObserver( self )
+
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            application.isIdleTimerDisabled = true
+            logVerbose( "isIdleTimerDisabled[ %@ ]", stringFor( application.isIdleTimerDisabled ) )
+        }
+        
     }
     
     
@@ -146,6 +160,12 @@ class RecipeListViewController: UIViewController {
 
     // MARK: Target / Action Methods
     
+    @IBAction func backBarButtonTouched(_ sender: UIBarButtonItem ) {
+        logTrace()
+        appDelegate.hidePrimaryView( true )
+    }
+
+    
     @IBAction func searchToggleBarButtonTouched(_ sender : UIBarButtonItem ) {
         searchEnabled = !searchEnabled
         
@@ -167,7 +187,7 @@ class RecipeListViewController: UIViewController {
     
     
     @IBAction func showAllBarButtonTouched(_ sender : UIBarButtonItem ) {
-//        logVerbose( "[ %@ ]", stringFor( showAllSections ) )
+        logVerbose( "[ %@ ]", stringFor( showAllSections ) )
         selectedSection = GlobalConstants.noSelection
         showAllSections = !showAllSections
         
@@ -265,22 +285,28 @@ class RecipeListViewController: UIViewController {
     
     private func loadBarButtonItems() {
 //        logTrace()
-        let sortDescriptor = navigatorCentral.sortDescriptor
-        let sortType       = sortDescriptor.0
+        var leftBarButtonItems: [UIBarButtonItem] = []
+        let searchImage       = UIImage(named: myTextField.isHidden ? "magnifyingGlass" : "hamburger" )
+        let sortDescriptor    = navigatorCentral.sortDescriptor
+        let sortType          = sortDescriptor.0
         
-        if sortType == SortOptions.byFilename {
-            navigationItem.leftBarButtonItem = nil
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            let title             = "< " + NSLocalizedString( "ButtonTitle.Back", comment: "Back" )
+            let backBarButtonItem = UIBarButtonItem.init( title: title, style: .plain, target: self, action: #selector( backBarButtonTouched(_: ) ) )
+
+            leftBarButtonItems.append( backBarButtonItem )
         }
-        else {
+
+        if sortType != SortOptions.byFilename {
             let arrowImage        = UIImage(named: showAllSections ? "arrowUp" : "arrowDown" )
             let leftBarButtonItem = UIBarButtonItem.init( image: arrowImage, style: .plain, target: self, action: #selector( showAllBarButtonTouched(_:) ) )
             
-            navigationItem.leftBarButtonItem = leftBarButtonItem
+            leftBarButtonItems.append( leftBarButtonItem )
         }
         
-        let searchImage = UIImage(named: myTextField.isHidden ? "magnifyingGlass" : "hamburger" )
-        
+
         navigationItem.rightBarButtonItem = UIBarButtonItem.init( image: searchImage, style: .plain, target: self, action: #selector( searchToggleBarButtonTouched(_:) ) )
+        navigationItem.leftBarButtonItems = leftBarButtonItems
     }
     
     
@@ -290,6 +316,7 @@ class RecipeListViewController: UIViewController {
             return
         }
         
+        logTrace()
         sortOptionsVC.delegate = self
         
         sortOptionsVC.modalPresentationStyle = .popover
@@ -313,6 +340,7 @@ class RecipeListViewController: UIViewController {
     
     
     private func scrollToLastSelectedItem() {
+        logTrace()
         let indexPath = lastAccessedRecipe()
         let sortType  = navigatorCentral.sortDescriptor.0
         

@@ -12,8 +12,16 @@ import UIKit
 
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-    let navigatorCentral = NavigatorCentral.sharedInstance
-    var window: UIWindow?
+    
+    // Public Definitions
+    var hidePrimary = false
+    var window      : UIWindow?
+    
+    
+    // Private Definitions
+    private let navigatorCentral   = NavigatorCentral.sharedInstance
+    private let notificationCenter = NotificationCenter.default
+    private var splitViewController: UISplitViewController!
 
     
     
@@ -27,6 +35,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         if #available(iOS 15, *) {
             UITableView.appearance().sectionHeaderTopPadding = 0.0
+        }
+        
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            setSplitViewControllerDelegate()
         }
         
         return true
@@ -58,6 +70,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     // MARK: Public Interfaces
 
+    func hidePrimaryView(_ isHidden: Bool ) {
+        if splitViewController != nil {
+            hidePrimary = isHidden
+
+            UIView.animate(withDuration: 0.5 ) { () -> Void in
+                self.splitViewController?.preferredDisplayMode = self.hidePrimary ? UISplitViewController.DisplayMode.secondaryOnly : UISplitViewController.DisplayMode.oneBesideSecondary
+            }
+            
+        }
+       
+        logVerbose( "hidePrimary[ %@ ]", stringFor( hidePrimary ) )
+        notificationCenter.post( name: NSNotification.Name( rawValue: Notifications.splitViewChanged ), object: self )
+    }
+    
+    
     func switchToMainApp() {
         logTrace()
         let     storyboardName = UIDevice.current.userInterfaceIdiom == .pad ? "Main_iPad" : "Main_iPhone"
@@ -77,6 +104,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     
     // MARK: Utility Methods (Private)
+    
+    private func setSplitViewControllerDelegate() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1 ) {
+            if let splitVC = self.window!.rootViewController as? UISplitViewController {
+                self.splitViewController          = splitVC
+//                self.splitViewController.delegate = self
+                self.splitViewController.presentsWithGesture = false
+                logTrace( "Captured pointer to SplitViewController" )
+            }
+            else {
+                logTrace( "ERROR!  Could NOT capture pointer to SplitViewController!" )
+            }
+
+        }
+
+    }
+    
     
     private func showPleaseWaitScreen() {
         logTrace()
@@ -127,4 +171,5 @@ extension AppDelegate: NavigatorCentralDelegate {
     
 
 }
+
 
