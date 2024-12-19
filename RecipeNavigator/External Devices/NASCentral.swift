@@ -220,7 +220,8 @@ class NASCentral: NSObject {
     
     private var currentCommand          : Command!
     private var currentFilename         = ""
-    private var dbFilenameArray         = [""]
+    private var dbDataArray             : [(String, Data)] = []
+    private var dbFilenameArray         : [String] = []
     private var delegate                : NASCentralDelegate?
     private let deviceAccessControl     = DeviceAccessControl.sharedInstance
     private var deviceUrlArray          = [URL].init()
@@ -893,7 +894,37 @@ extension NASCentral {
         
         loadDatabaseFilesIntoDeviceUrlArray()
         deleteFilesFromDevice()
-        readNextRootFileFromNas()
+        
+        if dbDataArray.count == 4 {
+            var allFilesTransferred = true
+            
+            for tuple in dbDataArray {
+                let fileUrl  = documentDirectoryURL.appendingPathComponent( tuple.0 )
+                let result   = fileManager.createFile( atPath: fileUrl.path, contents: tuple.1, attributes: nil )
+                
+                logVerbose( "%@ [ %@ ]", ( result ? "Created" : "FAILED to create" ), fileUrl.path )
+                
+                if !result {
+                    allFilesTransferred = false
+                    break
+                }
+                
+            }
+            
+            if allFilesTransferred {
+                self.delegate?.nasCentral( self, didCopyDatabaseFromNasToDevice:  true )
+            }
+            else {
+                deleteFilesFromDevice()
+                readNextRootFileFromNas()
+            }
+            
+        }
+        else {
+            readNextRootFileFromNas()
+        }
+        
+        dbDataArray = []
     }
     
     
@@ -924,7 +955,9 @@ extension NASCentral {
         dbFilenameArray = [Filenames.database, Filenames.databaseShm, Filenames.databaseWal, Filenames.lastUpdated]
         self.delegate   = delegate
         missingDbFiles  = []
+        dbDataArray     = []
 
+        // We then fetch them one at a time starting with the first one in the dbFilenameArray
         let     fullPath = dataStoreAccessKey.path + "/" + Filenames.database
 
         smbCentral.readFileAt( fullPath, self )
@@ -1442,7 +1475,10 @@ extension NASCentral: SMBCentralDelegate {
             
         case .FetchDbFiles:                 let dbFilename = dbFilenameArray.first!
             
-                                            if !didReadFile {
+                                            if didReadFile {
+                                                dbDataArray.append( ( dbFilename, fileData ) )
+                                            }
+                                            else{
                                                 logVerbose( "FetchDbFiles - Could NOT Read [ %@ ] ", dbFilename )
                                                 missingDbFiles.append( dbFilename )
                                             }
@@ -1856,8 +1892,8 @@ struct LastUpdatedFileCompareResult {
     static let deviceIsNewer = Int( 0 )
     static let equal         = Int( 1 )
     static let nasIsNewer    = Int( 2 )
-    static let cloudIsNewer  = Int( 3 )
-    static let fileNotFound  = Int( 4 )
+//    static let cloudIsNewer  = Int( 3 )
+    static let fileNotFound  = Int( 3 )
 }
 
 
@@ -1868,7 +1904,7 @@ func descriptionForCompare(_ lastUpdatedCompare: Int ) -> String {
     case LastUpdatedFileCompareResult.deviceIsNewer:    description = "Device is Newer"
     case LastUpdatedFileCompareResult.equal:            description = "Equal"
     case LastUpdatedFileCompareResult.nasIsNewer:       description = "NAS is Newer"
-    case LastUpdatedFileCompareResult.cloudIsNewer:     description = "Cloud is Newer"
+//    case LastUpdatedFileCompareResult.cloudIsNewer:     description = "Cloud is Newer"
     case LastUpdatedFileCompareResult.fileNotFound:     description = "File NOT Found"
     default:    break
     }

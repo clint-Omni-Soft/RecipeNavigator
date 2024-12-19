@@ -2,7 +2,7 @@
 //  ViewerRecipes+CoreDataProperties.swift
 //  RecipeNavigator
 //
-//  Created by Clint Shank on 5/23/24.
+//  Created by Clint Shank on 10/23/24.
 //
 //
 

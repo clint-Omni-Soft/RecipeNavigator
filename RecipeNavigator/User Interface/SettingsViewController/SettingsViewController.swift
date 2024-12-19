@@ -15,8 +15,7 @@ class SettingsViewController: UIViewController {
     
     // MARK: Public Variables
     
-    @IBOutlet weak var myActivityIndicator : UIActivityIndicatorView!
-    @IBOutlet weak var myTableView         : UITableView!
+    @IBOutlet weak var myTableView: UITableView!
     
     
     
@@ -39,6 +38,7 @@ class SettingsViewController: UIViewController {
     
     private struct StoryboardIds {
         static let about             = "AboutViewController"
+        static let finder            = "FinderViewController"
         static let howToUse          = "HowToUseViewController"
         static let keywordManager    = "KeywordManagerViewController"
         static let nasDriveSelector  = "NasDriveSelectorViewController"
@@ -48,6 +48,8 @@ class SettingsViewController: UIViewController {
     }
     
     private var canSeeNasFolders    = false
+    private let dataSourceCentral   = DataSourceCentral.sharedInstance
+    private var fileDescriptorArray = [FileDescriptor]()
     private var navigatorCentral    = NavigatorCentral.sharedInstance
     private var notificationCenter  = NotificationCenter.default
     private var optionArray         = [ NSLocalizedString( "Title.About",                comment: "About"                  ),
@@ -56,8 +58,9 @@ class SettingsViewController: UIViewController {
                                         NSLocalizedString( "Title.RecipeRepository",     comment: "Recipe Repository"      ),
                                         NSLocalizedString( "Title.ScanRecipeRepository", comment: "Scan Recipe Repository" ) ]
     private var showHowToUse        = true
+    private var showFinder          = false
     private let userDefaults        = UserDefaults.standard
-
+    
 
     
     // MARK: UIViewController Lifecycle Methods
@@ -72,9 +75,9 @@ class SettingsViewController: UIViewController {
             optionArray.append( NSLocalizedString( "Title.UserAssignedDeviceName", comment: "User Assigned Device Name" ) )
         }
 
-        if runningInSimulator() {   // Testing
-            optionArray.append( "Testing" )
-        }
+//        if runningInSimulator() {   // Testing
+//            optionArray.append( "Testing" )
+//        }
         
         if let _ = userDefaults.string(forKey: UserDefaultKeys.howToUseShown ) {
             showHowToUse = false
@@ -90,18 +93,6 @@ class SettingsViewController: UIViewController {
         logTrace()
         super.viewWillAppear( animated )
         
-        if !navigatorCentral.stayOffline && ( navigatorCentral.dataStoreLocation == .nas || navigatorCentral.dataStoreLocation == .shareNas ) {
-            canSeeNasFolders = false
-            NASCentral.sharedInstance.canSeeNasFolders( self )
-
-            myActivityIndicator.isHidden = false
-            myActivityIndicator.startAnimating()
-        }
-        else {
-            myActivityIndicator.isHidden = true
-            myActivityIndicator.stopAnimating()
-        }
-        
         loadBarButtonItems()
         registerForNotifications()
         
@@ -114,7 +105,7 @@ class SettingsViewController: UIViewController {
             
         }
         else if navigatorCentral.dataStoreLocation != .device && !flagIsPresentInUserDefaults( UserDefaultKeys.deviceName ) {
-            presentAlert( title:   NSLocalizedString( "AlertTitle.DeviceNameRequired",   comment: "Device Name is Required for NAS or iCloud" ),
+            presentAlert( title:   NSLocalizedString( "AlertTitle.DeviceNameRequired",   comment: "Device Name is Required for NAS" ),
                           message: NSLocalizedString( "AlertMessage.DeviceNameRequired", comment: "Please go to the Settings tab, tap on the 'User Assigned Device Name' entry in the table and enter a name for this device." ) )
         }
 
@@ -150,6 +141,12 @@ class SettingsViewController: UIViewController {
 
     // MARK: Target/Action Methods
     
+    @IBAction func actionBarButtonItemTouched(_ sender : UIBarButtonItem ) {
+        logTrace()
+        launchFinderViewController()
+    }
+    
+    
     @IBAction func questionBarButtonTouched(_ sender : UIBarButtonItem ) {
         let     message = String( format: NSLocalizedString( "AlertMessage.SelectHowToUseForInfo", comment: "Select '%@' for helpful information on '%@', '%@' and '%@'." ),
                                           NSLocalizedString( "Title.HowToUse",              comment: "How to Use"             ),
@@ -164,9 +161,30 @@ class SettingsViewController: UIViewController {
 
     // MARK: Utility Methods
 
+    private func launchFinderViewController() {
+        guard let finderVC : FinderViewController = iPhoneViewControllerWithStoryboardId( storyboardId: StoryboardIds.finder ) as? FinderViewController else {
+            logTrace( "Error!  Unable to load FinderViewController!" )
+            return
+        }
+        
+        logTrace()
+        navigationController?.pushViewController( finderVC, animated: true )
+    }
+    
+    
     private func loadBarButtonItems() {
         logTrace()
-        navigationItem.leftBarButtonItem = UIBarButtonItem.init( image: UIImage(named: "question" ), style: .plain, target: self, action: #selector( questionBarButtonTouched(_:) ) )
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            configureBackBarButtonItem()
+        }
+        
+        var rightBarButtonItems = [UIBarButtonItem.init( image: UIImage(named: "question" ), style: .plain, target: self, action: #selector( questionBarButtonTouched(_:) ) )]
+        
+        if showFinder {
+            rightBarButtonItems.append( UIBarButtonItem.init(  barButtonSystemItem: .action, target: self, action: #selector( actionBarButtonItemTouched(_:) ) ) )
+        }
+        
+        navigationItem.rightBarButtonItems = rightBarButtonItems
     }
     
     
@@ -175,24 +193,6 @@ class SettingsViewController: UIViewController {
         notificationCenter.addObserver( self, selector: #selector( deviceNameNotSet(  notification: ) ), name: NSNotification.Name( rawValue: Notifications.deviceNameNotSet  ), object: nil )
         notificationCenter.addObserver( self, selector: #selector( repoScanRequested( notification: ) ), name: NSNotification.Name( rawValue: Notifications.repoScanRequested ), object: nil )
     }
-    
-}
-
-
-
-// MARK: NASCentral Delegate Methods
-
-extension SettingsViewController: NASCentralDelegate {
-    
-    func nasCentral(_ nasCentral: NASCentral, canSeeNasFolders: Bool) {
-        logVerbose( "[ %@ ]", stringFor( canSeeNasFolders ) )
-        
-        self.canSeeNasFolders = canSeeNasFolders
-        
-        myActivityIndicator.stopAnimating()
-        myActivityIndicator.isHidden = true
-    }
-
     
 }
 
@@ -238,6 +238,7 @@ extension SettingsViewController : UITableViewDelegate {
         case CellIndexes.keywordManager:        launchKeywordManagerViewController()
         case CellIndexes.recipeRepository:      launchRecipeLocationViewController()
         case CellIndexes.scanRepository:        launchScanRepoViewController()
+//        case CellIndexes.transferToCloud:       transferDeviceRecipesToCloud()
         case CellIndexes.testing:               launchTestingViewController()
         default:                                break
         }
@@ -386,5 +387,29 @@ extension SettingsViewController : UITableViewDelegate {
         
     }
     
+  
+//    private func transferDeviceRecipesToCloud() {
+//        logTrace()
+//        dataSourceCentral.transferSharedFilesToCloud( self )
+//    }
+    
     
 }
+
+
+
+// MARK: DataSourceCentralDelegate Methods
+
+//extension SettingsViewController: DataSourceCentralDelegate {
+//    
+//    func dataSourceCentral(_ dataSourceCentral: DataSourceCentral, didTranferFiles: Bool, fileUrlArray: [URL] ) {
+//        logVerbose( "[ %@ ], transferred [ %d ] recipes", stringFor( didTranferFiles ), fileUrlArray.count )
+//
+////        myActivityIndicator.isHidden = true
+////        myActivityIndicator.stopAnimating()
+//        
+//        // TODO: Display files transferred
+//    }
+//    
+//
+//}

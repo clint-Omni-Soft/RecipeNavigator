@@ -13,229 +13,229 @@ import CoreData
 
 // MARK: CloudCentralDelegate Methods (Public)
 
-extension NavigatorCentral: CloudCentralDelegate {
-    
-    func cloudCentral(_ cloudCentral: CloudCentral, canSeeCloud: Bool ) {
-       logVerbose( "[ %@ ]", stringFor( canSeeCloud ) )
-       
-       if stayOffline {
-           logTrace( "Stay Offline!" )
-       }
-       else if canSeeCloud {
-           cloudCentral.startSession( self )
-           
-           notificationCenter.post( name: NSNotification.Name( rawValue: Notifications.connectingToExternalDevice ), object: self )
-       }
-       else {
-           deviceAccessControl.initWith(ownerName: "Unknown", locked: true, byMe: false, updating: false)
-           logVerbose( "%@", deviceAccessControl.descriptor() )
-           
-           notificationCenter.post( name: NSNotification.Name( rawValue: Notifications.cannotSeeExternalDevice ), object: self )
-       }
-       
-    }
-
-
-    func cloudCentral(_ cloudCentral: CloudCentral, didCompareLastUpdatedFiles: Int, lastUpdatedBy: String ) {
-       logVerbose( "[ %@ ]", descriptionForCompare( didCompareLastUpdatedFiles ) )
-       
-        externalDeviceLastUpdatedBy = lastUpdatedBy
-        
-       if didCompareLastUpdatedFiles == LastUpdatedFileCompareResult.deviceIsNewer {
-           if deviceAccessControl.locked && deviceAccessControl.byMe {
-               deviceAccessControl.updating = true
-               notificationCenter.post( name: NSNotification.Name( rawValue: Notifications.transferringDatabase ), object: self )
-               
-               cloudCentral.copyDatabaseFromDeviceToCloud( self )
-           }
-           
-       }
-       else if didCompareLastUpdatedFiles == LastUpdatedFileCompareResult.cloudIsNewer {
-           logTrace( "Verify that we can access all the database files before we start the tranfer" )
-           missingDbFiles = []
-           
-           cloudCentral.fetchDbFiles( self )
-       }
-       else {  // This tells the ReceivingVC to reload the barButtonItems and table data
-           notificationCenter.post( name: NSNotification.Name( rawValue: Notifications.ready ), object: self )
-       }
-
-    }
-
-
-    func cloudCentral(_ cloudCentral: CloudCentral, didCopyAllImagesFromCloudToDevice: Bool) {
-       logVerbose( "[ %@ ] ... SBH!", stringFor( didCopyAllImagesFromCloudToDevice ) )
-    }
-
-
-    func cloudCentral(_ cloudCentral: CloudCentral, didCopyAllImagesFromDeviceToCloud: Bool) {
-       logVerbose( "[ %@ ] ... SBH!", stringFor( didCopyAllImagesFromDeviceToCloud ) )
-    }
-
-
-    func cloudCentral(_ cloudCentral: CloudCentral, didCopyDatabaseFromCloudToDevice: Bool ) {
-       logVerbose( "[ %@ ]", stringFor( didCopyDatabaseFromCloudToDevice ) )
-        deviceAccessControl.updating = false
-
-        cloudCentral.unlockCloud( self )
-
-        notificationCenter.post( name: NSNotification.Name( rawValue: Notifications.ready ), object: self )
-
-       if didCopyDatabaseFromCloudToDevice && !openInProgress {
-           let     appDelegate = UIApplication.shared.delegate as! AppDelegate
-           
-           logTrace( "opening database" )
-           openDatabaseWith( delegate != nil ? delegate! : appDelegate )
-       }
-       
-    }
-
-
-    func cloudCentral(_ cloudCentral: CloudCentral, didCopyDatabaseFromDeviceToCloud: Bool ) {
-       logVerbose( "[ %@ ]", stringFor( didCopyDatabaseFromDeviceToCloud ) )
-       
-       if backgroundTaskID != UIBackgroundTaskIdentifier.invalid {
-           cloudCentral.unlockCloud( self )
-       }
-
-        deviceAccessControl.updating = false
- 
-        notificationCenter.post( name: NSNotification.Name( rawValue: Notifications.ready ), object: self )
-    }
-
-
-    func cloudCentral(_ cloudCentral: CloudCentral, didDeleteImage: Bool) {
-       logVerbose( "[ %@ ]", stringFor( didDeleteImage ) )
-    }
-
-
-    func cloudCentral(_ cloudCentral: CloudCentral, didEndSession: Bool ) {
-       logVerbose( "[ %@ ]", stringFor( didEndSession ) )
-
-       if backgroundTaskID != UIBackgroundTaskIdentifier.invalid {
-           UIApplication.shared.endBackgroundTask( backgroundTaskID )
-           backgroundTaskID = UIBackgroundTaskIdentifier.invalid
-       }
-       
-    }
-
-
-    func cloudCentral(_ cloudCentral: CloudCentral, didFetch imageNames: [String] ) {
-        logTrace()
-        delegate?.navigatorCentral( self, didFetch: imageNames )  // Tailored to each implementation
-    }
-
-    
-    func cloudCentral(_ cloudCentral: CloudCentral, didFetchImage: Bool, filename: String, image: UIImage ) {
-//        logVerbose( "[ %@ ]  filename[ %@ ]", stringFor( didFetchImage ), filename )
-
-        if didFetchImage {
-            let     imageData            = image.pngData()!
-            let     picturesDirectoryURL = URL.init( fileURLWithPath: pictureDirectoryPath() )
-            let     pictureFileURL       = picturesDirectoryURL.appendingPathComponent( filename )
-            
-//            guard let imageData = image.jpegData( compressionQuality: 1.0 ) ?? image.pngData() else {
-//                logVerbose( "ERROR!  Could NOT convert UIImage to Data! [ %@ ]", filename )
-//                return
+//extension NavigatorCentral: CloudCentralDelegate {
+//    
+//    func cloudCentral(_ cloudCentral: CloudCentral, canSeeCloud: Bool ) {
+//       logVerbose( "[ %@ ]", stringFor( canSeeCloud ) )
+//       
+//       if stayOffline {
+//           logTrace( "Stay Offline!" )
+//       }
+//       else if canSeeCloud {
+//           cloudCentral.startSession( self )
+//           
+//           notificationCenter.post( name: NSNotification.Name( rawValue: Notifications.connectingToExternalDevice ), object: self )
+//       }
+//       else {
+//           deviceAccessControl.initWith(ownerName: "Unknown", locked: true, byMe: false, updating: false)
+//           logVerbose( "%@", deviceAccessControl.descriptor() )
+//           
+//           notificationCenter.post( name: NSNotification.Name( rawValue: Notifications.cannotSeeExternalDevice ), object: self )
+//       }
+//       
+//    }
+//
+//
+//    func cloudCentral(_ cloudCentral: CloudCentral, didCompareLastUpdatedFiles: Int, lastUpdatedBy: String ) {
+//       logVerbose( "[ %@ ]", descriptionForCompare( didCompareLastUpdatedFiles ) )
+//       
+//        externalDeviceLastUpdatedBy = lastUpdatedBy
+//        
+//       if didCompareLastUpdatedFiles == LastUpdatedFileCompareResult.deviceIsNewer {
+//           if deviceAccessControl.locked && deviceAccessControl.byMe {
+//               deviceAccessControl.updating = true
+//               notificationCenter.post( name: NSNotification.Name( rawValue: Notifications.transferringDatabase ), object: self )
+//               
+//               cloudCentral.copyDatabaseFromDeviceToCloud( self )
+//           }
+//           
+//       }
+//       else if didCompareLastUpdatedFiles == LastUpdatedFileCompareResult.cloudIsNewer {
+//           logTrace( "Verify that we can access all the database files before we start the tranfer" )
+//           missingDbFiles = []
+//           
+//           cloudCentral.fetchDbFiles( self )
+//       }
+//       else {  // This tells the ReceivingVC to reload the barButtonItems and table data
+//           notificationCenter.post( name: NSNotification.Name( rawValue: Notifications.ready ), object: self )
+//       }
+//
+//    }
+//
+//
+//    func cloudCentral(_ cloudCentral: CloudCentral, didCopyATOSFromCloudToDevice: Bool) {
+//       logVerbose( "[ %@ ] ... SBH!", stringFor( didCopyATOSFromCloudToDevice ) )
+//    }
+//
+//
+//    func cloudCentral(_ cloudCentral: CloudCentral, didCopyATOSFromDeviceToCloud: Bool) {
+//       logVerbose( "[ %@ ] ... SBH!", stringFor( didCopyATOSFromDeviceToCloud ) )
+//    }
+//
+//
+//    func cloudCentral(_ cloudCentral: CloudCentral, didCopyDatabaseFromCloudToDevice: Bool ) {
+//       logVerbose( "[ %@ ]", stringFor( didCopyDatabaseFromCloudToDevice ) )
+//        deviceAccessControl.updating = false
+//
+//        cloudCentral.unlockCloud( self )
+//
+//        notificationCenter.post( name: NSNotification.Name( rawValue: Notifications.ready ), object: self )
+//
+//       if didCopyDatabaseFromCloudToDevice && !openInProgress {
+//           let     appDelegate = UIApplication.shared.delegate as! AppDelegate
+//           
+//           logTrace( "opening database" )
+//           openDatabaseWith( delegate != nil ? delegate! : appDelegate )
+//       }
+//       
+//    }
+//
+//
+//    func cloudCentral(_ cloudCentral: CloudCentral, didCopyDatabaseFromDeviceToCloud: Bool ) {
+//       logVerbose( "[ %@ ]", stringFor( didCopyDatabaseFromDeviceToCloud ) )
+//       
+//       if backgroundTaskID != UIBackgroundTaskIdentifier.invalid {
+//           cloudCentral.unlockCloud( self )
+//       }
+//
+//        deviceAccessControl.updating = false
+// 
+//        notificationCenter.post( name: NSNotification.Name( rawValue: Notifications.ready ), object: self )
+//    }
+//
+//
+//    func cloudCentral(_ cloudCentral: CloudCentral, didDeleteRepoFile: Bool) {
+//       logVerbose( "[ %@ ]", stringFor( didDeleteRepoFile ) )
+//    }
+//
+//
+//    func cloudCentral(_ cloudCentral: CloudCentral, didEndSession: Bool ) {
+//       logVerbose( "[ %@ ]", stringFor( didEndSession ) )
+//
+//       if backgroundTaskID != UIBackgroundTaskIdentifier.invalid {
+//           UIApplication.shared.endBackgroundTask( backgroundTaskID )
+//           backgroundTaskID = UIBackgroundTaskIdentifier.invalid
+//       }
+//       
+//    }
+//
+//
+//    func cloudCentral(_ cloudCentral: CloudCentral, didFetch imageNames: [String] ) {
+//        logTrace()
+//        delegate?.navigatorCentral( self, didFetch: imageNames )  // Tailored to each implementation
+//    }
+//
+//    
+//    func cloudCentral(_ cloudCentral: CloudCentral, didFetchImage: Bool, filename: String, image: UIImage ) {
+////        logVerbose( "[ %@ ]  filename[ %@ ]", stringFor( didFetchImage ), filename )
+//
+//        if didFetchImage {
+//            let     imageData            = image.pngData()!
+//            let     picturesDirectoryURL = URL.init( fileURLWithPath: pictureDirectoryPath() )
+//            let     pictureFileURL       = picturesDirectoryURL.appendingPathComponent( filename )
+//            
+////            guard let imageData = image.jpegData( compressionQuality: 1.0 ) ?? image.pngData() else {
+////                logVerbose( "ERROR!  Could NOT convert UIImage to Data! [ %@ ]", filename )
+////                return
+////            }
+//            
+//            do {
+//                try imageData.write( to: pictureFileURL, options: .atomic )
+//                logVerbose( "Saved image to file named[ %@ ]", filename )
 //            }
-            
-            do {
-                try imageData.write( to: pictureFileURL, options: .atomic )
-                logVerbose( "Saved image to file named[ %@ ]", filename )
-            }
-            catch let error as NSError {
-                logVerbose( "ERROR!  Failed to save image for [ %@ ] ... Error[ %@ ]", filename, error.localizedDescription )
-            }
-            
-        }
-        
-        guard let imageRequest = imageRequestQueue.first else {
-            logTrace( "ERROR!  Unable to remove request from front of queue!" )
-            return
-        }
-
-        let     delegate  = imageRequest.1
-        let     imageName = imageRequest.0
-        
-        imageRequestQueue.remove( at: 0 )
-        
-        if imageName != filename {
-            logVerbose( "ERROR!  Image returned[ %@ ] is not what was requested [ %@ ]", filename, imageName )
-        }
-        
-        DispatchQueue.main.async {
-            delegate.navigatorCentral( self, didFetchImage: didFetchImage, filename: filename, image : image )  // Tailored to each implementation
-
-            if self.imageRequestQueue.count == 0 {
-                self.notificationCenter.post( name: NSNotification.Name( rawValue: Notifications.ready ), object: self )
-            }
-
-        }
-                
-    }
-
-
-    func cloudCentral(_ cloudCentral: CloudCentral, didLockCloud: Bool ) {
-        logVerbose( "didLockCloud[ %@ ] ... %@", stringFor( didLockCloud ), deviceAccessControl.descriptor() )
-
-        if deviceAccessControl.updating {
-            notificationCenter.post( name: NSNotification.Name( rawValue: Notifications.updatingExternalDevice ), object: self )
-        }
-        else if deviceAccessControl.locked && !deviceAccessControl.byMe {
-            notificationCenter.post( name: NSNotification.Name( rawValue: Notifications.externalDeviceLocked ), object: self )
-        }
-        else {
-            cloudCentral.compareLastUpdatedFiles( self )
-        }
-
-    }
-
-
-    func cloudCentral(_ cloudCentral: CloudCentral, didSaveImageData: Bool, filename: String) {
-        logVerbose( "[ %@ ]", stringFor( didSaveImageData ) )
-        self.delegate?.navigatorCentral( self, didSaveImageData: didSaveImageData )  // Tailored to each implementation
-    }
-
-
-    func cloudCentral(_ cloudCentral: CloudCentral, didStartSession: Bool ) {
-       logVerbose( "[ %@ ]", stringFor( didStartSession ) )
-       
-       if didStartSession {
-           cloudCentral.lockCloud( self )
-       }
-       else {
-           notificationCenter.post( name: NSNotification.Name( rawValue: Notifications.unableToConnect ), object: self )
-       }
-       
-    }
-
-
-    func cloudCentral(_ cloudCentral: CloudCentral, didUnlockCloud: Bool) {
-       logVerbose( "[ %@ ]", stringFor( didUnlockCloud ) )
-
-       cloudCentral.endSession( self )
-    }
-       
-       
-    func cloudCentral(_ cloudCentral: CloudCentral, missingDbFiles: [String] ) {
-        logVerbose( "[ %@ ]", missingDbFiles )
-        self.missingDbFiles = missingDbFiles
-        
-        if missingDbFiles.count == 0 {
-            didOpenDatabase = false
-            deviceAccessControl.updating = true
-            notificationCenter.post( name: NSNotification.Name( rawValue: Notifications.transferringDatabase ), object: self )
-
-            cloudCentral.copyDatabaseFromCloudToDevice( self )
-        }
-        else {
-            notificationCenter.post( name: NSNotification.Name( rawValue: Notifications.cannotReadAllDbFiles ), object: self )
-        }
-
-    }
-        
-    
-}
+//            catch let error as NSError {
+//                logVerbose( "ERROR!  Failed to save image for [ %@ ] ... Error[ %@ ]", filename, error.localizedDescription )
+//            }
+//            
+//        }
+//        
+//        guard let imageRequest = imageRequestQueue.first else {
+//            logTrace( "ERROR!  Unable to remove request from front of queue!" )
+//            return
+//        }
+//
+//        let     delegate  = imageRequest.1
+//        let     imageName = imageRequest.0
+//        
+//        imageRequestQueue.remove( at: 0 )
+//        
+//        if imageName != filename {
+//            logVerbose( "ERROR!  Image returned[ %@ ] is not what was requested [ %@ ]", filename, imageName )
+//        }
+//        
+//        DispatchQueue.main.async {
+//            delegate.navigatorCentral( self, didFetchImage: didFetchImage, filename: filename, image : image )  // Tailored to each implementation
+//
+//            if self.imageRequestQueue.count == 0 {
+//                self.notificationCenter.post( name: NSNotification.Name( rawValue: Notifications.ready ), object: self )
+//            }
+//
+//        }
+//                
+//    }
+//
+//
+//    func cloudCentral(_ cloudCentral: CloudCentral, didLockCloud: Bool ) {
+//        logVerbose( "didLockCloud[ %@ ] ... %@", stringFor( didLockCloud ), deviceAccessControl.descriptor() )
+//
+//        if deviceAccessControl.updating {
+//            notificationCenter.post( name: NSNotification.Name( rawValue: Notifications.updatingExternalDevice ), object: self )
+//        }
+//        else if deviceAccessControl.locked && !deviceAccessControl.byMe {
+//            notificationCenter.post( name: NSNotification.Name( rawValue: Notifications.externalDeviceLocked ), object: self )
+//        }
+//        else {
+//            cloudCentral.compareLastUpdatedFiles( self )
+//        }
+//
+//    }
+//
+//
+//    func cloudCentral(_ cloudCentral: CloudCentral, didSaveFileData: Bool, filename: String) {
+//        logVerbose( "[ %@ ]", stringFor( didSaveFileData ) )
+//        self.delegate?.navigatorCentral( self, didSaveImageData: didSaveFileData )  // Tailored to each implementation
+//    }
+//
+//
+//    func cloudCentral(_ cloudCentral: CloudCentral, didStartSession: Bool ) {
+//       logVerbose( "[ %@ ]", stringFor( didStartSession ) )
+//       
+//       if didStartSession {
+//           cloudCentral.lockCloud( self )
+//       }
+//       else {
+//           notificationCenter.post( name: NSNotification.Name( rawValue: Notifications.unableToConnect ), object: self )
+//       }
+//       
+//    }
+//
+//
+//    func cloudCentral(_ cloudCentral: CloudCentral, didUnlockCloud: Bool) {
+//       logVerbose( "[ %@ ]", stringFor( didUnlockCloud ) )
+//
+//       cloudCentral.endSession( self )
+//    }
+//       
+//       
+//    func cloudCentral(_ cloudCentral: CloudCentral, missingDbFiles: [String] ) {
+//        logVerbose( "[ %@ ]", missingDbFiles )
+//        self.missingDbFiles = missingDbFiles
+//        
+//        if missingDbFiles.count == 0 {
+//            didOpenDatabase = false
+//            deviceAccessControl.updating = true
+//            notificationCenter.post( name: NSNotification.Name( rawValue: Notifications.transferringDatabase ), object: self )
+//
+//            cloudCentral.copyDatabaseFromCloudToDevice( self )
+//        }
+//        else {
+//            notificationCenter.post( name: NSNotification.Name( rawValue: Notifications.cannotReadAllDbFiles ), object: self )
+//        }
+//
+//    }
+//        
+//    
+//}
 
 
 
@@ -271,9 +271,7 @@ extension NavigatorCentral {
         
         switch locationString {
         case DataLocationName.device:      location = .device
-        case DataLocationName.iCloud:      location = .iCloud
         case DataLocationName.nas:         location = .nas
-        case DataLocationName.shareCloud:  location = .shareCloud
         case DataLocationName.shareNas:    location = .shareNas
         default:                           location = .notAssigned
         }
@@ -287,9 +285,7 @@ extension NavigatorCentral {
         
         switch location {
         case .device:       name = DataLocationName.device
-        case .iCloud:       name = DataLocationName.iCloud
         case .nas:          name = DataLocationName.nas
-        case .shareCloud:   name = DataLocationName.shareCloud
         case .shareNas:     name = DataLocationName.shareNas
         default:            name = DataLocationName.notAssigned
         }
@@ -335,11 +331,7 @@ extension NavigatorCentral {
             
         }
         
-        if dataStoreLocation == .iCloud || dataStoreLocation == .shareCloud {
-            logTrace( "Deleting from the Cloud" )
-            self.cloudCentral.deleteImage( name, self )
-        }
-        else if dataStoreLocation == .nas || dataStoreLocation == .shareNas {
+        if dataStoreLocation == .nas || dataStoreLocation == .shareNas {
             if stayOffline {
                 logTrace( "stayOffline!  queue request" )
                 createImageRequestFor( OfflineImageRequestCommands.delete, filename: name )
@@ -356,17 +348,9 @@ extension NavigatorCentral {
     
     
     func downloadFromRemote(_ imageName: String, _ delegate: NavigatorCentralDelegate ) {  // Tailored to each implementation
-        logVerbose( "Requesting [ %@ ] from %@ ...", imageName, ( dataStoreLocation == .iCloud || dataStoreLocation == .shareCloud ) ? "Cloud": "NAS" )
-
-        if dataStoreLocation == .iCloud || dataStoreLocation == .shareCloud {
-            imageRequestQueue.append( (imageName, delegate ) )
-            cloudCentral.fetchImage( imageName, self )
-        }
-        else if dataStoreLocation == .nas || dataStoreLocation == .shareNas {
-            imageRequestQueue.append( (imageName, delegate ) )
-            nasCentral.fetchImage( imageName, self )
-        }
-
+        logVerbose( "Requesting [ %@ ] from NAS ...", imageName )
+        imageRequestQueue.append( (imageName, delegate ) )
+        nasCentral.fetchImage( imageName, self )
     }
 
     
@@ -442,35 +426,21 @@ extension NavigatorCentral {
         self.delegate = delegate
         
         if !stayOffline {
-            if dataStoreLocation == .iCloud || dataStoreLocation == .shareCloud {
-                cloudCentral.fetchImageNames( self )
-            }
-            else if dataStoreLocation == .nas || dataStoreLocation == .shareNas {
-                nasCentral.fetchImageNames( self )
-            }
-
+            nasCentral.fetchImageNames( self )
         }
         
     }
     
     
-    func fetchMissingImages(_ imageName: String, _ descriptor: String,  _ delegate: NavigatorCentralDelegate ) -> Int {   // Tailored to each implementation
+    func fetchMissingDeviceImages(_ imageName: String, _ descriptor: String,  _ delegate: NavigatorCentralDelegate ) -> Int {   // Tailored to each implementation
         var     imagesRequested = 0
         
         if !imageExistsWith( imageName ) {
             imagesRequested += 1
             
-            if dataStoreLocation == .iCloud || dataStoreLocation == .shareCloud {
-                logVerbose( "Image for [ %@ ] not on disk!  \n    Requesting [ %@ ] from the Cloud ...", descriptor, imageName )
-                imageRequestQueue.append( (imageName, delegate ) )
-                cloudCentral.fetchImage( imageName, self )
-            }
-            else if dataStoreLocation == .nas || dataStoreLocation == .shareNas {
-                logVerbose( "Image for [ %@ ] not on disk!  \n    Requesting [ %@ ] from NAS ...", descriptor, imageName )
-                imageRequestQueue.append( (imageName, delegate ) )
-                nasCentral.fetchImage( imageName, self )
-            }
-            
+            logVerbose( "Image for [ %@ ] not on disk!  \n    Requesting [ %@ ] from NAS ...", descriptor, imageName )
+            imageRequestQueue.append( (imageName, delegate ) )
+            nasCentral.fetchImage( imageName, self )
         }
         
         return imagesRequested
@@ -501,20 +471,12 @@ extension NavigatorCentral {
             return result
         }
         
-        if dataStoreLocation == .iCloud || dataStoreLocation == .shareCloud {
-            logVerbose( "Image for [ %@ ] not on disk!  Requesting from the Cloud [ %@ ]", descriptor, name )
+        if !stayOffline {
+            logVerbose( "Image for [ %@ ] not on disk!  Requesting from NAS [ %@ ]", descriptor, name )
             imageRequestQueue.append( (name, delegate) )
-            cloudCentral.fetchImage( name, self )
+            nasCentral.fetchImage( name, self )
         }
-        else if dataStoreLocation == .nas || dataStoreLocation == .shareNas {
-            if !stayOffline {
-                logVerbose( "Image for [ %@ ] not on disk!  Requesting from NAS [ %@ ]", descriptor, name )
-                imageRequestQueue.append( (name, delegate) )
-                nasCentral.fetchImage( name, self )
-            }
 
-        }
-        
         return ( false, UIImage.init() )
     }
     
@@ -635,17 +597,11 @@ extension NavigatorCentral {
             
             logVerbose( "saved compressed[ %@ ] image to [ %@ ]", stringFor( compressed ), imageFilename )
             
-            if dataStoreLocation == .iCloud || dataStoreLocation == .shareCloud {
-                cloudCentral.saveImageData( imageData, filename: imageFilename, self )
+            if stayOffline {
+                createImageRequestFor( OfflineImageRequestCommands.save, filename: imageFilename )
             }
-            else if dataStoreLocation == .nas || dataStoreLocation == .shareNas {
-                if stayOffline {
-                    createImageRequestFor( OfflineImageRequestCommands.save, filename: imageFilename )
-                }
-                else {
-                    nasCentral.saveImageData( imageData, filename: imageFilename, self )
-                }
-                
+            else {
+                nasCentral.saveImageData( imageData, filename: imageFilename, self )
             }
             
             return true
@@ -659,7 +615,6 @@ extension NavigatorCentral {
  
     
     func uploadImageNamed(_ imageName: String, _ delegate: NavigatorCentralDelegate ) {  // Tailored to each implementation
-        logTrace()
         let     directoryPath        = pictureDirectoryPath()
         let     picturesDirectoryURL = URL.init( fileURLWithPath: directoryPath )
         let     imageFileURL         = picturesDirectoryURL.appendingPathComponent( imageName )
@@ -668,15 +623,10 @@ extension NavigatorCentral {
             let     imageFileData = fileManager.contents( atPath: imageFileURL.path )
             
             if let imageData = imageFileData {
+                logVerbose( "[ %@ ]", imageName )
                 self.delegate = delegate
 
-                if dataStoreLocation == .iCloud || dataStoreLocation == .shareCloud {
-                    cloudCentral.saveImageData( imageData, filename: imageName, self )
-                }
-                else if dataStoreLocation == .nas || dataStoreLocation == .shareNas {
-                    nasCentral.saveImageData( imageData, filename: imageName, self )
-                }
-                        
+                nasCentral.saveImageData( imageData, filename: imageName, self )
             }
             else {
                 logVerbose( "ERROR!  Failed to load data for image for [ %@ ]", imageName )
@@ -823,21 +773,6 @@ extension NavigatorCentral {
 // MARK: NASCentralDelegate Methods (Public)
 
 extension NavigatorCentral: NASCentralDelegate {
-    
-    func nasCentral(_ nasCentral: NASCentral, canSeeNasDataSourceFolders: Bool) {
-        if stayOffline {
-            logVerbose( "[ %@ ]  Stay Offline!", stringFor( canSeeNasDataSourceFolders ) )
-            return
-        }
-        
-        logVerbose( "[ %@ ]", stringFor( canSeeNasDataSourceFolders ) )
-        
-        if canSeeNasDataSourceFolders {
-            
-        }
-        
-    }
-    
     
     func nasCentral(_ nasCentral: NASCentral, canSeeNasFolders: Bool) {
         if stayOffline {

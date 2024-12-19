@@ -26,9 +26,9 @@ class DataLocationViewController: UIViewController {
     
     private struct CellIndexes {
         static let device = 0
-        static let iCloud = 1
-        static let nas    = 2
-        static let unused = 3
+//        static let cloud  = 1
+        static let nas    = 1
+        static let unused = 2
     }
     
     private struct StoryboardIds {
@@ -36,17 +36,16 @@ class DataLocationViewController: UIViewController {
         static let transferProgress = "TransferProgressViewController"
     }
     
-    private var     canSeeCloud      = false
+//    private var     canSeeCloud      = false
     private var     canSeeNasFolders = false
-    private var     canSeeCount      = 0
-    private let     cloudCentral     = CloudCentral.sharedInstance
+//    private var     canSeeCount      = 0
+//    private let     cloudCentral     = CloudCentral.sharedInstance
     private let     nasCentral       = NASCentral.sharedInstance
     private var     navigatorCentral = NavigatorCentral.sharedInstance
     private var     selectedOption   = CellIndexes.device
     private var     userDefaults     = UserDefaults.standard
     
     private let optionArray = [ NSLocalizedString( "Title.Device",     comment: "Device" ),
-                                NSLocalizedString( "Title.iCloud",     comment: "iCloud" ),
                                 NSLocalizedString( "Title.InNASDrive", comment: "Network Accessible Storage" ) ]
     
     
@@ -67,8 +66,6 @@ class DataLocationViewController: UIViewController {
         else {
             switch location {
                 case DataLocationName.device:      selectedOption = CellIndexes.device
-                case DataLocationName.shareCloud:  selectedOption = CellIndexes.iCloud
-                case DataLocationName.iCloud:      selectedOption = CellIndexes.iCloud
                 case DataLocationName.nas:         selectedOption = CellIndexes.nas
                 case DataLocationName.shareNas:    selectedOption = CellIndexes.nas
                 default:                           logTrace( "ERROR!  SBH!" )
@@ -83,11 +80,13 @@ class DataLocationViewController: UIViewController {
         logTrace()
         super.viewWillAppear( animated )
         
-        canSeeCount      = 0
-        canSeeCloud      = false
+//        canSeeCount      = 0
+//        canSeeCloud      = false
         canSeeNasFolders = false
         
-        cloudCentral.canSeeCloud( self )
+//        cloudCentral.canSeeCloud( self )
+        
+        // TODO: we don't need to do this here... should be when we select the NAS option
         nasCentral.canSeeNasFolders( self )
         
         myActivityIndicator.isHidden = false
@@ -101,7 +100,7 @@ class DataLocationViewController: UIViewController {
     // MARK: Target/Action Methods
     
     @IBAction func questionBarButtonTouched(_ sender : UIBarButtonItem ) {
-        let     message = NSLocalizedString( "InfoText.DataStoreLocation", comment: "We provide support for three different storage locations...\n\n   (a) on your device (default),\n   (b) in the cloud and \n   (c) on a Network Accessible Storage (NAS) unit. \n\nThe key point here is that there is no sharing on the device, if you chose the cloud then your data can be shared across all of your devices and if you chose NAS then anyone who has access to your Wi-Fi can access it." )
+        let     message = NSLocalizedString( "InfoText.DataStoreLocation", comment: "This app gives you the option to store your data either on...\n\n   (a) on your device (default) or\n   (b) on a Network Accessible Storage (NAS) drive. \n\nThe key point here is that there is no sharing on the device. If you prefer to use a NAS then anyone who has this app and access to your Wi-Fi can access your data." )
 
         presentAlert( title: NSLocalizedString( "AlertTitle.GotAQuestion", comment: "Got a question?" ), message: message )
     }
@@ -121,103 +120,6 @@ class DataLocationViewController: UIViewController {
 
 
 
-// MARK: CloudCentralDelegate Methods
-
-extension DataLocationViewController : CloudCentralDelegate {
-    
-    func cloudCentral(_ cloudCentral: CloudCentral, canSeeCloud: Bool) {
-        logVerbose( "[ %@ ]", stringFor( canSeeCloud ) )
-        
-        self.canSeeCloud = canSeeCloud
-        
-        canSeeCount += 1
-        
-        if canSeeCount == 2 {
-            myActivityIndicator.stopAnimating()
-            myActivityIndicator.isHidden = true
-            myTableView.reloadData()
-        }
-        
-    }
-    
-    
-    func cloudCentral(_ cloudCentral: CloudCentral, didCreateDirectoryTree: Bool ) {
-        logVerbose( "[ %@ ]", stringFor( didCreateDirectoryTree ) )
-        
-        if didCreateDirectoryTree {
-            presentConfirmationForCloudTransfer( shared: true )
-        }
-        else {
-            presentAlert( title   : NSLocalizedString( "AlertTitle.Error", comment: "Error" ),
-                          message : NSLocalizedString( "AlertMessage.UnableToCreateCloudFolders", comment: "Unable to create our directories on your iCloud Drive." ) )
-        }
-        
-    }
-    
-    
-    func cloudCentral(_ cloudCentral: CloudCentral, rootDirectoryIsPresent: Bool ) {
-        logVerbose( "[ %@ ]", stringFor( rootDirectoryIsPresent ) )
-
-        if rootDirectoryIsPresent {
-            presentConfirmationForCloudTransfer( shared: true )
-        }
-        else {
-            cloudCentral.createDrirectoryTree( self )
-        }
-
-    }
-    
-    
-
-    // MARK: CloudCentralDelegate Utility Methods
-    
-    private func launchTransferProgressViewController() {
-        guard let transferProgressVC : TransferProgressViewController = iPhoneViewControllerWithStoryboardId( storyboardId: StoryboardIds.transferProgress ) as? TransferProgressViewController else {
-            logTrace( "Error!  Unable to load TransferProgressViewController!" )
-            return
-        }
-
-        transferProgressVC.modalPresentationStyle = .overFullScreen
-        
-        transferProgressVC.popoverPresentationController?.delegate                 = self
-        transferProgressVC.popoverPresentationController?.permittedArrowDirections = .any
-        transferProgressVC.popoverPresentationController?.sourceRect               = view.frame
-        transferProgressVC.popoverPresentationController?.sourceView               = view
-        
-        present( transferProgressVC, animated: true, completion: nil )
-    }
-    
-    
-    private func presentConfirmationForCloudTransfer( shared : Bool ) {
-        logVerbose( "[ %@ ]", stringFor( shared ) )
-        var     message = shared ? NSLocalizedString( "AlertMessage.DataWillBeShared",  comment: "When you hit the OK button we will transfer your data then kill the app.  When you re-start the app will SHARE the data in your " ) :
-                                   NSLocalizedString( "AlertMessage.DataWillBeMovedTo", comment: "When you hit the OK button we will transfer your data then kill the app.  When you re-start the app your data will stored be on your " )
-        let     title   = NSLocalizedString( "Title.DataStoreLocation", comment: "Data Store Location" )
-        
-        message += NSLocalizedString( "Title.iCloud", comment: "iCloud" )
-        
-        let     alert = UIAlertController.init( title : title, message : message, preferredStyle : .alert )
-
-        let     okAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.OK", comment: "OK" ), style: .default )
-        { ( alertAction ) in
-            logTrace( "OK Action" )
-            self.navigatorCentral.dataStoreLocation = ( shared ? .shareCloud : .iCloud )
-            self.launchTransferProgressViewController()
-        }
-        
-        let     cancelAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Cancel", comment: "Cancel" ), style: .cancel, handler: nil )
-
-        alert.addAction( cancelAction )
-        alert.addAction( okAction     )
-        
-        present( alert, animated: true, completion: nil )
-
-    }
-
-}
-
-
-
 // MARK: NASCentralDelegate Methods
 
 extension DataLocationViewController : NASCentralDelegate {
@@ -225,16 +127,9 @@ extension DataLocationViewController : NASCentralDelegate {
     func nasCentral(_ nasCentral: NASCentral, canSeeNasFolders: Bool) {
         logVerbose( "[ %@ ]", stringFor( canSeeNasFolders ) )
         
-        self.canSeeNasFolders = canSeeNasFolders
-        
-        canSeeCount += 1
-        
-        if canSeeCount == 2 {
-            myActivityIndicator.stopAnimating()
-            myActivityIndicator.isHidden = true
-            myTableView.reloadData()
-        }
-        
+        myActivityIndicator.stopAnimating()
+        myActivityIndicator.isHidden = true
+        myTableView.reloadData()
     }
 
     
@@ -306,32 +201,11 @@ extension DataLocationViewController : UITableViewDelegate {
         case CellIndexes.device:
             tableView.reloadData()
             // NOTE - We are assuming that the data on the device is either more current or at least up to date
-            //        with where ever it was previously stored (NAS or iCloud) so we don't have to copy any files.
+            //        with where ever it was previously stored (NAS) so we don't have to copy any files.
             presentConfirmationForMoveToDevice()
 
         case CellIndexes.nas:
-            if selectedOption == CellIndexes.iCloud {
-                presentAlert( title  : NSLocalizedString( "AlertTitle.Error", comment: "Error!" ),
-                              message: NSLocalizedString( "AlertMessage.CannotGoDirectFromCloudToNas", comment: "You can't go from iCloud directly to NAS, you must go back to the Device and then to NAS" ) )
-                return
-            }
-            
             launchNasSelectorViewController()
-
-        case CellIndexes.iCloud:
-            if selectedOption == CellIndexes.nas {
-                presentAlert( title  : NSLocalizedString( "AlertTitle.Error", comment: "Error!" ),
-                              message: NSLocalizedString( "AlertMessage.CannotGoDirectFromNasToCloud", comment: "You can't go from NAS directly to iCloud, you must go back to the Device and then to iCloud" ) )
-                return
-            }
-            
-            if canSeeCloud {
-                cloudCentral.isRootDirectoryPresent( self )
-            }
-            else {
-                presentAlert( title   : NSLocalizedString( "AlertTitle.Error", comment:  "Error" ),
-                              message : NSLocalizedString( "AlertMessage.CannotSeeContainer", comment: "Cannot see your iCloud container!  Please go to Settings and verify that you have signed into iCloud with your Apple ID then navigate to the iCloud setting screen and make sure iCloud Drive is on.  Finally, verify that iCloud is enabled for this app." ) )
-            }
 
         default:
             logTrace( "ERROR!  SBH!" )

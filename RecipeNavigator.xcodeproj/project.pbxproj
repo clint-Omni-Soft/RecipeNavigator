@@ -11,12 +11,14 @@
 		F4099B082BFC145600339544 /* SortOptionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4099B072BFC145600339544 /* SortOptionsViewController.swift */; };
 		F4099B0A2BFC19D600339544 /* RecipeListViewControllerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4099B092BFC19D600339544 /* RecipeListViewControllerCell.swift */; };
 		F40F5C962C24D79C006CA302 /* FileDescriptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F40F5C952C24D79C006CA302 /* FileDescriptor.swift */; };
+		F41231922CC71FC90013C376 /* FavoriteRecipes.swift in Sources */ = {isa = PBXBuildFile; fileRef = F41231902CC71FC90013C376 /* FavoriteRecipes.swift */; };
 		F41EA6E02C20EDC200452CEF /* ScanRepoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F41EA6DF2C20EDC200452CEF /* ScanRepoViewController.swift */; };
 		F42177972BE2E51600B1D1AC /* HowToUseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F421778B2BE2E51600B1D1AC /* HowToUseViewController.swift */; };
 		F42177982BE2E51600B1D1AC /* DataStoreLocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F421778D2BE2E51600B1D1AC /* DataStoreLocationViewController.swift */; };
 		F42177992BE2E51600B1D1AC /* TransferProgressViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F421778F2BE2E51600B1D1AC /* TransferProgressViewController.swift */; };
 		F421779A2BE2E51600B1D1AC /* NasLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42177922BE2E51600B1D1AC /* NasLoginViewController.swift */; };
 		F421779B2BE2E51600B1D1AC /* NasDriveSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42177932BE2E51600B1D1AC /* NasDriveSelectorViewController.swift */; };
+		F43FE1E52CCAFA0B0096AA30 /* DataSourceCentral.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43FE1E42CCAFA0B0096AA30 /* DataSourceCentral.swift */; };
 		F440FD582BFE95010039E4E2 /* Halibut with Fennel F&W 2001.JPG in Resources */ = {isa = PBXBuildFile; fileRef = F440FD512BFE95010039E4E2 /* Halibut with Fennel F&W 2001.JPG */; };
 		F440FD592BFE95010039E4E2 /* How to Make a Sourdough Starter from Scratch.txt in Resources */ = {isa = PBXBuildFile; fileRef = F440FD522BFE95010039E4E2 /* How to Make a Sourdough Starter from Scratch.txt */; };
 		F440FD5A2BFE95010039E4E2 /* Mushroom Gravy from Scratch.rtf in Resources */ = {isa = PBXBuildFile; fileRef = F440FD532BFE95010039E4E2 /* Mushroom Gravy from Scratch.rtf */; };
@@ -32,12 +34,13 @@
 		F4B9822E2C26315500AEBBA1 /* KeywordManagerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B9822D2C26315500AEBBA1 /* KeywordManagerViewController.swift */; };
 		F4B982312C263AED00AEBBA1 /* RecipeKeywords.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B9822F2C263AED00AEBBA1 /* RecipeKeywords.swift */; };
 		F4B982322C263AED00AEBBA1 /* RecipeKeywords+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B982302C263AED00AEBBA1 /* RecipeKeywords+CoreDataProperties.swift */; };
+		F4C48D192CC960E800B65F10 /* Recipe+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4C48D132CC960E800B65F10 /* Recipe+CoreDataProperties.swift */; };
+		F4C48D1B2CC960E800B65F10 /* ViewerRecipes+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4C48D152CC960E800B65F10 /* ViewerRecipes+CoreDataProperties.swift */; };
+		F4C48D1D2CC960E800B65F10 /* FavoriteRecipes+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4C48D172CC960E800B65F10 /* FavoriteRecipes+CoreDataProperties.swift */; };
 		F4C69BDA2BD9BF3100B7CD89 /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4C69BD92BD9BF3100B7CD89 /* TabBarViewController.swift */; };
 		F4C69BDF2BD9CAE600B7CD89 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = F4C69BE12BD9CAE600B7CD89 /* Localizable.strings */; };
 		F4DAA0552BFFFE7C001C13D4 /* Recipe.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4DAA0512BFFFE7C001C13D4 /* Recipe.swift */; };
-		F4DAA0562BFFFE7C001C13D4 /* Recipe+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4DAA0522BFFFE7C001C13D4 /* Recipe+CoreDataProperties.swift */; };
 		F4DAA0572BFFFE7C001C13D4 /* ViewerRecipes.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4DAA0532BFFFE7C001C13D4 /* ViewerRecipes.swift */; };
-		F4DAA0582BFFFE7C001C13D4 /* ViewerRecipes+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4DAA0542BFFFE7C001C13D4 /* ViewerRecipes+CoreDataProperties.swift */; };
 		F4E583382BE1BF4F00D8153A /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E583372BE1BF4F00D8153A /* AboutViewController.swift */; };
 		F4F311E32BDB114500665440 /* PleaseWaitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F311E22BDB114500665440 /* PleaseWaitViewController.swift */; };
 		F4F311E52BDB156C00665440 /* PleaseWait.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F4F311E42BDB156C00665440 /* PleaseWait.storyboard */; };
@@ -62,6 +65,7 @@
 		F4F96EE32BCA01EA00AD534F /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4F96EE22BCA01EA00AD534F /* CoreData.framework */; };
 		F4F96EE52BCA020A00AD534F /* SMBClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F4F96EE42BCA020A00AD534F /* SMBClient.framework */; };
 		F4F96EE62BCA020A00AD534F /* SMBClient.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F4F96EE42BCA020A00AD534F /* SMBClient.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		F4FBA6B02CE67A7800C330CE /* FinderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4FBA6AE2CE67A7800C330CE /* FinderViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -83,12 +87,15 @@
 		F4099B072BFC145600339544 /* SortOptionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortOptionsViewController.swift; sourceTree = "<group>"; };
 		F4099B092BFC19D600339544 /* RecipeListViewControllerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeListViewControllerCell.swift; sourceTree = "<group>"; };
 		F40F5C952C24D79C006CA302 /* FileDescriptor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileDescriptor.swift; sourceTree = "<group>"; };
+		F41231832CC719230013C376 /* NavigatorCentral 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "NavigatorCentral 2.xcdatamodel"; sourceTree = "<group>"; };
+		F41231902CC71FC90013C376 /* FavoriteRecipes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteRecipes.swift; sourceTree = "<group>"; };
 		F41EA6DF2C20EDC200452CEF /* ScanRepoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanRepoViewController.swift; sourceTree = "<group>"; };
 		F421778B2BE2E51600B1D1AC /* HowToUseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HowToUseViewController.swift; sourceTree = "<group>"; };
 		F421778D2BE2E51600B1D1AC /* DataStoreLocationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataStoreLocationViewController.swift; sourceTree = "<group>"; };
 		F421778F2BE2E51600B1D1AC /* TransferProgressViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransferProgressViewController.swift; sourceTree = "<group>"; };
 		F42177922BE2E51600B1D1AC /* NasLoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NasLoginViewController.swift; sourceTree = "<group>"; };
 		F42177932BE2E51600B1D1AC /* NasDriveSelectorViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NasDriveSelectorViewController.swift; sourceTree = "<group>"; };
+		F43FE1E42CCAFA0B0096AA30 /* DataSourceCentral.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSourceCentral.swift; sourceTree = "<group>"; };
 		F440FD512BFE95010039E4E2 /* Halibut with Fennel F&W 2001.JPG */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Halibut with Fennel F&W 2001.JPG"; sourceTree = "<group>"; };
 		F440FD522BFE95010039E4E2 /* How to Make a Sourdough Starter from Scratch.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "How to Make a Sourdough Starter from Scratch.txt"; sourceTree = "<group>"; };
 		F440FD532BFE95010039E4E2 /* Mushroom Gravy from Scratch.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = "Mushroom Gravy from Scratch.rtf"; sourceTree = "<group>"; };
@@ -107,6 +114,9 @@
 		F4B9822D2C26315500AEBBA1 /* KeywordManagerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeywordManagerViewController.swift; sourceTree = "<group>"; };
 		F4B9822F2C263AED00AEBBA1 /* RecipeKeywords.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeKeywords.swift; sourceTree = "<group>"; };
 		F4B982302C263AED00AEBBA1 /* RecipeKeywords+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RecipeKeywords+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		F4C48D132CC960E800B65F10 /* Recipe+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Recipe+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		F4C48D152CC960E800B65F10 /* ViewerRecipes+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewerRecipes+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		F4C48D172CC960E800B65F10 /* FavoriteRecipes+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FavoriteRecipes+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		F4C69BD92BD9BF3100B7CD89 /* TabBarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
 		F4C69BE02BD9CAE600B7CD89 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		F4C69BE42BD9CC9B00B7CD89 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
@@ -116,9 +126,7 @@
 		F4C69BE82BD9CCB300B7CD89 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Main_iPhone.strings; sourceTree = "<group>"; };
 		F4C69BE92BD9CCB300B7CD89 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		F4DAA0512BFFFE7C001C13D4 /* Recipe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Recipe.swift; sourceTree = "<group>"; };
-		F4DAA0522BFFFE7C001C13D4 /* Recipe+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Recipe+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		F4DAA0532BFFFE7C001C13D4 /* ViewerRecipes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewerRecipes.swift; sourceTree = "<group>"; };
-		F4DAA0542BFFFE7C001C13D4 /* ViewerRecipes+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewerRecipes+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		F4E583372BE1BF4F00D8153A /* AboutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
 		F4F311E22BDB114500665440 /* PleaseWaitViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PleaseWaitViewController.swift; sourceTree = "<group>"; };
 		F4F311E42BDB156C00665440 /* PleaseWait.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = PleaseWait.storyboard; sourceTree = "<group>"; };
@@ -144,6 +152,7 @@
 		F4F96EDC2BCA01A600AD534F /* DeviceAccessControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceAccessControl.swift; sourceTree = "<group>"; };
 		F4F96EE22BCA01EA00AD534F /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		F4F96EE42BCA020A00AD534F /* SMBClient.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SMBClient.framework; path = "../ZKits/ZKits-Debug/SMBClient.framework"; sourceTree = "<group>"; };
+		F4FBA6AE2CE67A7800C330CE /* FinderViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FinderViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -179,7 +188,6 @@
 		F41EA6DE2C20ED8B00452CEF /* ScanRepoViewController */ = {
 			isa = PBXGroup;
 			children = (
-				F40F5C952C24D79C006CA302 /* FileDescriptor.swift */,
 				F41EA6DF2C20EDC200452CEF /* ScanRepoViewController.swift */,
 			);
 			path = ScanRepoViewController;
@@ -269,6 +277,7 @@
 				F421778C2BE2E51600B1D1AC /* Data Store Location */,
 				F4B18F612BE988B10013371F /* Recipe Location */,
 				F41EA6DE2C20ED8B00452CEF /* ScanRepoViewController */,
+				F4FBA6AB2CE67A0F00C330CE /* Testing */,
 			);
 			path = SettingsViewController;
 			sourceTree = "<group>";
@@ -411,6 +420,7 @@
 		F4F96EBC2BC9CA2C00AD534F /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				F40F5C952C24D79C006CA302 /* FileDescriptor.swift */,
 				F49289122C389CD4008D538A /* Extensions */,
 				F49289132C389CE4008D538A /* Logger */,
 				F492890F2C389C40008D538A /* Quick Look */,
@@ -423,6 +433,7 @@
 			children = (
 				F4F96EC92BC9FFCE00AD534F /* NavigatorCentral.swift */,
 				F4F96EC82BC9FFCE00AD534F /* CommonExtensions.swift */,
+				F43FE1E42CCAFA0B0096AA30 /* DataSourceCentral.swift */,
 				F4F96ECC2BCA001800AD534F /* NavigatorCentral.xcdatamodeld */,
 				F4F96ECF2BCA010300AD534F /* Entities */,
 			);
@@ -432,14 +443,16 @@
 		F4F96ECF2BCA010300AD534F /* Entities */ = {
 			isa = PBXGroup;
 			children = (
+				F41231902CC71FC90013C376 /* FavoriteRecipes.swift */,
+				F4C48D172CC960E800B65F10 /* FavoriteRecipes+CoreDataProperties.swift */,
 				F4F96ED22BCA013000AD534F /* ImageRequest.swift */,
 				F4F96ED32BCA013000AD534F /* ImageRequest+CoreDataProperties.swift */,
 				F4DAA0512BFFFE7C001C13D4 /* Recipe.swift */,
-				F4DAA0522BFFFE7C001C13D4 /* Recipe+CoreDataProperties.swift */,
+				F4C48D132CC960E800B65F10 /* Recipe+CoreDataProperties.swift */,
 				F4B9822F2C263AED00AEBBA1 /* RecipeKeywords.swift */,
 				F4B982302C263AED00AEBBA1 /* RecipeKeywords+CoreDataProperties.swift */,
 				F4DAA0532BFFFE7C001C13D4 /* ViewerRecipes.swift */,
-				F4DAA0542BFFFE7C001C13D4 /* ViewerRecipes+CoreDataProperties.swift */,
+				F4C48D152CC960E800B65F10 /* ViewerRecipes+CoreDataProperties.swift */,
 			);
 			path = Entities;
 			sourceTree = "<group>";
@@ -447,10 +460,10 @@
 		F4F96ED82BCA01A600AD534F /* External Devices */ = {
 			isa = PBXGroup;
 			children = (
-				F4F96ED92BCA01A600AD534F /* SMBCentral.swift */,
 				F4F96EDA2BCA01A600AD534F /* CloudCentral.swift */,
-				F4F96EDB2BCA01A600AD534F /* NASCentral.swift */,
 				F4F96EDC2BCA01A600AD534F /* DeviceAccessControl.swift */,
+				F4F96EDB2BCA01A600AD534F /* NASCentral.swift */,
+				F4F96ED92BCA01A600AD534F /* SMBCentral.swift */,
 			);
 			path = "External Devices";
 			sourceTree = "<group>";
@@ -462,6 +475,14 @@
 				F4F96EE22BCA01EA00AD534F /* CoreData.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		F4FBA6AB2CE67A0F00C330CE /* Testing */ = {
+			isa = PBXGroup;
+			children = (
+				F4FBA6AE2CE67A7800C330CE /* FinderViewController.swift */,
+			);
+			path = Testing;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -548,6 +569,7 @@
 			files = (
 				F4F96ECE2BCA001800AD534F /* NavigatorCentral.xcdatamodeld in Sources */,
 				F49289112C389CC4008D538A /* QuickLookViewController.swift in Sources */,
+				F43FE1E52CCAFA0B0096AA30 /* DataSourceCentral.swift in Sources */,
 				F42177972BE2E51600B1D1AC /* HowToUseViewController.swift in Sources */,
 				F4099B052BFC07D300339544 /* RecipeListViewControllerSectionCell.swift in Sources */,
 				F41EA6E02C20EDC200452CEF /* ScanRepoViewController.swift in Sources */,
@@ -555,6 +577,8 @@
 				F4C69BDA2BD9BF3100B7CD89 /* TabBarViewController.swift in Sources */,
 				F44842AA2BCB244B00FC1585 /* SettingsViewController.swift in Sources */,
 				F4F96ED62BCA013000AD534F /* ImageRequest.swift in Sources */,
+				F4FBA6B02CE67A7800C330CE /* FinderViewController.swift in Sources */,
+				F4C48D1D2CC960E800B65F10 /* FavoriteRecipes+CoreDataProperties.swift in Sources */,
 				F421779B2BE2E51600B1D1AC /* NasDriveSelectorViewController.swift in Sources */,
 				F4E583382BE1BF4F00D8153A /* AboutViewController.swift in Sources */,
 				F4B9822E2C26315500AEBBA1 /* KeywordManagerViewController.swift in Sources */,
@@ -562,16 +586,15 @@
 				F4DAA0552BFFFE7C001C13D4 /* Recipe.swift in Sources */,
 				F42177992BE2E51600B1D1AC /* TransferProgressViewController.swift in Sources */,
 				F4F96EC12BC9CA2C00AD534F /* Logger.swift in Sources */,
-				F4DAA0562BFFFE7C001C13D4 /* Recipe+CoreDataProperties.swift in Sources */,
 				F4F96EDF2BCA01A600AD534F /* NASCentral.swift in Sources */,
 				F4F96EDD2BCA01A600AD534F /* SMBCentral.swift in Sources */,
 				F44842A82BCB244B00FC1585 /* RecipeListViewController.swift in Sources */,
 				F4099B0A2BFC19D600339544 /* RecipeListViewControllerCell.swift in Sources */,
 				F4AA6ABA2C407A650015ED86 /* RecipeDisplayViewController.swift in Sources */,
+				F4C48D192CC960E800B65F10 /* Recipe+CoreDataProperties.swift in Sources */,
 				F4F96EC22BC9CA2C00AD534F /* UIKitExtensions.swift in Sources */,
 				F4B18F632BE988EB0013371F /* RecipeLocationViewController.swift in Sources */,
 				F4F96EC42BC9CA2C00AD534F /* LogViewController.swift in Sources */,
-				F4DAA0582BFFFE7C001C13D4 /* ViewerRecipes+CoreDataProperties.swift in Sources */,
 				F421779A2BE2E51600B1D1AC /* NasLoginViewController.swift in Sources */,
 				F4F96EC32BC9CA2C00AD534F /* UIImage+Cropping.swift in Sources */,
 				F4F96EE02BCA01A600AD534F /* DeviceAccessControl.swift in Sources */,
@@ -582,7 +605,9 @@
 				F4F96ECA2BC9FFCE00AD534F /* CommonExtensions.swift in Sources */,
 				F4099B082BFC145600339544 /* SortOptionsViewController.swift in Sources */,
 				F4F96EDE2BCA01A600AD534F /* CloudCentral.swift in Sources */,
+				F4C48D1B2CC960E800B65F10 /* ViewerRecipes+CoreDataProperties.swift in Sources */,
 				F4B982322C263AED00AEBBA1 /* RecipeKeywords+CoreDataProperties.swift in Sources */,
+				F41231922CC71FC90013C376 /* FavoriteRecipes.swift in Sources */,
 				F4F96EC62BC9CAC900AD534F /* GlobalDefinitions.swift in Sources */,
 				F4DAA0572BFFFE7C001C13D4 /* ViewerRecipes.swift in Sources */,
 				F4F96ECB2BC9FFCE00AD534F /* NavigatorCentral.swift in Sources */,
@@ -852,9 +877,10 @@
 		F4F96ECC2BCA001800AD534F /* NavigatorCentral.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				F41231832CC719230013C376 /* NavigatorCentral 2.xcdatamodel */,
 				F4F96ECD2BCA001800AD534F /* NavigatorCentral.xcdatamodel */,
 			);
-			currentVersion = F4F96ECD2BCA001800AD534F /* NavigatorCentral.xcdatamodel */;
+			currentVersion = F41231832CC719230013C376 /* NavigatorCentral 2.xcdatamodel */;
 			path = NavigatorCentral.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

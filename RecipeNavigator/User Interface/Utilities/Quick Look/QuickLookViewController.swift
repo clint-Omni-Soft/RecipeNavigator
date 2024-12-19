@@ -32,8 +32,9 @@ class QuickLookViewController: UIViewController {
     
     // MARK: Private Variables
     
-    private let cloudCentral        = CloudCentral.sharedInstance
+//    private let cloudCentral        = CloudCentral.sharedInstance
     private var connectedShare      : SMBShare!
+    private let dataSourceCentral   = DataSourceCentral.sharedInstance
     private let deviceAccessControl = DeviceAccessControl.sharedInstance
     private var fileData            : Data!
     private let fileManager         = FileManager.default
@@ -52,7 +53,7 @@ class QuickLookViewController: UIViewController {
         logVerbose( "[ %@ ]", recipe.filename! )
         
         self.navigationItem.title = NSLocalizedString( "Title.QuickLook", comment: "Quick Look" )
-        recipeFilenameLabel.text  = recipe.filename
+        recipeFilenameLabel.text  = (recipe.relativePath ?? "??") + "\n" + (recipe.filename ?? "???")
         
         configureBackBarButtonItem()
         
@@ -71,7 +72,7 @@ class QuickLookViewController: UIViewController {
         loadBarButtonItems()
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0 ) {
-            self.requestData()
+            self.dataSourceCentral.requestViewerDataFor( self.recipe, self )
         }
 
     }
@@ -90,11 +91,17 @@ class QuickLookViewController: UIViewController {
     }
 
     
+    @IBAction func favoriteBarButtonTouched(_ sender: UIBarButtonItem ) {
+        logTrace()
+        promptToChangeFavoriteStatus()
+    }
     
+    
+
     // MARK: Utility Methods
     
-    private func displayRichTextFile() {
-        if let attributedString = try? NSAttributedString( data: fileData, options: rtfAttributedStringOptions, documentAttributes: nil ) {
+    private func displayRichTextFile(_ data: Data ) {
+        if let attributedString = try? NSAttributedString( data: data, options: rtfAttributedStringOptions, documentAttributes: nil ) {
             myTextView.attributedText = attributedString
         }
         else {
@@ -106,7 +113,16 @@ class QuickLookViewController: UIViewController {
     
     private func loadBarButtonItems() {
         logTrace()
-        navigationItem.rightBarButtonItem = loadingData ? nil : UIBarButtonItem.init( barButtonSystemItem: .add, target: self, action: #selector( addBarButtonItemTouched(_:) ) )
+        var rightBarButtonItemArray = [UIBarButtonItem]()
+        
+        if !loadingData {
+            let favoriteIconName = recipe.favoriteRecipe != nil ? "heart-selected" : "heart-empty"
+                
+            rightBarButtonItemArray.append( UIBarButtonItem.init( barButtonSystemItem: .add, target: self, action: #selector( addBarButtonItemTouched(_:) ) ) )
+            rightBarButtonItemArray.append( UIBarButtonItem.init( image: UIImage(named: favoriteIconName ), style: .plain, target: self, action: #selector( favoriteBarButtonTouched(_:) ) ) )
+        }
+
+        navigationItem.rightBarButtonItems = rightBarButtonItemArray
     }
     
     
@@ -125,7 +141,7 @@ class QuickLookViewController: UIViewController {
     }
     
     
-    private func presentDocument() {
+    private func presentDocument(_ data: Data ) {
         let mimeType = navigatorCentral.mimeTypeFor( recipe )
         
         loadingData = false
@@ -135,27 +151,40 @@ class QuickLookViewController: UIViewController {
         
         switch navigatorCentral.mimeTypeFor( recipe ) {
             case FileMimeTypes.rtf:     myTextView.isHidden = false
-                                        displayRichTextFile()
+                                        displayRichTextFile( data )
             
             default:                    myWebView.isHidden = false
-                                        myWebView.load( fileData, mimeType: mimeType, characterEncodingName: "UTF8", baseURL: URL(string: "http://localhost")! )
+                                        myWebView.load( data, mimeType: mimeType, characterEncodingName: "UTF8", baseURL: URL(string: "http://localhost")! )
         }
             
     }
     
    
-    private func requestData() {
-        if navigatorCentral.dataSourceLocation == .device {
-            fileData = navigatorCentral.fetchFromDevice( recipe )
-            presentDocument()
-        }
-        else if navigatorCentral.dataSourceLocation == .iCloud || navigatorCentral.dataSourceLocation == .shareCloud {
-            cloudCentral.canSeeCloud( self )
-        }
-        else {  // Must be NAS
-            nasCentral.canSeeNasDataSourceFolders( self )
-        }
+    private func promptToChangeFavoriteStatus() {
+        let isFavorite = recipe.favoriteRecipe != nil
+        let title      = isFavorite ? NSLocalizedString( "ButtonTitle.RemoveFromFavorites", comment: "Remove from Favorites" ) : NSLocalizedString( "ButtonTitle.AddToFavorites", comment: "Add to Favorites" )
 
+        let     alert  = UIAlertController.init( title: title, message: nil, preferredStyle: .alert)
+
+        let yesAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Yes", comment: "Yes" ), style: .destructive )
+        { ( alertAction ) in
+            if isFavorite {
+                logTrace( "YES Action ... Remove from Favorites" )
+                self.navigatorCentral.removeFromFavorites( self.recipe, self )
+            }
+            else {
+                logTrace( "YES Action ... Add to Favorites" )
+                self.navigatorCentral.addToFavorites( self.recipe, self )
+            }
+            
+        }
+        
+        let     noAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.No", comment: "No!" ), style: .cancel, handler: nil )
+
+        alert.addAction( yesAction )
+        alert.addAction( noAction  )
+        
+        present( alert, animated: true, completion: nil )
     }
     
     
@@ -163,54 +192,19 @@ class QuickLookViewController: UIViewController {
 
 
 
-// MARK: CloudCentralDelegate Methods
+// MARK: DataSourceCentralDelegate Methods
 
-extension QuickLookViewController: CloudCentralDelegate {
+extension QuickLookViewController: DataSourceCentralDelegate {
     
-    func cloudCentral(_ cloudCentral: CloudCentral, canSeeCloud: Bool ) {
-        logVerbose( "[ %@ ]", stringFor( canSeeCloud ) )
-        
-        if canSeeCloud {
-            cloudCentral.startSession( self )
-        }
-        else {
-            deviceAccessControl.initWith(ownerName: "Unknown", locked: true, byMe: false, updating: false)
-            logVerbose( "%@", deviceAccessControl.descriptor() )
-            
-            presentAlertAndPopVC( NSLocalizedString( "AlertMessage.CannotSeeContainer", comment: "Cannot see your iCloud container!  Please go to Settings and verify that you have signed into iCloud with your Apple ID then navigate to the iCloud setting screen and make sure iCloud Drive is on.  Finally, verify that iCloud is enabled for this app." ) )
-        }
-        
-    }
-    
-    
-    func cloudCentral(_ cloudCentral: CloudCentral, didEndSession: Bool) {
-        logVerbose( "[ %@ ]", stringFor( didEndSession ) )
-    }
-    
-    
-    func cloudCentral(_ cloudCentral: CloudCentral, didFetchFile: Bool, _ data: Data) {
-        logVerbose( "[ %@ ]", stringFor( didFetchFile ) )
-        if didFetchFile {
-            fileData = data
-            presentDocument()
+    func dataSourceCentral(_ dataSourceCentral: DataSourceCentral, didFetch: Bool, data: Data, from recipe: Recipe ) {
+        logVerbose( "[ %@ ]", stringFor( didFetch ) )
+        if didFetch {
+            fileData = data // hold onto this for our callback
+            presentDocument( data )
         }
         else {
             presentAlertAndPopVC( NSLocalizedString( "AlertMessage.CannotReadFileData", comment: "We cannot the data from this recipe." ) )
         }
-
-        cloudCentral.endSession( self )
-    }
-    
-    
-    func cloudCentral(_ cloudCentral: CloudCentral, didStartSession: Bool ) {
-        logVerbose( "[ %@ ]", stringFor( didStartSession ) )
-        
-        if didStartSession {
-            cloudCentral.fetchFileOn( recipe.filename!, self )
-        }
-        else {
-            presentAlertAndPopVC( NSLocalizedString( "AlertMessage.UnableToStartSession", comment: "Unable to start a session with the selected share!" ) )
-        }
         
     }
     
@@ -219,67 +213,14 @@ extension QuickLookViewController: CloudCentralDelegate {
 
 
 
-// MARK: NASCentralDelegate Methods
+// MARK: NavigatorCentralDelegate Methods
 
-extension QuickLookViewController: NASCentralDelegate {
+extension QuickLookViewController: NavigatorCentralDelegate {
     
-    func nasCentral(_ nasCentral: NASCentral, canSeeNasDataSourceFolders: Bool) {
-        logVerbose( "[ %@ ]", stringFor( canSeeNasDataSourceFolders ) )
-        if canSeeNasDataSourceFolders {
-            nasCentral.startDataSourceSession( self )
-        }
-        else {
-            presentAlertAndPopVC( NSLocalizedString( "AlertMessage.CannotSeeExternalDevice", comment: "We cannot see your external device.  Move closer to your WiFi network and try again." ) )
-        }
-        
+    func navigatorCentralDidUpdateFavoriteRecipes(_ navigatorCentral: NavigatorCentral) {
+        logTrace()
+        loadBarButtonItems()
     }
     
     
-    func nasCentral(_ nasCentral: NASCentral, didFetchFile: Bool, _ data: Data ) {
-        logVerbose( "[ %@ ]", stringFor( didFetchFile ) )
-        
-        if didFetchFile {
-            fileData = data
-            presentDocument()
-        }
-        else {
-            presentAlertAndPopVC( NSLocalizedString( "AlertMessage.UnableToFetchFileFromNAS", comment: "Unable to fetch file from NAS!" ) )
-        }
-        
-    }
-
-    
-    func nasCentral(_ nasCentral: NASCentral, didOpenShare: Bool, _ share: SMBShare) {
-        logVerbose( "[ %@ ]", stringFor( didOpenShare ) )
-        var filePathAndName = ""
-        
-        if let relativePath = recipe.relativePath, let filename = recipe.filename {
-            filePathAndName = relativePath + "/" + filename
-        }
-
-        if didOpenShare {
-            nasCentral.fetchFileOn( connectedShare, filePathAndName, self )
-        }
-        
-    }
-    
-    
-    func nasCentral(_ nasCentral: NASCentral, didStartDataSourceSession: Bool, share: SMBShare ) {
-        logVerbose( "[ %@ ]", stringFor( didStartDataSourceSession ) )
-
-        if didStartDataSourceSession {
-            connectedShare = share
-            nasCentral.openShare( share, self )
-        }
-        else {
-            presentAlertAndPopVC( NSLocalizedString( "AlertMessage.UnableToStartSession", comment: "Unable to start a session with the selected share!" ) )
-        }
-        
-    }
-    
-    
-
 }
-
-
-

@@ -41,13 +41,7 @@ class TransferProgressViewController: UIViewController {
         
         activityIndicator.startAnimating()
         
-        if navigatorCentral.dataStoreLocation == .iCloud || navigatorCentral.dataStoreLocation == .shareCloud {
-            CloudCentral.sharedInstance.startSession( self )
-        }
-        else {
-            NASCentral.sharedInstance.startSession( self )
-        }
-        
+        NASCentral.sharedInstance.startSession( self )
     }
     
     
@@ -68,77 +62,6 @@ class TransferProgressViewController: UIViewController {
         alert.addAction( okAction )
         
         present( alert, animated: true, completion: nil )
-    }
-    
-    
-}
-
-
-
-// MARK: CloudCentralDelegate Methods
-
-extension TransferProgressViewController : CloudCentralDelegate {
-    
-    func cloudCentral(_ cloudCentral: CloudCentral, didCopyAllImagesFromCloudToDevice: Bool) {
-        logVerbose( "[ %@ ]", stringFor( didCopyAllImagesFromCloudToDevice ) )
-        cloudCentral.endSession( self )
-    }
-
-
-    func cloudCentral(_ cloudCentral: CloudCentral, didCopyAllImagesFromDeviceToCloud: Bool) {
-        logVerbose( "[ %@ ]", stringFor( didCopyAllImagesFromDeviceToCloud ) )
-        cloudCentral.endSession( self )
-    }
-    
-    
-    func cloudCentral(_ cloudCentral: CloudCentral, didCopyDatabaseFromDeviceToCloud: Bool) {
-        logVerbose( "[ %@ ]", stringFor( didCopyDatabaseFromDeviceToCloud ) )
-        
-        if didCopyDatabaseFromDeviceToCloud {
-            cloudCentral.copyAllImagesFromDeviceToCloud( self )
-        }
-        else {
-            cloudCentral.endSession( self )
-        }
-        
-    }
-    
-    
-    func cloudCentral(_ cloudCentral: CloudCentral, didCopyDatabaseFromCloudToDevice: Bool) {
-        logVerbose( "[ %@ ]", stringFor( didCopyDatabaseFromCloudToDevice ) )
-
-        if didCopyDatabaseFromCloudToDevice {
-            cloudCentral.copyAllImagesFromCloudToDevice( self )
-        }
-        else {
-            cloudCentral.endSession( self )
-        }
-        
-    }
-    
-    
-    func cloudCentral(_ cloudCentral: CloudCentral, didEndSession: Bool) {
-        logVerbose( "[ %@ ] ... ready to exit", stringFor( didEndSession ) )
-        
-        DispatchQueue.main.asyncAfter( deadline: .now() + 1.0 ) {
-            self.presentReadyToRestartPrompt()
-        }
-
-    }
-
-    
-    func cloudCentral(_ cloudCentral: CloudCentral, didStartSession: Bool) {
-        logVerbose( "[ %@ ]", stringFor( didStartSession ) )
-        
-        if navigatorCentral.dataStoreLocation == .iCloud {
-            cloudCentral.copyDatabaseFromDeviceToCloud( self )
-        }
-        else {
-            let _ = navigatorCentral.imageExistsWith( "BogusName" ) // This will create the pictures sub-Directory
-            
-            cloudCentral.copyDatabaseFromCloudToDevice( self )
-        }
-        
     }
     
     

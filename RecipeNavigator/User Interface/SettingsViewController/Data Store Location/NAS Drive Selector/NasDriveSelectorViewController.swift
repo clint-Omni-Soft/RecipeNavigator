@@ -171,8 +171,8 @@ class NasDriveSelectorViewController: UIViewController {
         var     message = "Unknown"
         
         switch mode {
-        case .dataSourceLocation:   message = NSLocalizedString( "InfoText.RecipeRepository",  comment: "Use this utility to specify where your recipes are located.  They can be on either (a) on this device, (b) in the iCloud or (c) on a Network Accessible Storage (NAS) unit.\n\nThis app ONLY recognizes recipes can be in the following file formats: JPG, JPEG, HTM, HTML, PDF, PNG or TXT." )
-        case .dataStoreLocation:    message = NSLocalizedString( "InfoText.DataStoreLocation", comment: "We provide support for three different storage locations...\n\n   (a) on your device (default),\n   (b) in the cloud and \n   (c) on a Network Accessible Storage (NAS) unit. \n\nThe key point here is that there is no sharing on the device, if you chose the cloud then your data can be shared across all of your devices and if you chose NAS then anyone who has access to your Wi-Fi can access it." )
+        case .dataSourceLocation:   message = NSLocalizedString( "InfoText.RecipeRepository",  comment: "Use this utility to specify where your recipes are located.  They can be on either (a) on this device or (b) on a Network Accessible Storage (NAS) drive.\n\nThis app ONLY recognizes recipes can be in the following file formats: JPG, JPEG, HTM, HTML, PDF, PNG or TXT." )
+        case .dataStoreLocation:    message = NSLocalizedString( "InfoText.DataStoreLocation", comment: "This app gives you the option to store your data either on...\n\n   (a) on your device (default) or\n   (b) on a Network Accessible Storage (NAS) drive. \n\nThe key point here is that there is no sharing on the device. If you prefer to use a NAS then anyone who has this app and access to your Wi-Fi can access your data." )
         }
 
         presentAlert( title: NSLocalizedString( "AlertTitle.GotAQuestion", comment: "Got a question?" ), message: message )
@@ -879,8 +879,16 @@ extension NasDriveSelectorViewController : UITableViewDelegate {
         let     yesAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Yes", comment: "Yes" ), style: .default )
         { ( alertAction ) in
             logTrace( "Yes Action" )
-            self.navigationController?.popToRootViewController(animated: true )
-            
+            if UIDevice.current.userInterfaceIdiom == .phone {
+                self.navigationController?.popToRootViewController(animated: true )
+            }
+            else {
+                if let settingsViewController = self.navigationController?.viewControllers[1] {
+                    self.navigationController?.popToViewController( settingsViewController, animated: true)
+                }
+                
+            }
+
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1 ) {
                 self.notificationCenter.post( name: NSNotification.Name( rawValue: Notifications.repoScanRequested ), object: self )
             }
@@ -890,7 +898,10 @@ extension NasDriveSelectorViewController : UITableViewDelegate {
         let     noAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.No", comment: "No" ), style: .default )
         { ( alertAction ) in
             logTrace( "No Action" )
-            self.navigationController?.popToRootViewController(animated: true )
+            if let settingsViewController = self.navigationController?.viewControllers[1] {
+                self.navigationController?.popToViewController( settingsViewController, animated: true)
+            }
+            
         }
 
         alert.addAction( yesAction )

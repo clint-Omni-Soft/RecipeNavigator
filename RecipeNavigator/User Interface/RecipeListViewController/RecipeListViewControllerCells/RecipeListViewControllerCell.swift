@@ -35,12 +35,10 @@ class RecipeListViewControllerCell: UITableViewCell {
     // MARK: Public Initializer
     
     func initializeWith(_ recipe: Recipe ) {
+        accessoryType   = ( recipe.viewerRecipe   == nil ) ? .none  : .checkmark
+        backgroundColor = ( recipe.favoriteRecipe == nil ) ? .white : GlobalConstants.lightBlueColor
         textLabel?.text = recipe.filename
-        accessoryType   = navigatorCentral.accessoryTypeFor( recipe )
     }
 
-    
-    
-    // MARK: Utility Methods
     
 }

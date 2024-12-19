@@ -52,7 +52,14 @@ class RecipeDisplayViewController: UIViewController {
         super.viewDidLoad()
         
         self.navigationItem.title = NSLocalizedString( "Title.RecipeViewer", comment: "Recipe Viewer" )
-        recipeFilenameLabel.text  = recipe.filename
+    }
+    
+
+    override func viewDidAppear(_ animated: Bool) {
+        logTrace()
+        super.viewDidAppear(animated)
+        
+        recipeFilenameLabel.text = recipe.filename
         
         myTextView.text     = ""
         myTextView.isHidden = true
@@ -64,13 +71,7 @@ class RecipeDisplayViewController: UIViewController {
         configureBackBarButtonItem()
         
         myActivityIndicator.startAnimating()
-    }
-    
 
-    override func viewDidAppear(_ animated: Bool) {
-        logTrace()
-        super.viewDidAppear(animated)
-        
         if fileData != nil {
             presentDocument()
             myActivityIndicator.stopAnimating()

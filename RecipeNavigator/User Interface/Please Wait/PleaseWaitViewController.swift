@@ -79,9 +79,6 @@ class PleaseWaitViewController: UIViewController {
     
     @objc func connectingToExternalDevice( notification: NSNotification ) {
         logTrace()
-        stayOfflineButton.isHidden = true
-        pleaseWaitLabel  .isHidden = true
-                
         displayAlert(title: NSLocalizedString( "AlertMessage.ConnectingToExternalDevice", comment: "Connecting to your external device." ), message: "" )
     }
 

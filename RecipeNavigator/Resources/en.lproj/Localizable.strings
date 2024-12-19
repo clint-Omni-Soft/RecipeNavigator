@@ -6,12 +6,9 @@
   
 */
 
-"AlertMessage.CannotGoDirectFromCloudToNas" = "You can't go from iCloud directly to NAS, you must go back to the Device and then to NAS";
-"AlertMessage.CannotGoDirectFromNasToCloud" = "You can't go from NAS directly to iCloud, you must go back to the Device and then to iCloud";
 "AlertMessage.CannotOpenDatabase"           = "Fatal Error!  Cannot open database.";
 "AlertMessage.CannotReadAllDbFiles"         = "The last update to the database on the remote device did not complete properly.  Please contact the user of '%@' and ask them to re-submit their last post.  The database will remain locked until this is resolved.";
 "AlertMessage.CannotReadFileData"           = "We cannot the data from this recipe.";
-"AlertMessage.CannotSeeContainer"           = "Cannot see your iCloud container!  Please go to Settings and verify that you have signed into iCloud with your Apple ID then navigate to the iCloud setting screen and make sure iCloud Drive is on.  Finally, verify that iCloud is enabled for this app.";
 "AlertMessage.CannotSeeExternalDevice"      = "We cannot see your external device.  Move closer to your WiFi network and try again.";
 "AlertMessage.ConnectingToExternalDevice"   = "Connecting to your external device.";
 "AlertMessage.CsvFileSaved"                 = "A CSV file has successfully been saved on your NAS drive.";
@@ -32,18 +29,17 @@
 "AlertMessage.NameMustBeUnique"             = "Name must be unique!";
 "AlertMessage.NetworkAddressCannotBeBlank"  = "Network address cannot be left blank";
 "AlertMessage.NoAccess"                     = "Unable to access this file server!";
+"AlertMessage.NoFavoriteRecipes"            = "To create a Fovorite, just select a recipe from the list then select 'Add to Favorites' from the popup menu";
 "AlertMessage.NoSharesOnDrive"              = "There are no shares available on this drive!";
 "AlertMessage.NoViewerRecipes"              = "Go to Recipes then tap on an item in the list and select Quick Look.  Touch the add button (+) to send a recipe to the viewer.";
 "AlertMessage.OfflineWarning"               = "We cannot connect to your remote storage.  Because this app is designed to work offline, you can make changes that we will upload the next time you connect to your remote storage.  Just be aware that if more than one person makes changes offline, your changes may be overwritten.";
 "AlertMessage.ReadyToRestart"               = "Ready to Restart";
 "AlertMessage.RecipeRepoNotSet"             = "Select using the Recipe Repository option";
-"AlertMessage.ScanCompleteFormat"           = "Added %d recipes and skipped %d files.";
+"AlertMessage.ScanCompleteFormat"           = "Added %d recipes.";
 "AlertMessage.SelectHowToUseForInfo"        = "Select '%@' for helpful information on '%@', '%@' and '%@'.";
 "AlertMessage.UnableToAddRecipe"            = "We are unable to add the recipes we found!  Please try again.";
 "AlertMessage.UnableToConnect"              = "We are unable to connect to your external device.  Move closer to your WiFi network and try again.";
-"AlertMessage.UnableToCopyFiles"            = "Unable to copy your files to your iCloud Drive.";
 "AlertMessage.UnableToCreate"               = "Unable to create our directory!";
-"AlertMessage.UnableToCreateCloudFolders"   = "We are unable to create our directories on your iCloud Drive.";
 "AlertMessage.UnableToCreateCsvFile"        = "We are unable to create the Comma Separated Variable (CSV) file!";
 "AlertMessage.UnableToDeleteRecipes"        = "We were unable to delete all of your recipes!  This may leave unwanted recipes in your database.";
 "AlertMessage.UnableToFetchDevices"         = "Unable to fetch devices!";
@@ -61,7 +57,7 @@
 "AlertTitle.AreYouSureImport"               = "Are you sure you want to import this file?";
 "AlertTitle.CannotReadAllDbFiles"           = "Cannot Read ALL Database Files on Remote!";
 "AlertTitle.DataWillBeSavedToNAS"           = "Preparing to save data to:";
-"AlertTitle.DeviceNameRequired"             = "Device Name is Required for NAS or iCloud";
+"AlertTitle.DeviceNameRequired"             = "Device Name is Required for NAS";
 "AlertTitle.DuplicateEntry"                 = "Duplicate Entry!";
 "AlertTitle.EnterDeviceName"                = "Enter Device Name";
 "AlertTitle.EnterName"                      = "Enter Name";
@@ -73,6 +69,7 @@
 "AlertTitle.ImportErrors"                   = "Your CSV file has one or more errors that you need to correct before it can be imported.";
 "AlertTitle.LastUpdateDidNotComplete"       = "The Last Update Did NOT Complete!";
 "AlertTitle.ModifyKeyword"                  = "Modify Keyword";
+"AlertTitle.NoFavoriteRecipes"              = "You don't have any Favorites yet";
 "AlertTitle.NoViewerRecipes"                = "No Viewer Recipes";
 "AlertTitle.RecipeRepoNotSet"               = "The Recipe Repository has NOT been set yet!";
 "AlertTitle.RemoveRecipeFromViewer"         = "Do you really want to remove this recipe from the viewer?";
@@ -87,6 +84,7 @@
 "AlertTitle.WouldYouLikeToSelectASubFolder" = "Would you like to select a sub-folder on this share?";
 
 "ButtonTitle.Add"                           = "Add";
+"ButtonTitle.AddToFavorites"                = "Add to Favorites";
 "ButtonTitle.AddToViewer"                   = "Add to Viewer";
 "ButtonTitle.Back"                          = "Back";
 "ButtonTitle.Cancel"                        = "Cancel";
@@ -101,6 +99,7 @@
 "ButtonTitle.OK"                            = "OK";
 "ButtonTitle.Open"                          = "Open";
 "ButtonTitle.QuickLook"                     = "Quick Look";
+"ButtonTitle.RemoveFromFavorites"           = "Remove from Favorites";
 "ButtonTitle.RemoveFromViewer"              = "Remove from Viewer";
 "ButtonTitle.Rename"                        = "Rename";
 "ButtonTitle.Replace"                       = "Replace";
@@ -112,11 +111,11 @@
 "ButtonTitle.SetAsRecipeRepository"         = "Set as Recipe Repository";
 "ButtonTitle.Yes"                           = "Yes";
 
-"InfoText.DataStoreLocation"                = "We provide support for three different storage locations...\n\n   (a) on your device (default),\n   (b) in the cloud and \n   (c) on a Network Accessible Storage (NAS) unit.\n\nThe key point here is that there is no sharing on the device.  If you chose the cloud then your data can be shared across all of your devices.  If you chose NAS then anyone who has access to your Wi-Fi can access it.";
+"InfoText.DataStoreLocation"                = "This app gives you the option to store your data either on...\n\n   (a) on your device (default) or\n   (b) on a Network Accessible Storage (NAS) drive. \n\nThe key point here is that there is no sharing on the device. If you prefer to use a NAS then anyone who has this app and access to your Wi-Fi can access your data.";
 "InfoText.FirstThingsFirst"                 = "Before you start using this app, you should consider where we can find your recipes (see Recipe Repository for details).";
 "InfoText.KeywordManager"                   = "This is where you manage (add/modify/delete) the keywords that you want to use to search and organize the titles of your recipes.";
-"InfoText.RecipeRepository"                 = "Use this utility to specify where your recipes are located.  They can be on either (a) on this device, (b) in the iCloud or (c) on a Network Accessible Storage (NAS) unit.\n\nThis app ONLY recognizes recipes can be in the following file formats: JPG, JPEG, HTM, HTML, PDF, PNG or TXT.";
-"InfoText.ScanRecipeRepository"             = "Once you have specified where your recipes are located (your repository), you can this utility to scan the designated location and create a database on this device for easy access.\n\nThe time it takes to access and display a recipe will depend on where you store your recipe files.  We do NOT copy your recipes files to your device.";
+"InfoText.RecipeRepository"                 = "Use this utility to specify where your recipes are located.  They can be on either (a) on this device or (b) on a Network Accessible Storage (NAS) drive.\n\nThis app ONLY recognizes recipes the following file formats: JPG, JPEG, HTM, HTML, PDF, PNG or TXT.";
+"InfoText.ScanRecipeRepository"             = "Once you have specified where your recipes are located (your repository), you can this utility to scan the designated location and create a database on this device for easy access.\n\nThe time it takes to access and display a recipe will depend on where you store your recipe files.";
 "InfoText.Viewer"                           = "Hit the trash icon to remove this recipe from the viewer.  This will NOT delete the file in your repo.";
 
 "LabelText.About"                           = "About";
@@ -149,9 +148,9 @@
 "Title.Device"                              = "Device";
 "Title.EnterCredentials"                    = "Enter Credentials for";
 "Title.ExportCSV"                           = "Export CSV file";
+"Title.Favorites"                           = "Favorites";
 "Title.FirstThingFirst"                     = "First Things First";
 "Title.HowToUse"                            = "How to Use";
-"Title.iCloud"                              = "iCloud";
 "Title.ImportFromCSV"                       = "Import from CSV file";
 "Title.InNASDrive"                          = "Network Accessible Storage";
 "Title.KeywordManager"                      = "Keyword Manager";

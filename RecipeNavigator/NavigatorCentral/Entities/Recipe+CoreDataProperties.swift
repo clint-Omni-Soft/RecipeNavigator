@@ -2,7 +2,7 @@
 //  Recipe+CoreDataProperties.swift
 //  RecipeNavigator
 //
-//  Created by Clint Shank on 5/23/24.
+//  Created by Clint Shank on 10/23/24.
 //
 //
 
@@ -20,6 +20,7 @@ extension Recipe {
     @NSManaged public var guid: String?
     @NSManaged public var keywords: String?
     @NSManaged public var relativePath: String?
+    @NSManaged public var favoriteRecipe: FavoriteRecipes?
     @NSManaged public var viewerRecipe: ViewerRecipes?
 
 }

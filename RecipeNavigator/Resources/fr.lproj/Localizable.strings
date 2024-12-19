@@ -6,12 +6,9 @@
   
 */
 
-"AlertMessage.CannotGoDirectFromCloudToNas" = "Vous ne pouvez pas passer d'iCloud directement au NAS, vous devez revenir à l'appareil puis au NAS";
-"AlertMessage.CannotGoDirectFromNasToCloud" = "Vous ne pouvez pas passer directement du NAS à iCloud, vous devez revenir à l'appareil puis à iCloud";
 "AlertMessage.CannotOpenDatabase"           = "Erreur fatale!  Impossible d'ouvrir la base de données.";
 "AlertMessage.CannotReadAllDbFiles"         = "La dernière mise à jour de la base de données sur le périphérique distant ne s'est pas terminée correctement. Veuillez contacter l'utilisateur de '%@' et lui demander de soumettre à nouveau son dernier message. La base de données restera verrouillée jusqu'à ce que ce problème soit résolu.";
 "AlertMessage.CannotReadFileData"           = "Nous ne pouvons pas connaître les données de cette recette.";
-"AlertMessage.CannotSeeContainer"           = "Impossible de voir votre conteneur iCloud! Accédez à Paramètres et vérifiez que vous vous êtes connecté à iCloud avec votre identifiant Apple, puis accédez à l'écran de configuration iCloud et assurez-vous que iCloud Drive est activé. Enfin, vérifiez que iCloud est activé pour cette application.";
 "AlertMessage.CannotSeeExternalDevice"      = "Nous ne pouvons pas voir votre appareil externe. Rapprochez-vous de votre réseau WiFi et réessayez.";
 "AlertMessage.ConnectingToExternalDevice"   = "Connexion à votre appareil externe.";
 "AlertMessage.CsvFileSaved"                 = "Un fichier CSV a été enregistré avec succès sur votre lecteur NAS.";
@@ -32,18 +29,17 @@
 "AlertMessage.NameMustBeUnique"             = "Le nom doit être unique!";
 "AlertMessage.NetworkAddressCannotBeBlank"  = "L'adresse réseau ne peut pas être laissée en blanc!";
 "AlertMessage.NoAccess"                     = "Impossible d'accéder à ce serveur de fichiers!";
+"AlertMessage.NoFavoriteRecipes"            = "Pour créer un Fovorite, sélectionnez simplement une recette dans la liste puis sélectionnez 'Ajouter aux Favoris' dans le menu contextuel.";
 "AlertMessage.NoSharesOnDrive"              = "Il n'y a pas de partages disponibles sur ce disque!";
 "AlertMessage.NoViewerRecipes"              = "Accédez à Recettes, puis appuyez sur un élément de la liste et sélectionnez Aperçu rapide.  Appuyez sur le bouton Ajouter (+) pour envoyer une recette au spectateur.";
 "AlertMessage.OfflineWarning"               = "Nous ne pouvons pas nous connecter à votre stockage distant. Étant donné que cette application est conçue pour fonctionner hors ligne, vous pouvez apporter des modifications que nous téléchargerons la prochaine fois que vous vous connecterez à votre stockage distant. Sachez simplement que si plusieurs personnes effectuent des modifications hors ligne, vos modifications peuvent être écrasées.";
 "AlertMessage.ReadyToRestart"               = "Prêt à redémarrer";
 "AlertMessage.RecipeRepoNotSet"             = "Sélectionnez à l'aide de l'option Référentiel de recettes";
-"AlertMessage.ScanCompleteFormat"           = "%d recettes ajoutées et %d fichiers ignorés.";
+"AlertMessage.ScanCompleteFormat"           = "%d recettes ajoutées.";
 "AlertMessage.SelectHowToUseForInfo"        = "Sélectionnez '%@' pour obtenir des informations utiles sur '%@', '%@' et '%@'.";
 "AlertMessage.UnableToAddRecipe"            = "Nous ne pouvons pas ajouter les recettes que nous avons trouvées !  Veuillez réessayer.";
 "AlertMessage.UnableToConnect"              = "Nous ne pouvons pas nous connecter à votre appareil externe. Rapprochez-vous de votre réseau WiFi et réessayez.";
-"AlertMessage.UnableToCopyFiles"            = "Impossible de copier vos fichiers sur votre iCloud Drive.";
 "AlertMessage.UnableToCreate"               = "Impossible de créer notre annuaire!";
-"AlertMessage.UnableToCreateCloudFolders"   = "Nous ne pouvons pas créer nos répertoires sur votre iCloud Drive.";
 "AlertMessage.UnableToCreateCsvFile"        = "Nous ne pouvons pas créer le fichier de variable séparée par des virgules (CSV)!";
 "AlertMessage.UnableToDeleteRecipes"        = "Nous n'avons pas pu supprimer toutes vos recettes !  Cela peut laisser des recettes indésirables dans votre base de données.";
 "AlertMessage.UnableToFetchDevices"         = "Impossible de récupérer les appareils!";
@@ -61,7 +57,7 @@
 "AlertTitle.AreYouSureImport"               = "Voulez-vous vraiment importer ce fichier?";
 "AlertTitle.CannotReadAllDbFiles"           = "Impossible de lire TOUS les fichiers de base de données à distance!";
 "AlertTitle.DataWillBeSavedToNAS"           = "Préparation de l'enregistrement des données dans:";
-"AlertTitle.DeviceNameRequired"             = "Le nom de l'appareil est requis pour NAS ou iCloud";
+"AlertTitle.DeviceNameRequired"             = "Le nom de l'appareil est requis pour NAS";
 "AlertTitle.DuplicateEntry"                 = "Double entrée!";
 "AlertTitle.EnterDeviceName"                = "Entrez le nom de l'appareil";
 "AlertTitle.EnterName"                      = "Entrez le nom";
@@ -73,6 +69,7 @@
 "AlertTitle.ImportErrors"                   = "Votre fichier CSV contient une ou plusieurs erreurs que vous devez corriger avant de pouvoir l'importer.";
 "AlertTitle.LastUpdateDidNotComplete"       = "La dernière mise à jour n'a PAS été terminée!";
 "AlertTitle.ModifyKeyword"                  = "Modifier le mot clé";
+"AlertTitle.NoFavoriteRecipes"              = "Vous n'avez pas encore de favoris";
 "AlertTitle.NoViewerRecipes"                = "Aucune recette de visionneuse";
 "AlertTitle.RecipeRepoNotSet"               = "Le référentiel de recettes n'a PAS encore été défini !";
 "AlertTitle.RemoveRecipeFromViewer"         = "Voulez-vous vraiment supprimer cette recette du spectateur ?";
@@ -87,6 +84,7 @@
 "AlertTitle.WouldYouLikeToSelectASubFolder" = "Souhaitez-vous sélectionner un sous-dossier sur ce partage?";
 
 "ButtonTitle.Add"                           = "Ajouter";
+"ButtonTitle.AddToFavorites"                = "Ajouter aux favoris";
 "ButtonTitle.AddToViewer"                   = "Ajouter à la visionneuse";
 "ButtonTitle.Back"                          = "Retour";
 "ButtonTitle.Cancel"                        = "Annuler";
@@ -101,6 +99,7 @@
 "ButtonTitle.OK"                            = "OK";
 "ButtonTitle.Open"                          = "Ouvrir";
 "ButtonTitle.QuickLook"                     = "Coup d'oeil";
+"ButtonTitle.RemoveFromFavorites"           = "Supprimer des favoris";
 "ButtonTitle.RemoveFromViewer"              = "Supprimer de la visionneuse";
 "ButtonTitle.Rename"                        = "Renommer";
 "ButtonTitle.Replace"                       = "Remplacer";
@@ -112,11 +111,11 @@
 "ButtonTitle.SetAsRecipeRepository"         = "Définir comme référentiel de recettes";
 "ButtonTitle.Yes"                           = "Oui";
 
-"InfoText.DataStoreLocation"                = "Nous prenons en charge trois emplacements de stockage différents ... \n\n   (a) sur votre appareil (par défaut), \n   (b) dans le cloud et \n   (c) sur une unité NAS (Network Accessible Storage). \n\nLe point clé ici est qu'il n'y a pas de partage sur l'appareil. Si vous avez choisi le cloud, vos données peuvent être partagées sur tous vos appareils. Si vous avez choisi le NAS, toute personne ayant accès à votre Wi-Fi peut y accéder.";
+"InfoText.DataStoreLocation"                = "Cette application vous offre la possibilité de stocker vos données soit sur...\n\n (a) sur votre appareil (par défaut) ou\n (b) sur un lecteur de stockage accessible en réseau (NAS). \n\nLe point clé ici est qu’il n’y a pas de partage sur l’appareil. Si vous préférez utiliser un NAS, toute personne disposant de cette application et ayant accès à votre Wi-Fi peut accéder à vos données.";
 "InfoText.FirstThingsFirst"                 = "Avant de commencer à utiliser cette application, vous devez déterminer où nous pouvons trouver vos recettes (voir Référentiel de recettes pour plus de détails).";
 "InfoText.KeywordManager"                   = "C'est ici que vous gérez (ajoutez/modifiez/supprimez) les mots-clés que vous souhaitez utiliser pour rechercher et organiser les titres de vos recettes.";
-"InfoText.RecipeRepository"                 = "Utilisez cet utilitaire pour spécifier où se trouvent vos recettes.  Elles peuvent se trouver soit (a) sur cet appareil, (b) dans iCloud ou (c) sur une unité de stockage accessible en réseau (NAS).\n\nCette application reconnaît UNIQUEMENT que les recettes peuvent être dans les formats de fichier suivants : JPG, JPEG, HTM, HTML, PDF, PNG ou TXT.";
-"InfoText.ScanRecipeRepository"             = "Une fois que vous avez spécifié où se trouvent vos recettes (votre référentiel), vous pouvez utiliser cet utilitaire pour analyser l'emplacement désigné et créer une base de données sur cet appareil pour un accès facile.\n\nLe temps nécessaire pour accéder et afficher une recette dépendra de où vous stockez vos fichiers de recettes.  Nous ne copions PAS vos fichiers de recettes sur votre appareil.";
+"InfoText.RecipeRepository"                 = "Utilisez cet utilitaire pour spécifier où se trouvent vos recettes.  Ils peuvent se trouver soit sur (a) sur cet appareil, soit (b) sur un lecteur de stockage accessible en réseau (NAS).\n\nCette application reconnaît UNIQUEMENT les recettes aux formats de fichiers suivants: JPG, JPEG, HTM, HTML, PDF, PNG ou TXT.";
+"InfoText.ScanRecipeRepository"             = "Une fois que vous avez spécifié où se trouvent vos recettes (votre référentiel), vous pouvez utiliser cet utilitaire pour analyser l'emplacement désigné et créer une base de données sur cet appareil pour un accès facile.\n\nLe temps nécessaire pour accéder et afficher une recette dépendra de où vous stockez vos fichiers de recettes.";
 "InfoText.Viewer"                           = "Appuyez sur l'icône de la corbeille pour supprimer cette recette de la visionneuse.  Cela ne supprimera PAS le fichier dans votre dépôt.";
 
 "LabelText.About"                           = "Sur";
@@ -149,9 +148,9 @@
 "Title.Device"                              = "Dispositif";
 "Title.EnterCredentials"                    = "Entrez les informations d'identification pour";
 "Title.ExportCSV"                           = "Exporter le fichier CSV";
+"Title.Favorites"                           = "Favoris";
 "Title.FirstThingFirst"                     = "Tout d'abord";
 "Title.HowToUse"                            = "Comment Utiliser";
-"Title.iCloud"                              = "iCloud";
 "Title.ImportFromCSV"                       = "Importer depuis un fichier CSV";
 "Title.InNASDrive"                          = "Almacenamiento accesible en red";
 "Title.KeywordManager"                      = "Gestionnaire de mots clés";

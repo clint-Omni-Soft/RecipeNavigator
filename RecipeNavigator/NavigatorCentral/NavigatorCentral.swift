@@ -18,8 +18,9 @@ protocol NavigatorCentralDelegate: AnyObject {
     func navigatorCentral(_ navigatorCentral: NavigatorCentral, didOpenDatabase    : Bool )
     func navigatorCentral(_ navigatorCentral: NavigatorCentral, didReloadRecipes   : Bool )
     func navigatorCentral(_ navigatorCentral: NavigatorCentral, didSaveImageData   : Bool )
-    func navigatorCentralDidUpdateRecipeKeywords(_ navigatorCentral: NavigatorCentral )
-    func navigatorCentralDidUpdateViewerRecipes(_  navigatorCentral: NavigatorCentral )
+    func navigatorCentralDidUpdateFavoriteRecipes(_ navigatorCentral: NavigatorCentral )
+    func navigatorCentralDidUpdateRecipeKeywords(_  navigatorCentral: NavigatorCentral )
+    func navigatorCentralDidUpdateViewerRecipes(_   navigatorCentral: NavigatorCentral )
 
 }
 
@@ -28,13 +29,15 @@ extension NavigatorCentralDelegate {
     func navigatorCentral(_ navigatorCentral: NavigatorCentral, didAddRecipes      : Bool, count: Int ) {}
     func navigatorCentral(_ navigatorCentral: NavigatorCentral, didDeleteAllRecipes: Bool ) {}
     func navigatorCentral(_ navigatorCentral: NavigatorCentral, didFetch imageNames: [String] ) {}
+    func navigatorCentral(_ navigatorCentral: NavigatorCentral, didFetch           : Bool, data: Data, from recipe: Recipe ) {}
     func navigatorCentral(_ navigatorCentral: NavigatorCentral, didFetchImage      : Bool, filename: String, image: UIImage ) {}
     func navigatorCentral(_ navigatorCentral: NavigatorCentral, didImportCsvRecords: Bool ) {}
     func navigatorCentral(_ navigatorCentral: NavigatorCentral, didOpenDatabase    : Bool ) {}
     func navigatorCentral(_ navigatorCentral: NavigatorCentral, didReloadRecipes   : Bool ) {}
     func navigatorCentral(_ navigatorCentral: NavigatorCentral, didSaveImageData   : Bool ) {}
-    func navigatorCentralDidUpdateRecipeKeywords(_ navigatorCentral: NavigatorCentral ) {}
-    func navigatorCentralDidUpdateViewerRecipes(_  navigatorCentral: NavigatorCentral ) {}
+    func navigatorCentralDidUpdateFavoriteRecipes(_ navigatorCentral: NavigatorCentral ) {}
+    func navigatorCentralDidUpdateRecipeKeywords(_  navigatorCentral: NavigatorCentral ) {}
+    func navigatorCentralDidUpdateViewerRecipes(_   navigatorCentral: NavigatorCentral ) {}
 }
 
 
@@ -46,8 +49,10 @@ class NavigatorCentral: NSObject {
     
     weak var delegate: NavigatorCentralDelegate?
     
+    var didDeleteAddRecipes             = false
     var didOpenDatabase                 = false
     var externalDeviceLastUpdatedBy     = ""
+    var favoriteRecipesArray: [Recipe]  = []
     var missingDbFiles: [String]        = []
     var numberOfRecipesLoaded           = 0
     var pleaseWaiting                   = false
@@ -55,6 +60,7 @@ class NavigatorCentral: NSObject {
     var recipeArrayReloaded             = false
     var recipeKeywords: [String]        = []
     var recipeKeywordsObject            : RecipeKeywords!
+    var reloadViewerRecipes             = false
     var resigningActive                 = false
     var restarting                      = true
     var sectionTitleArray: [String]     = []
@@ -122,9 +128,7 @@ class NavigatorCentral: NSObject {
             
             switch location {
             case .device:       newLocation = DataLocationName.device
-            case .iCloud:       newLocation = DataLocationName.iCloud
             case .nas:          newLocation = DataLocationName.nas
-            case .shareCloud:   newLocation = DataLocationName.shareCloud
             case .shareNas:     newLocation = DataLocationName.shareNas
             default:            newLocation = DataLocationName.notAssigned
             }
@@ -165,9 +169,7 @@ class NavigatorCentral: NSObject {
             
             switch location {
             case .device:       newLocation = DataLocationName.device
-            case .iCloud:       newLocation = DataLocationName.iCloud
             case .nas:          newLocation = DataLocationName.nas
-            case .shareCloud:   newLocation = DataLocationName.shareCloud
             case .shareNas:     newLocation = DataLocationName.shareNas
             default:            newLocation = DataLocationName.device
             }
@@ -223,7 +225,7 @@ class NavigatorCentral: NSObject {
             var     nameOfDevice = ""
             
             if let deviceNameString = userDefaults.string( forKey: UserDefaultKeys.deviceName ) {
-                if !deviceNameString.isEmpty && deviceNameString.count > 0 {
+                if deviceNameString != "" && deviceNameString.count > 0 {
                     nameOfDevice = deviceNameString
                 }
                 
@@ -274,8 +276,11 @@ class NavigatorCentral: NSObject {
     private var databaseUpdated             = false
     private var dataSourceLocationBacking   = DataLocation.notAssigned
     private var dataStoreLocationBacking    = DataLocation.notAssigned
+    private var favoriteRecipesObject      : FavoriteRecipes!
+    private var favoritesRefreshArray       = [(String, String)]()      // (filename, relativePath)
     private var updateTimer                 : Timer!
     private var viewerRecipesObject         : ViewerRecipes!
+    private var viewerRefreshArray          = [(String, String)]()      // (filename, relativePath)
     
     private let sampleRecipeArray = [ "Halibut with Fennel F&W 2001.JPG",
                                       "How to Make a Sourdough Starter from Scratch.txt",
@@ -301,10 +306,9 @@ class NavigatorCentral: NSObject {
     }
     
     var backgroundTaskID        : UIBackgroundTaskIdentifier = .invalid
-    var cloudCentral            = CloudCentral.sharedInstance
     let deviceAccessControl     = DeviceAccessControl.sharedInstance
     let fileManager             = FileManager.default
-    var imageRequestQueue       : [(String, NavigatorCentralDelegate)] = []      // This queue is used to serialize transactions while online (both iCloud and NAS)
+    var imageRequestQueue       : [(String, NavigatorCentralDelegate)] = []      // This queue is used to serialize transactions while online (NAS)
     var managedObjectContext    : NSManagedObjectContext!
     var nasCentral              = NASCentral.sharedInstance
     var notificationCenter      = NotificationCenter.default
@@ -419,16 +423,18 @@ class NavigatorCentral: NSObject {
     
     
     
-    // MARK: Entity Access/Modifier Methods (Public)
+    // MARK: Recipe Methods (Public)
     
     func addRecipesFrom(_ smbFileArray: [SMBFile], _ delegate: NavigatorCentralDelegate ) {
+        // This method takes in a directory at a time from the NAS
+        // NOTE: deleteAllRecipes() must be called before this one and cleanUpAfterScan() must be called after all directories have been scanned
         if !self.didOpenDatabase {
             logTrace( "ERROR!  Database NOT open yet!" )
             delegate.navigatorCentral( self, didAddRecipes: false, count: 0 )
             return
         }
         
-//        logTrace()
+        logTrace()
         persistentContainer.viewContext.perform {
             for smbFile in smbFileArray {
                 let recipe  = NSEntityDescription.insertNewObject( forEntityName: EntityNames.recipe, into: self.managedObjectContext ) as! Recipe
@@ -439,8 +445,18 @@ class NavigatorCentral: NSObject {
                 recipe.keywords     = self.keywordsIn( smbFile.name )
                 recipe.relativePath = pathUrl.deletingLastPathComponent().path
                 
-                self.saveContext()
+                if self.isFavorite( recipe ) {
+                    self.bindFavoriteRecipe( recipe )
+                }
+                
+                if self.isInViewer( recipe ) {
+                    self.bindViewerRecipe( recipe )
+                }
+
             }
+            
+            self.saveContext()
+            logVerbose( "Created [ %d ] recipe objects with [ %d ] favorites and [ %d ] viewer recipes", smbFileArray.count, self.favoriteRecipesArray.count, self.viewerRecipeArray.count )
             
             delegate.navigatorCentral( self, didAddRecipes: true, count: smbFileArray.count )
         }
@@ -448,6 +464,57 @@ class NavigatorCentral: NSObject {
     }
     
     
+    func cleanUpAfterScan() {
+        logTrace()
+        fetchFavoriteRecipesObject()
+        fetchViewerRecipes()
+        
+        favoriteRecipesArray = favoriteRecipesObject.recipes?.allObjects as! [Recipe]
+        viewerRecipeArray    = viewerRecipesObject  .recipes?.allObjects as! [Recipe]
+        
+        // First we throw out all of the viewerTuples that match the current viewer recipes
+        for recipe in viewerRecipeArray {
+            for index in 0..<viewerRefreshArray.count {
+                let viewerTuple = viewerRefreshArray[index]
+                
+                if recipe.filename == viewerTuple.0 {
+                    // As the relativePath on the device will always be empty, we cannot use it if we are switching from one to the other
+                    if recipe.relativePath!.isEmpty || viewerTuple.1.isEmpty {
+                        viewerRefreshArray.remove(at: index )
+                    }
+                    else {
+                        if recipe.relativePath == viewerTuple.1 {
+                            viewerRefreshArray.remove(at: index )
+                        }
+                        
+                    }
+     
+                    break
+                }
+
+            }
+
+        }
+        
+        // Then we use what is left to delete all the data files for recipes that we no longer have
+        for viewerTuple in viewerRefreshArray {
+            DataSourceCentral.sharedInstance.removeViewerDataFile( viewerTuple.0 )
+        }
+        
+        // Finally we alpha sort the viewerRecipeArray by filename
+        viewerRecipeArray = viewerRecipeArray.sorted( by: { (recipe1, recipe2) -> (Bool) in
+            return recipe1.filename! < recipe2.filename!
+        } )
+               
+        favoritesRefreshArray = []
+        viewerRefreshArray    = []
+
+        reloadViewerRecipes = true
+        
+        notificationCenter.post( name: NSNotification.Name( rawValue: Notifications.viewerRecipesArrayReloaded ), object: self )  // We need this for the iPad
+    }
+    
+
     func deleteAllRecipes(_ delegate: NavigatorCentralDelegate ) {
         if !self.didOpenDatabase {
             logTrace( "ERROR!  Database NOT open yet!" )
@@ -455,17 +522,32 @@ class NavigatorCentral: NSObject {
             return
         }
         
-//        logTrace()
+        logTrace()
+        favoritesRefreshArray = []
+        viewerRefreshArray    = []
+
+        // Save off descriptions of our favorite and viewer recipes
+        for recipe in favoriteRecipesArray {
+            favoritesRefreshArray.append( ( recipe.filename!, recipe.relativePath! ) )
+        }
+        
+        for recipe in viewerRecipeArray {
+            viewerRefreshArray.append( ( recipe.filename!, recipe.relativePath! ) )
+        }
+        
         persistentContainer.viewContext.perform {
-            
-            // First we clean out the viewer recipes
-            for recipe in self.viewerRecipeArray {
-                self.removeViewerDataFile( recipe.filename! )
-                self.viewerRecipesObject.removeFromRecipes( recipe )
+            // Clean out our favorites & viewer recipes
+            if self.favoriteRecipesArray.count > 0 {
+                self.favoriteRecipesObject.removeFromRecipes( NSSet(array: self.favoriteRecipesArray ) )
             }
             
-            self.viewerRecipeArray = []
+            if self.viewerRecipeArray.count > 0 {
+                self.viewerRecipesObject.removeFromRecipes( NSSet(array: self.viewerRecipeArray ) )
+            }
             
+            self.favoriteRecipesArray = []
+            self.viewerRecipeArray    = []
+
             // Then we delete all the recipes
             let flatArray = self.flatRecipeArray()
 
@@ -475,32 +557,44 @@ class NavigatorCentral: NSObject {
             
             self.saveContext()
             
+            self.didDeleteAddRecipes = true
             delegate.navigatorCentral( self, didDeleteAllRecipes: true )
         }
         
     }
     
     
-    func fetchFromDevice(_ recipe: Recipe ) -> Data {
-        var fetchedData = Data.init()
-        
-        if let url = fileManager.urls( for: .documentDirectory, in: .userDomainMask ).first {
-            let fileUrl = url.appendingPathComponent( recipe.filename! )
-            
-            do {
-                try fetchedData = Data(contentsOf: fileUrl )
-            }
-            
-            catch let error as NSError {
-                logVerbose( "ERROR!  Failed to read [ %@ ] ... Error[ %@ ]", recipe.filename!, error.localizedDescription )
-            }
-            
+    func deleteDeviceRecipeAt(_ indexPath: IndexPath, _ delegate: NavigatorCentralDelegate ) {
+        if !self.didOpenDatabase {
+            logTrace( "ERROR!  Database NOT open yet!" )
+            return
         }
-
-        return fetchedData
+        
+        //        logTrace()
+        self.delegate = delegate
+        
+        persistentContainer.viewContext.perform {
+            let recipe = self.recipeAt( indexPath )
+            
+            if self.isFavorite( recipe ) {
+                self.detachFavoriteRecipe( recipe )
+            }
+            
+            if self.isInViewer( recipe ) {
+                self.detachFavoriteRecipe( recipe )
+                DataSourceCentral.sharedInstance.removeViewerDataFile( recipe.filename! )
+            }
+            
+            DataSourceCentral.sharedInstance.removeFromDeviceRepo( recipe.filename! )
+            
+            self.managedObjectContext.delete( recipe )
+            
+            self.refetchRecipesAndNotifyDelegate()
+        }
+        
     }
     
-
+    
     func fetchRecipesWith(_ delegate: NavigatorCentralDelegate ) {
         if !self.didOpenDatabase {
             logTrace( "ERROR!  Database NOT open yet!" )
@@ -529,8 +623,6 @@ class NavigatorCentral: NSObject {
         case SupportedFilenameExtensions.png:   mimeType = FileMimeTypes.png
         case SupportedFilenameExtensions.rtf:   mimeType = FileMimeTypes.rtf
         case SupportedFilenameExtensions.txt:   mimeType = FileMimeTypes.txt
-//        case SupportedFilenameExtensions.doc:   mimeType = FileMimeTypes.doc
-//        case SupportedFilenameExtensions.docx:  mimeType = FileMimeTypes.docx
         default:                                break
         }
         
@@ -554,7 +646,7 @@ class NavigatorCentral: NSObject {
                     var saveIt = true
                     
                     for keyword in keywordArray {
-                        if !keyword.isEmpty {
+                        if keyword != "" {
                             if !filename.uppercased().contains( keyword.uppercased() ) {
                                 saveIt = false
                                 break
@@ -595,6 +687,52 @@ class NavigatorCentral: NSObject {
     
     
     func reloadRecipesFrom(_ fileDescriptorArray: [FileDescriptor], _ delegate: NavigatorCentralDelegate ) {
+        // This method takes in the entire contents of the device's Documents/Recipe directory in a single shot
+        // NOTE: deleteAllRecipes() must be called before this one and cleanUpAfterScan() must be called after the delegate is notified
+        if !self.didOpenDatabase {
+            logTrace( "ERROR!  Database NOT open yet!" )
+            return
+        }
+        
+        logTrace( "Starting" )
+        self.delegate = delegate
+        
+        var objectsCreated = 0
+        
+        persistentContainer.viewContext.perform {
+            for fileDescriptor in fileDescriptorArray {
+                let recipe = NSEntityDescription.insertNewObject( forEntityName: EntityNames.recipe, into: self.managedObjectContext ) as! Recipe
+                
+                recipe.filename     = fileDescriptor.name
+                recipe.guid         = UUID().uuidString
+                recipe.keywords     = self.keywordsIn( fileDescriptor.name )
+                recipe.relativePath = fileDescriptor.path
+
+                objectsCreated += 1
+                
+                if self.isFavorite( recipe ) {
+                    self.bindFavoriteRecipe( recipe )
+                }
+
+                if self.isInViewer( recipe ) {
+                    self.bindViewerRecipe( recipe )
+                }
+                
+            }
+            
+            self.saveContext()
+            logVerbose( "Created [ %d ] recipe objects with [ %d ] favorites and [ %d ] viewer recipes", objectsCreated, self.favoriteRecipesArray.count, self.viewerRecipeArray.count )
+            
+            self.refetchRecipesAndNotifyDelegate()
+        }
+        
+    }
+    
+    
+    
+    // MARK: Favorites Methods (Public)
+    
+    func addToFavorites(_ recipe: Recipe, _ delegate: NavigatorCentralDelegate ) {
         if !self.didOpenDatabase {
             logTrace( "ERROR!  Database NOT open yet!" )
             return
@@ -603,40 +741,132 @@ class NavigatorCentral: NSObject {
         logTrace()
         self.delegate = delegate
         
-        var objectsCreated = 0
-        var objectsDeleted = 0
-        
         persistentContainer.viewContext.perform {
-            let flatArray = self.flatRecipeArray()
-            
-            for recipe in flatArray {
-                self.managedObjectContext.delete( recipe )
-                objectsDeleted += 1
-            }
-            
+            self.bindFavoriteRecipe( recipe )
             self.saveContext()
             
-            for fileDescriptor in fileDescriptorArray {
-                let recipe = NSEntityDescription.insertNewObject( forEntityName: EntityNames.recipe, into: self.managedObjectContext ) as! Recipe
-                
-                recipe.filename     = fileDescriptor.name
-                recipe.guid         = UUID().uuidString
-                recipe.keywords     = self.keywordsIn( fileDescriptor.name )
-                recipe.relativePath = fileDescriptor.path
-                
-                objectsCreated += 1
-            }
-            
-            self.saveContext()
-            logVerbose( "Deleted [ %d ] and created [ %d ] recipe objects", objectsDeleted, objectsCreated )
-            
-            self.refetchRecipesAndNotifyDelegate()
+            self.refetchFavoriteRecipesAndNotifyDelegate()
         }
         
     }
     
 
+    func removeFromFavorites(_ recipe: Recipe, _ delegate: NavigatorCentralDelegate ) {
+        if !self.didOpenDatabase {
+            logTrace( "ERROR!  Database NOT open yet!" )
+            return
+        }
+        
+        logTrace()
+        self.delegate = delegate
+        
+        persistentContainer.viewContext.perform {
+            self.detachFavoriteRecipe( recipe )
+            self.saveContext()
+            
+            self.refetchFavoriteRecipesAndNotifyDelegate()
+        }
+        
+    }
+
     
+    
+    // MARK: Favorites Utility Methods (Private)
+    
+    // Must be called from within persistentContainer.viewContext
+    private func bindFavoriteRecipe(_ recipe: Recipe ) {
+        self.favoriteRecipesObject.addToRecipes( recipe )
+        self.favoriteRecipesArray.append( recipe )
+        
+        recipe.favoriteRecipe = favoriteRecipesObject
+        logVerbose( "[ %@ ]", recipe.filename! )
+    }
+    
+    
+    // Must be called from within persistentContainer.viewContext
+    private func detachFavoriteRecipe(_ recipe: Recipe ) {
+        var newRecipeArray = [Recipe]()
+        
+        for arrayRecipe in favoriteRecipesArray {
+            if recipe.guid != arrayRecipe.guid {
+                newRecipeArray.append( arrayRecipe )
+            }
+            
+        }
+        
+        favoriteRecipesArray = newRecipeArray
+        favoriteRecipesObject.removeFromRecipes( recipe )
+        
+        recipe.favoriteRecipe = nil
+        logVerbose( "[ %@ ]", recipe.filename! )
+    }
+    
+    
+    // Must be called from within persistentContainer.viewContext
+    private func fetchFavoriteRecipesObject() {
+        favoriteRecipesArray = []
+        
+        do {
+            let     request: NSFetchRequest<FavoriteRecipes> = FavoriteRecipes.fetchRequest()
+            let     favoriteRecipesObjectsArray = try managedObjectContext.fetch( request )
+            
+            
+            if favoriteRecipesObjectsArray.count == 0 {
+                self.favoriteRecipesObject = (NSEntityDescription.insertNewObject( forEntityName: EntityNames.favoriteRecipes, into: self.managedObjectContext ) as! FavoriteRecipes )
+                self.saveContext()
+                logTrace( "Created FavoriteRecipes object" )
+            }
+            else if favoriteRecipesObjectsArray.count == 1 {
+                favoriteRecipesObject = favoriteRecipesObjectsArray[0]
+                
+                if favoriteRecipesObject.recipes != nil {
+                    if let recipeSet = favoriteRecipesObject.recipes {
+                        favoriteRecipesArray = recipeSet.allObjects as! [Recipe]
+                        
+                        favoriteRecipesArray = favoriteRecipesArray.sorted(by: { (recipe1, recipe2) in
+                            return recipe1.filename!.uppercased() < recipe2.filename!.uppercased()
+                        })
+                        
+                    }
+                    
+                }
+                
+                logVerbose( "Retrieved [ %d ] container objects and [ %d ] favorite recipes", favoriteRecipesObjectsArray.count, favoriteRecipesArray.count )
+            }
+            
+        }
+        
+        catch {
+            logTrace( "Error!  Fetch failed!" )
+        }
+        
+    }
+    
+    
+    private func isFavorite(_ recipe: Recipe ) -> Bool {
+        var favoriteRecipe = false
+        
+        for favoritesTuple in favoritesRefreshArray {
+            if recipe.filename == favoritesTuple.0 {
+                // As the relativePath on the device will always be empty, we cannot use it if we are switching from one to the other
+                if recipe.relativePath!.isEmpty || favoritesTuple.1.isEmpty {
+                    favoriteRecipe = true
+                }
+                else {
+                    favoriteRecipe = recipe.relativePath == favoritesTuple.1
+                }
+                
+//                logVerbose( "Found a matching name [ %@ ] - [ %@ ][ %@ ] ? [ %@ ][ %@ ]", stringFor( favoriteRecipe ), recipe.filename!, recipe.relativePath!, favoritesTuple.0, favoritesTuple.1 )
+                break
+            }
+
+        }
+        
+        return favoriteRecipe
+    }
+    
+    
+
     // MARK: Keyword Methods (Public)
     
     func saveRecipeKeywords(_ keywordArray: [String] ) {
@@ -649,11 +879,11 @@ class NavigatorCentral: NSObject {
         var keywordString = ""
         
         for keyword in keywordArray {
-            if !keywordString.isEmpty {
+            if keywordString != "" {
                 keywordString += GlobalConstants.separatorForRecipeKeywordString
             }
             
-            keywordString += keyword
+            keywordString += keyword.uppercased()
         }
         
         recipeKeywords = keywordArray
@@ -678,8 +908,8 @@ class NavigatorCentral: NSObject {
             let flatArray = self.flatRecipeArray()
             
             for recipe in flatArray {
-                let newKeywordString = self.keywordsIn( recipe.filename! )
-                let oldKeywordString = recipe.keywords ?? ""
+                let newKeywordString = self.keywordsIn( recipe.filename!.uppercased() )
+                let oldKeywordString = recipe.keywords?.uppercased() ?? ""
                 
                 if newKeywordString != oldKeywordString {
                     recipe.keywords = newKeywordString
@@ -696,7 +926,7 @@ class NavigatorCentral: NSObject {
     
       
 
-    // MARK: Viewer Methods
+    // MARK: Viewer Methods (Public)
     
     func addViewerRecipe(_ recipe: Recipe, _ delegate: NavigatorCentralDelegate ) {
         if !self.didOpenDatabase {
@@ -704,31 +934,16 @@ class NavigatorCentral: NSObject {
             return
         }
         
-//        logTrace()
+        logTrace()
         self.delegate = delegate
         
         persistentContainer.viewContext.perform {
-            self.viewerRecipesObject.addToRecipes( recipe )
-            
+            self.bindViewerRecipe( recipe )
             self.saveContext()
+            
             self.refetchViewerRecipesAndNotifyDelegate()
         }
         
-    }
-    
-    
-    func accessoryTypeFor(_ recipe: Recipe ) -> UITableViewCell.AccessoryType {
-        var accessory = UITableViewCell.AccessoryType.none
-        
-        for viewerRecipe in viewerRecipeArray {
-            if recipe.guid == viewerRecipe.guid {
-                accessory = .checkmark
-                break
-            }
-            
-        }
-        
-        return accessory
     }
     
     
@@ -760,59 +975,18 @@ class NavigatorCentral: NSObject {
     }
     
     
-    func fetchViewerRecipesObject(_ delegate: NavigatorCentralDelegate ) {
-        if !self.didOpenDatabase {
-            logTrace( "ERROR!  Database NOT open yet!" )
-            return
-        }
-        
-//        logTrace()
-        self.delegate = delegate
-        
-        persistentContainer.viewContext.perform {
-            self.refetchViewerRecipesAndNotifyDelegate()
-        }
-        
-    }
-    
-    
-    func flushViewerRecipes() {
-        if !self.didOpenDatabase {
-            logTrace( "ERROR!  Database NOT open yet!" )
-            return
-        }
-        
-        logTrace()
-        for recipe in viewerRecipeArray {
-            removeViewerDataFile( recipe.filename! )
-        }
-
-        persistentContainer.viewContext.perform {
-            for recipe in self.viewerRecipeArray {
-                self.viewerRecipesObject.removeFromRecipes( recipe )
-            }
-            
-            self.saveContext()
-            
-            self.viewerRecipeArray = []
-        }
-        
-    }
-    
-    
     func removeViewerRecipe(_ recipe: Recipe, _ delegate: NavigatorCentralDelegate ) {
         if !self.didOpenDatabase {
             logTrace( "ERROR!  Database NOT open yet!" )
             return
         }
         
-        removeViewerDataFile( recipe.filename! )
-        
-//        logTrace()
+        logTrace()
         self.delegate = delegate
-        
+        DataSourceCentral.sharedInstance.removeViewerDataFile( recipe.filename! )
+
         persistentContainer.viewContext.perform {
-            self.viewerRecipesObject.removeFromRecipes( recipe )
+            self.detachViewerRecipe( recipe )
             self.saveContext()
 
             self.refetchViewerRecipesAndNotifyDelegate()
@@ -821,33 +995,41 @@ class NavigatorCentral: NSObject {
     }
     
     
-    func saveFileDataFrom(_ recipe: Recipe, _ fileData: Data ) {
-        guard let docURL = fileManager.urls( for: .documentDirectory, in: .userDomainMask ).last else {
-            logTrace( "Error!  Unable to resolve document directory" )
-            return
-        }
-        
-        let dataDirectoryURL = docURL.appendingPathComponent( DirectoryNames.viewerData )
-        let fileDataURL      = dataDirectoryURL.appendingPathComponent( recipe.filename! )
-        let fileDataPath     = fileDataURL.path + GlobalConstants.dataFileExtension
-        
-        if !fileManager.fileExists(atPath: fileDataPath ) {
-            do {
-                try fileData.write(to: URL(fileURLWithPath: fileDataPath ), options: .atomic )
-                logVerbose( "Wrote [ %d ] data bytes for [ %@ ]", fileData.count, recipe.filename! )
-            }
-            
-            catch let error as NSError {
-                logVerbose( "ERROR!  Failed to save image for [ %@ ] ... Error[ %@ ]", recipe.filename!, error.localizedDescription )
-            }
-
-        }
-
-    }
-
-    
     
     // MARK: Viewer Utility Methods (Private)
+    
+    // Must be called from within persistentContainer.viewContext
+    private func bindViewerRecipe(_ recipe: Recipe ) {
+        viewerRecipesObject.addToRecipes( recipe )
+        viewerRecipeArray.append( recipe )
+        
+        viewerRecipeArray = viewerRecipeArray.sorted(by: { (recipe1, recipe2) -> (Bool) in
+            return recipe1.filename!.uppercased() < recipe2.filename!.uppercased()
+        })
+
+        recipe.viewerRecipe = viewerRecipesObject
+        logVerbose( "[ %@ ]", recipe.filename! )
+    }
+    
+    
+    // Must be called from within persistentContainer.viewContext
+    private func detachViewerRecipe(_ recipe: Recipe ) {
+        var newRecipeArray = [Recipe]()
+        
+        for arrayRecipe in viewerRecipeArray {
+            if recipe.guid != arrayRecipe.guid {
+                newRecipeArray.append( arrayRecipe )
+            }
+            
+        }
+        
+        viewerRecipeArray = newRecipeArray
+        viewerRecipesObject.removeFromRecipes( recipe )
+        
+        recipe.viewerRecipe = nil
+        logVerbose( "[ %@ ]", recipe.filename! )
+    }
+    
     
     // Must be called from within persistentContainer.viewContext
     private func fetchViewerRecipes() {
@@ -858,7 +1040,12 @@ class NavigatorCentral: NSObject {
             let     viewerRecipesObjectsArray = try managedObjectContext.fetch( request )
             
             
-            if viewerRecipesObjectsArray.count == 1 {
+            if viewerRecipesObjectsArray.count == 0 {
+                self.viewerRecipesObject = (NSEntityDescription.insertNewObject( forEntityName: EntityNames.viewerRecipes, into: self.managedObjectContext ) as! ViewerRecipes )
+                self.saveContext()
+                logTrace( "Created ViewerRecipes object" )
+            }
+            else if viewerRecipesObjectsArray.count == 1 {
                 viewerRecipesObject = viewerRecipesObjectsArray[0]
                 
                 if viewerRecipesObject.recipes != nil {
@@ -866,11 +1053,15 @@ class NavigatorCentral: NSObject {
                         viewerRecipeArray = recipeSet.allObjects as! [Recipe]
                     }
                     
+                    viewerRecipeArray = viewerRecipeArray.sorted(by: { (recipe1, recipe2) -> (Bool) in
+                        return recipe1.filename!.uppercased() < recipe2.filename!.uppercased()
+                    })
+                    
                 }
                 
+                logVerbose( "Retrieved [ %d ] container objects and [ %d ] viewer recipes", viewerRecipesObjectsArray.count, viewerRecipeArray.count )
             }
             
-            logVerbose( "Retrieved [ %d ] container objects and [ %d ] viewer recipes", viewerRecipesObjectsArray.count, viewerRecipeArray.count )
         }
         
         catch {
@@ -880,28 +1071,42 @@ class NavigatorCentral: NSObject {
     }
     
     
-    private func removeViewerDataFile(_ filename: String ) {
-        guard let docURL = fileManager.urls( for: .documentDirectory, in: .userDomainMask ).last else {
-            logTrace( "Error!  Unable to resolve document directory" )
+    private func fetchViewerRecipesObject(_ delegate: NavigatorCentralDelegate ) {
+        if !self.didOpenDatabase {
+            logTrace( "ERROR!  Database NOT open yet!" )
             return
         }
         
-        let dataDirectoryURL = docURL.appendingPathComponent( DirectoryNames.viewerData )
-        let fileDataURL  = dataDirectoryURL.appendingPathComponent( filename )
-        let fileDataPath = fileDataURL.path + GlobalConstants.dataFileExtension
-
-        if fileManager.fileExists(atPath: fileDataPath ) {
-            do {
-                try fileManager.removeItem(atPath: fileDataPath )
-                logVerbose( "Removed [ %@ ]", filename )
-            }
-
-            catch let error as NSError {
-                logVerbose( "ERROR!  Failed to delete data for [ %@ ] ... Error[ %@ ]", filename, error.localizedDescription )
-            }
-
+        logTrace()
+        self.delegate = delegate
+        
+        persistentContainer.viewContext.perform {
+            self.refetchViewerRecipesAndNotifyDelegate()
         }
         
+    }
+    
+    
+    private func isInViewer(_ recipe: Recipe ) -> Bool {
+        var inViewer = false
+        
+        for viewerTuple in viewerRefreshArray {
+            if recipe.filename == viewerTuple.0 {
+                // As the relativePath on the device will always be empty, we cannot use it if we are switching from one to the other
+                if recipe.relativePath!.isEmpty || viewerTuple.1.isEmpty {
+                    inViewer = true
+                }
+                else {
+                    inViewer = recipe.relativePath == viewerTuple.1
+                }
+ 
+//                logVerbose( "Found a matching name [ %@ ] - [ %@ ][ %@ ] ? [ %@ ][ %@ ]", stringFor( inViewer ), recipe.filename!, recipe.relativePath!, viewerTuple.0, viewerTuple.1 )
+                break
+            }
+            
+        }
+        
+        return inViewer
     }
     
     
@@ -1059,12 +1264,10 @@ class NavigatorCentral: NSObject {
             return
         }
         
+        // We must be on the NAS
         logVerbose( "[ %@ ]", nameForDataLocation( dataStoreLocation ) )
         
-        if dataStoreLocation == .iCloud || dataStoreLocation == .shareCloud {
-            cloudCentral.canSeeCloud( self )
-        }
-        else {
+        if !stayOffline {
             nasCentral.emptyQueue()
             nasCentral.canSeeNasFolders( self )
         }
@@ -1087,7 +1290,7 @@ class NavigatorCentral: NSObject {
                 let fileExtension = components.last
                 
                 if let bundleFileUrl = Bundle.main.url( forResource: rootFilename, withExtension: fileExtension ) {
-                    var targetFileUrl = documentDirectoryURL
+                    var targetFileUrl = documentDirectoryURL.appendingPathComponent( DirectoryNames.recipes )
                     
                     targetFileUrl = targetFileUrl.appendingPathComponent( filename )
                     
@@ -1113,6 +1316,43 @@ class NavigatorCentral: NSObject {
     }
     
     
+    private func createDataFolders() {
+        guard let docURL = fileManager.urls( for: .documentDirectory, in: .userDomainMask ).last else {
+            logTrace( "Error!  Unable to resolve document directory" )
+            return
+        }
+        
+        let recipesDirectoryURL = docURL.appendingPathComponent( DirectoryNames.recipes )
+        
+        if !fileManager.fileExists( atPath: recipesDirectoryURL.path ) {
+            do {
+                try fileManager.createDirectory( atPath: recipesDirectoryURL.path, withIntermediateDirectories: true, attributes: nil )
+                logVerbose( "Created [ %@ ]", recipesDirectoryURL.path )
+            }
+            
+            catch let error as NSError {
+                logVerbose( "ERROR!  We Failed to create [ %@ ] ... Error[ %@ ]", recipesDirectoryURL.path, error.localizedDescription )
+            }
+            
+        }
+
+        let viewerDataDirectoryURL = docURL.appendingPathComponent( DirectoryNames.viewerData )
+        
+        if !fileManager.fileExists( atPath: viewerDataDirectoryURL.path ) {
+            do {
+                try fileManager.createDirectory( atPath: viewerDataDirectoryURL.path, withIntermediateDirectories: true, attributes: nil )
+                logVerbose( "Created [ %@ ]", viewerDataDirectoryURL.path )
+            }
+            
+            catch let error as NSError {
+                logVerbose( "ERROR!  We Failed to create [ %@ ] ... Error[ %@ ]", viewerDataDirectoryURL.path, error.localizedDescription )
+            }
+            
+        }
+
+    }
+    
+    
     private func createRecipeKeywordsObject() {
         logTrace()
         let object = NSEntityDescription.insertNewObject( forEntityName: EntityNames.recipeKeywords, into: self.managedObjectContext ) as! RecipeKeywords
@@ -1128,7 +1368,7 @@ class NavigatorCentral: NSObject {
         
         // Reconstruct the string (now sorted)
         for keyword in sortedKeywordArray {
-            if !keywordString.isEmpty {
+            if keywordString != "" {
                 keywordString += GlobalConstants.separatorForRecipeKeywordString
             }
             
@@ -1140,29 +1380,6 @@ class NavigatorCentral: NSObject {
         saveContext()
         
         recipeKeywords = sortedKeywordArray
-    }
-    
-    
-    private func createViewerTempFolder() {
-        guard let docURL = fileManager.urls( for: .documentDirectory, in: .userDomainMask ).last else {
-            logTrace( "Error!  Unable to resolve document directory" )
-            return
-        }
-        
-        let viewerDataDirectoryURL = docURL.appendingPathComponent( DirectoryNames.viewerData )
-        
-        if !fileManager.fileExists( atPath: viewerDataDirectoryURL.path ) {
-            do {
-                try fileManager.createDirectory( atPath: viewerDataDirectoryURL.path, withIntermediateDirectories: true, attributes: nil )
-                logVerbose( "Created [ %@ ]", viewerDataDirectoryURL.path )
-            }
-            
-            catch let error as NSError {
-                logVerbose( "ERROR!  We Failed to create [ %@ ] ... Error[ %@ ]", viewerDataDirectoryURL.path, error.localizedDescription )
-            }
-            
-        }
-
     }
     
     
@@ -1279,16 +1496,17 @@ class NavigatorCentral: NSObject {
     
     
     private func flatRecipeArray() -> [Recipe] {
-        var flatArray: [Recipe] = []
+        var flatArray = [Recipe]()
         
-        for array in recipeArrayOfArrays {
-            for recipe in array {
-                if !flatArray.contains( recipe ) {
-                    flatArray.append( recipe )
-                }
-                
-            }
+        do {
+            let     request: NSFetchRequest<Recipe> = Recipe.fetchRequest()
+            let     fetchedRecipes = try managedObjectContext.fetch( request )
             
+            flatArray = fetchedRecipes
+            logVerbose( "returning [ %d ] objects", flatArray.count )
+        }
+        catch {
+            logTrace( "Error!  Fetch failed!" )
         }
         
         return flatArray
@@ -1299,12 +1517,12 @@ class NavigatorCentral: NSObject {
         var keywordString = ""
         
         for keyword in recipeKeywords {
-            if filename.contains( keyword ) {
-                if !keywordString.isEmpty {
+            if filename.uppercased().contains( keyword.uppercased() ) {
+                if keywordString != "" {
                     keywordString.append( "," )
                 }
                 
-                keywordString.append( keyword )
+                keywordString.append( keyword.uppercased() )
             }
             
         }
@@ -1321,7 +1539,8 @@ class NavigatorCentral: NSObject {
         self.persistentContainer.viewContext.perform {
             if !primedFlag {
                 self.createRecipeKeywordsObject()
-                
+                self.createDataFolders()
+
                 for filename in self.sampleRecipeArray {
                     if self.copyFromBundleToDocumentsFolder( filename ) {
                         let recipe = NSEntityDescription.insertNewObject( forEntityName: EntityNames.recipe, into: self.managedObjectContext ) as! Recipe
@@ -1336,10 +1555,7 @@ class NavigatorCentral: NSObject {
                     
                 }
                 
-                self.viewerRecipesObject = (NSEntityDescription.insertNewObject( forEntityName: EntityNames.viewerRecipes, into: self.managedObjectContext ) as! ViewerRecipes)
-                
                 self.saveContext()
-                self.createViewerTempFolder()
                 
                 self.userDefaults.set( true, forKey: Constants.primedFlag )
                 self.userDefaults.synchronize()
@@ -1347,6 +1563,7 @@ class NavigatorCentral: NSObject {
             
             self.fetchRecipeKeywordsObject()    // Must be done first
             self.fetchAllRecipeObjects()
+            self.fetchFavoriteRecipesObject()
             self.fetchViewerRecipes()
             
             logVerbose( "Loaded Keywords[ %d ], Recipes[ %d ] & ViewerRecipe[ %d ] objects", self.recipeKeywords.count, self.numberOfRecipesLoaded, self.viewerRecipeArray.count )
@@ -1412,6 +1629,18 @@ class NavigatorCentral: NSObject {
     
     
     // Must be called from within a persistentContainer.viewContext
+    private func refetchFavoriteRecipesAndNotifyDelegate() {
+        fetchFavoriteRecipesObject()
+        
+        DispatchQueue.main.async {
+            logTrace( "calling delegate" )
+            self.delegate?.navigatorCentralDidUpdateFavoriteRecipes( self )
+        }
+        
+    }
+
+    
+    // Must be called from within a persistentContainer.viewContext
     private func refetchViewerRecipesAndNotifyDelegate() {
         fetchViewerRecipes()
         
@@ -1458,17 +1687,20 @@ extension NavigatorCentral {
         for recipe in fetchedRecipes {
             // Retrieve the keywords from the recipe
             if let recipeKeywordString = recipe.keywords {
-                let recipeKeywordArray = recipeKeywordString.components(separatedBy: GlobalConstants.separatorForRecipeKeywordString )
-            
-                // Then identify which array to copy the recipe into for each keyword
-                for recipeKeyword in recipeKeywordArray {
-                    for index in 0..<self.recipeKeywords.count {
-                        if recipeKeyword.uppercased() == recipeKeywords[index].uppercased() {
-                            outputArrayOfArrays[index].append( recipe )
+                if recipeKeywordString != "" {
+                    let recipeKeywordArray = recipeKeywordString.components(separatedBy: GlobalConstants.separatorForRecipeKeywordString )
+                
+                    // Then identify which array to copy the recipe into for each keyword
+                    for recipeKeyword in recipeKeywordArray {
+                        for index in 0..<self.recipeKeywords.count {
+                            if recipeKeyword.uppercased() == recipeKeywords[index].uppercased() {
+                                outputArrayOfArrays[index].append( recipe )
+                            }
+                            
                         }
                         
                     }
-                    
+
                 }
                 
             }
@@ -1654,26 +1886,12 @@ extension NavigatorCentral {
                     self.databaseUpdated = false
                     logVerbose( "databaseUpdated[ true ]\n    %@", self.deviceAccessControl.descriptor() )
 
-                    if self.dataStoreLocation == .iCloud || self.dataStoreLocation == .shareCloud {
-                        logTrace( "copying database to iCloud" )
-                        self.cloudCentral.copyDatabaseFromDeviceToCloud( self )
-                    }
-                    else {  // .nas
-                        logTrace( "copying database to NAS" )
-                        self.nasCentral.copyDatabaseFromDeviceToNas( self )
-                    }
-
+                    logTrace( "copying database to NAS" )
+                    self.nasCentral.copyDatabaseFromDeviceToNas( self )
                 }
                 else {
-                    if self.dataStoreLocation == .iCloud || self.dataStoreLocation == .shareCloud {
-                        logTrace( "ending iCloud session" )
-                        self.cloudCentral.endSession( self )
-                    }
-                    else {  // .nas
-                        logTrace( "ending NAS session" )
-                        self.nasCentral.endSession( self )
-                    }
-
+                    logTrace( "ending NAS session" )
+                    self.nasCentral.endSession( self )
                 }
                 
             }
@@ -1720,15 +1938,8 @@ extension NavigatorCentral {
                         self.databaseUpdated = false
                         self.deviceAccessControl.updating = true
                         
-                        if self.dataStoreLocation == .iCloud || self.dataStoreLocation == .shareCloud {
-                            logTrace( "copying database to iCloud" )
-                            self.cloudCentral.copyDatabaseFromDeviceToCloud( self )
-                        }
-                        else {  // .nas
-                            logTrace( "copying database to NAS" )
-                            self.nasCentral.copyDatabaseFromDeviceToNas( self )
-                        }
-                        
+                        logTrace( "copying database to NAS" )
+                        self.nasCentral.copyDatabaseFromDeviceToNas( self )
                     }
                     
                 }
@@ -1762,13 +1973,7 @@ extension NavigatorCentral {
                     }
                     else {
                         logTrace( "removing lock file" )
-                        if self.dataStoreLocation == .iCloud || self.dataStoreLocation == .shareCloud {
-                            self.cloudCentral.unlockCloud( self )
-                        }
-                        else {  // .nas
-                            self.nasCentral.unlockNas( self )
-                        }
-                        
+                        self.nasCentral.unlockNas( self )
                     }
                     
                 }
@@ -1778,5 +1983,6 @@ extension NavigatorCentral {
         }
         
     }
+    
 
 }

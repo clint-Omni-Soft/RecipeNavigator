@@ -13,20 +13,26 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     
-    // Public Definitions
+    // MARK: Public Definitions
     var hidePrimary = false
+    var recipeViewer: RecipeViewerViewController!
     var window      : UIWindow?
     
     
-    // Private Definitions
+    // MARK: Private Definitions
     private let navigatorCentral   = NavigatorCentral.sharedInstance
     private let notificationCenter = NotificationCenter.default
     private var splitViewController: UISplitViewController!
+    private let userDefaults       = UserDefaults.standard
 
     
     
+    // MARK: UIApplication Lifecycle Methods
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         LogCentral.sharedInstance.setupLogging()
+        setRepoDirectory()
+
         navigatorCentral.enteringForeground()
 
         if navigatorCentral.dataStoreLocation != .device {
@@ -38,7 +44,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         
         if UIDevice.current.userInterfaceIdiom == .pad {
-            setSplitViewControllerDelegate()
+            getLinkToSplitViewController()
         }
         
         return true
@@ -80,8 +86,29 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             
         }
        
-        logVerbose( "hidePrimary[ %@ ]", stringFor( hidePrimary ) )
-        notificationCenter.post( name: NSNotification.Name( rawValue: Notifications.splitViewChanged ), object: self )
+        if self.recipeViewer != nil {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1 ) {
+                self.recipeViewer.primaryWindow( isHidden )
+            }
+            
+        }
+        
+//        logVerbose( "hidePrimary[ %@ ]", stringFor( hidePrimary ) )
+    }
+    
+    
+    func primaryIsHidden() -> Bool {
+        var isHidden = true
+        
+        if let splitVC = self.splitViewController {
+            isHidden = splitVC.isCollapsed
+            logVerbose( "instantiated - [ %@ ]", stringFor( isHidden ) )
+        }
+        else {
+            logTrace( "NOT instantiated" )
+        }
+        
+        return isHidden
     }
     
     
@@ -105,12 +132,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     // MARK: Utility Methods (Private)
     
-    private func setSplitViewControllerDelegate() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1 ) {
+    private func getLinkToSplitViewController() {
+        DispatchQueue.main.asyncAfter(deadline: .now() ) {
             if let splitVC = self.window!.rootViewController as? UISplitViewController {
-                self.splitViewController          = splitVC
-//                self.splitViewController.delegate = self
+                self.splitViewController = splitVC
                 self.splitViewController.presentsWithGesture = false
+                
+                let minimumWidth = min( CGRectGetWidth(self.splitViewController.view.bounds), CGRectGetHeight(self.splitViewController.view.bounds) )
+                
+                self.splitViewController.minimumPrimaryColumnWidth = minimumWidth / 2;
+                self.splitViewController.maximumPrimaryColumnWidth = minimumWidth;                
                 logTrace( "Captured pointer to SplitViewController" )
             }
             else {
@@ -122,6 +153,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     
+    private func setRepoDirectory() {
+        var repoDirectory = ""
+        
+        if let directory = userDefaults.string( forKey: UserDefaultKeys.repoDirectory ) {
+            repoDirectory = directory
+        }
+
+        if repoDirectory.isEmpty {
+            // TODO: Configure DirectoryNames.xxxxx for each application
+            userDefaults.set( DirectoryNames.recipes, forKey: UserDefaultKeys.repoDirectory )
+            userDefaults.synchronize()
+        }
+
+    }
+
+
     private func showPleaseWaitScreen() {
         logTrace()
         let storyboard = UIStoryboard(name: "PleaseWait", bundle: .main )

@@ -454,7 +454,7 @@ extension SMBCentral {
         
         
     func fetchFilesAt(_ startingPath : String, _ delegate : SMBCentralDelegate ) {
-        logVerbose( "[ %@/%@ ]", connectedShare!.name, startingPath )
+        logVerbose( "[ %@%@ ]", connectedShare!.name, startingPath )
         var     fileArray : [SMBFile] = []
 
         if !connectedToDevice || !shareOpen {
@@ -586,7 +586,7 @@ extension SMBCentral {
         connectedToDevice = false
         shareOpen         = true
         
-        logTrace()
+//        logTrace()
         if let myFileServer = SMBFileServer.init( host: nasDescriptor.host, netbiosName: nasDescriptor.netbiosName, group: nasDescriptor.group ) {
             if let timer = startSessionTimer {
                 timer.invalidate()
@@ -616,7 +616,6 @@ extension SMBCentral {
                     myFileServer.findShare( nasDescriptor.share, completion: {
                         (share, error) in
                         
-                        logTrace( "found share" )
                         if error != nil {
                             logVerbose( "ERROR!  Unable to find share[ %@ ] ... [ %@ ]", nasDescriptor.share, error?.localizedDescription ?? "Unknown Error" )
                             myFileServer.disconnect( nil )
@@ -634,6 +633,7 @@ extension SMBCentral {
                                     delegate.smbCentral( self, didStartSession: false )
                                 }
                                 else {
+                                    logTrace( "found share" )
                                     self.connectedFileServer = myFileServer
                                     self.connectedShare      = share
                                     self.connectedToDevice   = true

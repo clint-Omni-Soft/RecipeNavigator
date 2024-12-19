@@ -6,12 +6,9 @@
   
 */
 
-"AlertMessage.CannotGoDirectFromCloudToNas" = "No puede pasar de iCloud directamente al NAS, debe volver al Dispositivo y luego al NAS";
-"AlertMessage.CannotGoDirectFromNasToCloud" = "No puede pasar del NAS directamente a iCloud, debe volver al Dispositivo y luego a iCloud";
 "AlertMessage.CannotOpenDatabase"           = "Error fatal!  No se puede abrir la base de datos.";
 "AlertMessage.CannotReadAllDbFiles"         = "La última actualización de la base de datos en el dispositivo remoto no se completó correctamente. Póngase en contacto con el usuario de '%@' y pídale que vuelva a enviar su última publicación. La base de datos permanecerá bloqueada hasta que esto se resuelva.";
 "AlertMessage.CannotReadFileData"           = "No podemos obtener los datos de esta receta.";
-"AlertMessage.CannotSeeContainer"           = "¡No puedo ver tu contenedor de iCloud! Vaya a Configuración y verifique que haya iniciado sesión en iCloud con su ID de Apple, luego vaya a la pantalla de configuración de iCloud y asegúrese de que iCloud Drive esté encendido. Finalmente, verifique que iCloud esté habilitado para esta aplicación.";
 "AlertMessage.CannotSeeExternalDevice"      = "No podemos ver su dispositivo externo. Acérquese a su red WiFi e intente nuevamente.";
 "AlertMessage.ConnectingToExternalDevice"   = "Conectándose a su dispositivo externo.";
 "AlertMessage.CsvFileSaved"                 = "Se ha guardado correctamente un archivo CSV en su unidad NAS.";
@@ -32,18 +29,17 @@
 "AlertMessage.NameMustBeUnique"             = "¡El nombre debe ser único!";
 "AlertMessage.NetworkAddressCannotBeBlank"  = "La dirección de red no se puede dejar en blanco!";
 "AlertMessage.NoAccess"                     = "¡No se puede acceder a este servidor de archivos!";
+"AlertMessage.NoFavoriteRecipes"            = "Para crear un favorito, simplemente seleccione una receta de la lista y luego seleccione 'Agregar a favoritos' en el menú emergente.";
 "AlertMessage.NoSharesOnDrive"              = "¡No hay acciones disponibles en esta unidad!";
 "AlertMessage.NoViewerRecipes"              = "Vaya a Recetas, luego toque un elemento de la lista y seleccione Vista rápida.  Toque el botón Agregar (+) para enviar una receta al espectador.";
 "AlertMessage.OfflineWarning"               = "No podemos conectarnos a su almacenamiento remoto. Debido a que esta aplicación está diseñada para funcionar sin conexión, puede realizar cambios que cargaremos la próxima vez que se conecte a su almacenamiento remoto. Solo tenga en cuenta que si más de una persona realiza cambios fuera de línea, es posible que se sobrescriban sus cambios.";
 "AlertMessage.ReadyToRestart"               = "Listo para reiniciar";
 "AlertMessage.RecipeRepoNotSet"             = "Seleccione usando la opción Repositorio de recetas";
-"AlertMessage.ScanCompleteFormat"           = "Se agregaron %d recetas y se omitieron %d archivos.";
+"AlertMessage.ScanCompleteFormat"           = "Se agregaron %d recetas.";
 "AlertMessage.SelectHowToUseForInfo"        = "Seleccione '%@' para obtener información útil sobre '%@', '%@' y '%@'.";
 "AlertMessage.UnableToAddRecipe"            = "We are unable to add the recipes we found!  Please try again.";
 "AlertMessage.UnableToConnect"              = "No podemos conectarnos a su dispositivo externo. Acérquese a su red WiFi e intente nuevamente.";
-"AlertMessage.UnableToCopyFiles"            = "No se pueden copiar sus archivos a su unidad iCloud.";
 "AlertMessage.UnableToCreate"               = "¡No se puede crear nuestro directorio!";
-"AlertMessage.UnableToCreateCloudFolders"   = "No podemos crear nuestros directorios en su unidad iCloud.";
 "AlertMessage.UnableToCreateCsvFile"        = "¡No podemos crear el archivo de variables separadas por comas (CSV)!";
 "AlertMessage.UnableToDeleteRecipes"        = "¡No pudimos eliminar todas tus recetas!  Esto puede dejar recetas no deseadas en su base de datos.";
 "AlertMessage.UnableToFetchDevices"         = "¡No se pueden recuperar dispositivos!";
@@ -61,7 +57,7 @@
 "AlertTitle.AreYouSureImport"               = "¿Estás seguro de que quieres importar este archivo?";
 "AlertTitle.CannotReadAllDbFiles"           = "¡No se pueden leer TODOS los archivos de la base de datos en el control remoto!";
 "AlertTitle.DataWillBeSavedToNAS"           = "Preparación para guardar datos en:";
-"AlertTitle.DeviceNameRequired"             = "Se requiere el nombre del dispositivo para NAS o iCloud";
+"AlertTitle.DeviceNameRequired"             = "Se requiere el nombre del dispositivo para NAS";
 "AlertTitle.DuplicateEntry"                 = "¡Entrada duplicada!";
 "AlertTitle.EnterDeviceName"                = "Ingrese el nombre del dispositivo";
 "AlertTitle.EnterName"                      = "Ingrese su Nombre";
@@ -73,6 +69,7 @@
 "AlertTitle.ImportErrors"                   = "Su archivo CSV tiene uno o más errores que debe corregir antes de poder importarlo.";
 "AlertTitle.LastUpdateDidNotComplete"       = "¡La última actualización NO se completó!";
 "AlertTitle.ModifyKeyword"                  = "Modificar palabra clave";
+"AlertTitle.NoFavoriteRecipes"              = "Aún no tienes favoritos";
 "AlertTitle.NoViewerRecipes"                = "Sin recetas para espectadores";
 "AlertTitle.RecipeRepoNotSet"               = "¡El repositorio de recetas NO se ha configurado todavía!";
 "AlertTitle.RemoveRecipeFromViewer"         = "¿Realmente quieres eliminar esta receta del visor?";
@@ -87,6 +84,7 @@
 "AlertTitle.WouldYouLikeToSelectASubFolder" = "¿Desea seleccionar una subcarpeta en este recurso compartido?";
 
 "ButtonTitle.Add"                           = "Añadir";
+"ButtonTitle.AddToFavorites"                = "Añadir a favoritos";
 "ButtonTitle.AddToViewer"                   = "Agregar al visor";
 "ButtonTitle.Back"                          = "Espalda";
 "ButtonTitle.Cancel"                        = "Cancelar";
@@ -101,6 +99,7 @@
 "ButtonTitle.OK"                            = "DE ACUERDO";
 "ButtonTitle.Open"                          = "Abierto";
 "ButtonTitle.QuickLook"                     = "Vistazo rápido";
+"ButtonTitle.RemoveFromFavorites"           = "Eliminar de favoritos";
 "ButtonTitle.RemoveFromViewer"              = "Quitar del visor";
 "ButtonTitle.Rename"                        = "Rebautizar";
 "ButtonTitle.Replace"                       = "Reemplazar";
@@ -112,11 +111,11 @@
 "ButtonTitle.SetAsRecipeRepository"         = "Establecer como repositorio de recetas";
 "ButtonTitle.Yes"                           = "Sí";
 
-"InfoText.DataStoreLocation"                = "Brindamos soporte para tres ubicaciones de almacenamiento diferentes ... \n\n   (a) en su dispositivo (predeterminado), \n   (b) en la nube y \n   (c) en una unidad de almacenamiento accesible en red (NAS). \n\nEl punto clave aquí es que no se puede compartir en el dispositivo. Si elige la nube, sus datos se pueden compartir en todos sus dispositivos. Si elige NAS, cualquiera que tenga acceso a su Wi-Fi puede acceder a él.";
+"InfoText.DataStoreLocation"                = "Esta aplicación le brinda la opción de almacenar sus datos en...\n\n (a) en su dispositivo (predeterminado) o\n (b) en una unidad de almacenamiento accesible en red (NAS). \n\nEl punto clave aquí es que no se puede compartir en el dispositivo. Si prefiere utilizar un NAS, cualquiera que tenga esta aplicación y acceso a su Wi-Fi podrá acceder a sus datos.";
 "InfoText.FirstThingsFirst"                 = "Antes de comenzar a usar esta aplicación, debe considerar dónde podemos encontrar sus recetas (consulte el Repositorio de recetas para obtener más detalles).";
 "InfoText.KeywordManager"                   = "Aquí es donde administras (agregas/modificas/eliminas) las palabras clave que deseas utilizar para buscar y organizar los títulos de tus recetas.";
-"InfoText.RecipeRepository"                 = "Utilice esta utilidad para especificar dónde se encuentran sus recetas.  Pueden estar en (a) en este dispositivo, (b) en iCloud o (c) en una unidad de almacenamiento accesible en red (NAS).\n\nEsta aplicación SÓLO reconoce que las recetas pueden estar en los siguientes formatos de archivo: JPG, JPEG, HTM, HTML, PDF, PNG o TXT.";
-"InfoText.ScanRecipeRepository"             = "Una vez que haya especificado dónde se encuentran sus recetas (su repositorio), puede utilizar esta utilidad para escanear la ubicación designada y crear una base de datos en este dispositivo para facilitar el acceso.\n\nEl tiempo que lleva acceder y mostrar una receta dependerá de donde almacena sus archivos de recetas.  NO copiamos sus archivos de recetas a su dispositivo.";
+"InfoText.RecipeRepository"                 = "Utilice esta utilidad para especificar dónde se encuentran sus recetas.  Pueden estar en (a) este dispositivo o (b) en una unidad de almacenamiento accesible en red (NAS).\n\nEsta aplicación SÓLO reconoce recetas en los siguientes formatos de archivo: JPG, JPEG, HTM, HTML, PDF, PNG o TXT.";
+"InfoText.ScanRecipeRepository"             = "Una vez que haya especificado dónde se encuentran sus recetas (su repositorio), puede utilizar esta utilidad para escanear la ubicación designada y crear una base de datos en este dispositivo para facilitar el acceso.\n\nEl tiempo que lleva acceder y mostrar una receta dependerá de donde almacena sus archivos de recetas.";
 "InfoText.Viewer"                           = "Presiona el ícono de la papelera para eliminar esta receta del visor.  Esto NO eliminará el archivo en su repositorio.";
 
 "LabelText.About"                           = "Acerca de";
@@ -149,9 +148,9 @@
 "Title.Device"                              = "Dispositivo";
 "Title.EnterCredentials"                    = "Ingrese credenciales para";
 "Title.ExportCSV"                           = "Exportar archivo CSV";
+"Title.Favorites"                           = "Favoritos";
 "Title.FirstThingFirst"                     = "Lo Primero es lo Primero";
 "Title.HowToUse"                            = "Cómo Utilizar";
-"Title.iCloud"                              = "iCloud";
 "Title.ImportFromCSV"                       = "Importer depuis un fichier CSV";
 "Title.InNASDrive"                          = "Almacenamiento accesible en red";
 "Title.KeywordManager"                      = "Administrador de palabras clave";

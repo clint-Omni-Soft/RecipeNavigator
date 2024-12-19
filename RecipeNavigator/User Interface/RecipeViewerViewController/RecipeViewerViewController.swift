@@ -11,12 +11,23 @@ import UIKit
 
 class RecipeViewerViewController: UIViewController {
 
-    // MARK: Public Variables
+    // MARK: Public Definitions
     
     @IBOutlet weak var myPageControl       : UIPageControl!
                    var myPageViewController: UIPageViewController?
     @IBOutlet weak var viewPort            : UIView!
  
+    
+    
+    // MARK: Public Interfaces
+    
+    func primaryWindow(_ isHidden: Bool ) {
+        logVerbose( "isHidden[ %@ ]", stringFor( isHidden ) )
+        primaryWindowIsHidden = isHidden
+        
+        loadBarButtonItems( false )
+    }
+    
     
     
     // MARK: Private Variables
@@ -26,12 +37,14 @@ class RecipeViewerViewController: UIViewController {
     }
     
     private let appDelegate                 = UIApplication.shared.delegate as! AppDelegate
+    private var application                 = UIApplication.shared
     private var changingOrientation         = false
-    private var pageIndex                   = GlobalConstants.noSelection
-    private var recipeDisplayViewControllers: [RecipeDisplayViewController] = []
-    private var watingForViewWillAppear     = true
     private let navigatorCentral            = NavigatorCentral.sharedInstance
     private let notificationCenter          = NotificationCenter.default
+    private var pageIndex                   = GlobalConstants.noSelection
+    private var primaryWindowIsHidden       = false
+    private var recipeDisplayViewControllers: [RecipeDisplayViewController] = []
+    private var watingForViewWillAppear     = true
 
     
     
@@ -51,13 +64,20 @@ class RecipeViewerViewController: UIViewController {
     
 
     override func viewWillAppear(_ animated: Bool) {
-        logTrace()
         super.viewWillAppear( animated )
         
-        watingForViewWillAppear = false
+        self.application.isIdleTimerDisabled = true
+        logVerbose( "isIdleTimerDisabled[ %@ ]", stringFor( self.application.isIdleTimerDisabled ) )
 
-        loadBarButtonItems()
+        appDelegate.recipeViewer = self
+        watingForViewWillAppear  = false
+
         registerForNotifications()
+        
+        if UIDevice.current.userInterfaceIdiom == .pad && !navigatorCentral.didOpenDatabase && !navigatorCentral.openInProgress {
+            navigatorCentral.openDatabaseWith( self )
+        }
+        
     }
     
     
@@ -65,19 +85,25 @@ class RecipeViewerViewController: UIViewController {
         logTrace()
         super.viewDidAppear( animated )
  
-         setupPageViewController()
+        loadBarButtonItems( false )
+        setupPageViewController()
+        
+        if navigatorCentral.didOpenDatabase && navigatorCentral.viewerRecipeArray.count > 0 {
+            DispatchQueue.main.asyncAfter(deadline: .now() + ( UIDevice.current.userInterfaceIdiom == .phone ? 0.1 : 1.0 ) ) {
+                self.setupPageControl()
+            }
 
-        if UIDevice.current.userInterfaceIdiom == .phone {
-            setupPageControl()
         }
         
     }
     
     
     override func viewWillDisappear(_ animated: Bool) {
-        logTrace()
         super.viewWillDisappear(animated)
         
+        self.application.isIdleTimerDisabled = false
+        logVerbose( "isIdleTimerDisabled[ %@ ]", stringFor( self.application.isIdleTimerDisabled ) )
+
         notificationCenter.removeObserver( self )
     }
 
@@ -110,22 +136,21 @@ class RecipeViewerViewController: UIViewController {
     }
 
     
-    @objc func splitViewChanged( notification: NSNotification ) {
-        logTrace()
-        loadBarButtonItems()
-    }
-    
-    
     @objc func viewerRecipesUpdated( notification: NSNotification ) {
         logTrace()
         myPageViewController!.view.frame = viewPort.frame
         setupPageControl()
     }
 
-
     
     
     // MARK: Target/Action Methods
+    
+    @IBAction func favoriteBarButtonTouched(_ sender: UIBarButtonItem ) {
+        logTrace()
+        promptToChangeFavoriteStatus()
+    }
+    
     
     @IBAction func pageControlValueChanged(_ sender: UIPageControl ) {
         logVerbose( "[ %d ]", sender.currentPage )
@@ -143,11 +168,6 @@ class RecipeViewerViewController: UIViewController {
     @IBAction func showPrimaryBarButtonItemTouched(_ sender: UIBarButtonItem ) {
         logTrace()
         appDelegate.hidePrimaryView( false )
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5 ) {
-            self.loadBarButtonItems()
-        }
-        
     }
     
     
@@ -167,26 +187,34 @@ class RecipeViewerViewController: UIViewController {
 
         logVerbose( "[ %d ][ %@ ]", index, recipe.filename! )
         myPageControl.currentPage = index
+        
+        loadBarButtonItems( false )
     }
     
     
-    private func loadBarButtonItems() {
-        let trashBarButtonItem = UIBarButtonItem.init(barButtonSystemItem: .trash, target: self, action: #selector( trashBarButtonItemTouched(_:) ) )
+    private func loadBarButtonItems(_ calledFromSetupPageControl: Bool ) {
+        logTrace()
+        var leftBarButtonItemArray : [UIBarButtonItem] = []
         var rightBarButtonItemArray: [UIBarButtonItem] = []
+        let trashBarButtonItem     = UIBarButtonItem.init( barButtonSystemItem: .trash, target: self, action: #selector( trashBarButtonItemTouched(_:) ) )
+
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            if primaryWindowIsHidden || calledFromSetupPageControl {
+                leftBarButtonItemArray.append( UIBarButtonItem.init(image: UIImage(named: "hamburger" ), style: .plain, target: self, action: #selector( showPrimaryBarButtonItemTouched(_:) ) ) )
+            }
+            
+        }
         
         if recipeDisplayViewControllers.count > 0 {
+            let favoriteIconName = navigatorCentral.viewerRecipeArray[myPageControl.currentPage].favoriteRecipe != nil ? "heart-selected" : "heart-empty"
+                
             rightBarButtonItemArray.append( trashBarButtonItem )
+            rightBarButtonItemArray.append( UIBarButtonItem.init( image: UIImage(named: favoriteIconName ), style: .plain, target: self, action: #selector( favoriteBarButtonTouched(_:) ) ) )
         }
         
-        if appDelegate.hidePrimary && UIDevice.current.userInterfaceIdiom == .pad {
-            logTrace( "Adding showPrimary button" )
-            rightBarButtonItemArray.append( UIBarButtonItem.init(barButtonSystemItem: .organize, target: self, action: #selector( showPrimaryBarButtonItemTouched(_:) ) ) )
-        }
-        else {
-            logTrace()
-        }
+        rightBarButtonItemArray.append( UIBarButtonItem.init( image: UIImage(named: "question" ),style: .plain, target: self, action: #selector( questionBarButtonTouched(_:) ) ) )
         
-        navigationItem.leftBarButtonItem   = UIBarButtonItem.init( image: UIImage(named: "question" ), style: .plain, target: self, action: #selector( questionBarButtonTouched(_:) ) )
+        navigationItem.leftBarButtonItems  = leftBarButtonItemArray
         navigationItem.rightBarButtonItems = rightBarButtonItemArray
     }
     
@@ -199,9 +227,13 @@ class RecipeViewerViewController: UIViewController {
     
     
     private func loadRecipeDisplayViewControllers() {
-        if recipeDisplayViewControllers.count == navigatorCentral.viewerRecipeArray.count && !changingOrientation {
+        if recipeDisplayViewControllers.count == navigatorCentral.viewerRecipeArray.count && !changingOrientation && !navigatorCentral.reloadViewerRecipes {
             logTrace( "recipeDisplayViewControllers initialized... do nothing!" )
             return
+        }
+        
+        if navigatorCentral.reloadViewerRecipes {
+            navigatorCentral.reloadViewerRecipes = false
         }
         
         var     index = 0
@@ -231,6 +263,35 @@ class RecipeViewerViewController: UIViewController {
     }
     
     
+    private func promptToChangeFavoriteStatus() {
+        let recipe     = navigatorCentral.viewerRecipeArray[myPageControl.currentPage]
+        let isFavorite = recipe.favoriteRecipe != nil
+        let title      = isFavorite ? NSLocalizedString( "ButtonTitle.RemoveFromFavorites", comment: "Remove from Favorites" ) : NSLocalizedString( "ButtonTitle.AddToFavorites", comment: "Add to Favorites" )
+
+        let     alert  = UIAlertController.init( title: title, message: nil, preferredStyle: .alert)
+
+        let yesAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Yes", comment: "Yes" ), style: .destructive )
+        { ( alertAction ) in
+            if isFavorite {
+                logTrace( "YES Action ... Remove from Favorites" )
+                self.navigatorCentral.removeFromFavorites( recipe, self )
+            }
+            else {
+                logTrace( "YES Action ... Add to Favorites" )
+                self.navigatorCentral.addToFavorites( recipe, self )
+            }
+            
+        }
+        
+        let     noAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.No", comment: "No!" ), style: .cancel, handler: nil )
+
+        alert.addAction( yesAction )
+        alert.addAction( noAction  )
+        
+        present( alert, animated: true, completion: nil )
+    }
+    
+    
     private func promptToRemove(_ recipe: Recipe ) {
         let     alert  = UIAlertController.init( title: NSLocalizedString( "AlertTitle.RemoveRecipeFromViewer", comment: "Do you really want to remove this recipe from the viewer?" ), message: nil, preferredStyle: .alert)
 
@@ -252,7 +313,6 @@ class RecipeViewerViewController: UIViewController {
     private func registerForNotifications() {
         logTrace()
         notificationCenter.addObserver( self, selector: #selector( ready(                notification: ) ), name: NSNotification.Name( rawValue: Notifications.ready                      ), object: nil )
-        notificationCenter.addObserver( self, selector: #selector( splitViewChanged(     notification: ) ), name: NSNotification.Name( rawValue: Notifications.splitViewChanged           ), object: nil )
         notificationCenter.addObserver( self, selector: #selector( viewerRecipesUpdated( notification: ) ), name: NSNotification.Name( rawValue: Notifications.viewerRecipesArrayReloaded ), object: nil )
     }
     
@@ -278,7 +338,7 @@ class RecipeViewerViewController: UIViewController {
             setupPageViewController()
         }
 
-        loadBarButtonItems()
+        loadBarButtonItems( true )
     }
     
     
@@ -311,6 +371,29 @@ class RecipeViewerViewController: UIViewController {
 // MARK: NavigatorCentralDelegate Methods
 
 extension RecipeViewerViewController: NavigatorCentralDelegate {
+    
+    func navigatorCentral(_ navigatorCentral: NavigatorCentral, didOpenDatabase: Bool ) {
+        logVerbose( "[ @ ]", stringFor( didOpenDatabase ) )
+        
+        if didOpenDatabase {
+            navigatorCentral.fetchRecipesWith( self )
+        }
+        
+    }
+    
+    
+    func navigatorCentral(_ navigatorCentral: NavigatorCentral, didReloadRecipes: Bool) {
+        logVerbose( "[ @ ]", stringFor( didReloadRecipes ) )
+        
+        self.setupPageControl()
+    }
+    
+    
+    func navigatorCentralDidUpdateFavoriteRecipes(_ navigatorCentral: NavigatorCentral) {
+        logTrace()
+        loadBarButtonItems( false )
+    }
+    
     
     func navigatorCentralDidUpdateViewerRecipes(_ navigatorCentral: NavigatorCentral ) {
         logVerbose( "loaded [ %d ] viewerRecipes", navigatorCentral.viewerRecipeArray.count )

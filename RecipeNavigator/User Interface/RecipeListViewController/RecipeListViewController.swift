@@ -33,16 +33,20 @@ class RecipeListViewController: UIViewController {
     
     private struct StoryboardIds {
         static let quickLook   = "QuickLookViewController"
+        static let settings    = "SettingsViewController"
         static let sortOptions = "SortOptionsViewController"
     }
     
     private let appDelegate         = UIApplication.shared.delegate as! AppDelegate
     private var application         = UIApplication.shared
+    private let dataSourceCentral   = DataSourceCentral.sharedInstance
     private let deviceAccessControl = DeviceAccessControl.sharedInstance
+    private var fileData            : Data!
     private var navigatorCentral    = NavigatorCentral.sharedInstance
     private var sectionIndexTitles  : [String] = []
     private var sectionTitleIndexes : [Int]    = []
     private var showAllSections     = true
+    private var showingFavorites    = false
     private var searchEnabled       = false
     private var searchResults       : [Recipe] = []
     private let userDefaults        = UserDefaults.standard
@@ -77,7 +81,7 @@ class RecipeListViewController: UIViewController {
         super.viewDidLoad()
         
         self.navigationItem.title = NSLocalizedString( "Title.Recipes", comment: "Recipes" )
-        
+
         myTextField.delegate      = self
         myTextField.isHidden      = !searchEnabled
         myTextField.returnKeyType = .done
@@ -87,6 +91,13 @@ class RecipeListViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         logTrace()
         super.viewWillAppear( animated )
+        
+        if navigatorCentral.didDeleteAddRecipes {
+            navigatorCentral.didDeleteAddRecipes = false
+
+            searchEnabled    = false
+            showingFavorites = false
+        }
         
         configureSortButtonTitle()
         loadBarButtonItems()
@@ -113,25 +124,18 @@ class RecipeListViewController: UIViewController {
         
         registerForNotifications()
         
-        if UIDevice.current.userInterfaceIdiom == .pad {
-            application.isIdleTimerDisabled = false
-            logVerbose( "isIdleTimerDisabled[ %@ ]", stringFor( application.isIdleTimerDisabled ) )
-        }
-        
+        application.isIdleTimerDisabled = false
+        logVerbose( "isIdleTimerDisabled[ %@ ]", stringFor( application.isIdleTimerDisabled ) )
     }
     
     
     override func viewWillDisappear(_ animated: Bool) {
-        logTrace()
         super.viewWillDisappear( animated )
         
-        NotificationCenter.default.removeObserver( self )
+        application.isIdleTimerDisabled = UIDevice.current.userInterfaceIdiom == .pad
+        logVerbose( "isIdleTimerDisabled[ %@ ]", stringFor( application.isIdleTimerDisabled ) )
 
-        if UIDevice.current.userInterfaceIdiom == .pad {
-            application.isIdleTimerDisabled = true
-            logVerbose( "isIdleTimerDisabled[ %@ ]", stringFor( application.isIdleTimerDisabled ) )
-        }
-        
+        NotificationCenter.default.removeObserver( self )
     }
     
     
@@ -141,18 +145,21 @@ class RecipeListViewController: UIViewController {
     
     @objc func ready( notification: NSNotification ) {
         logTrace()
+        loadBarButtonItems()
         myTableView.reloadData()
     }
 
 
     @objc func recipeArrayReloaded( notification: NSNotification ) {
         logTrace()
+        loadBarButtonItems()
         myTableView.reloadData()
     }
 
 
     @objc func viewerRecipesArrayReloaded( notification: NSNotification ) {
         logTrace()
+        loadBarButtonItems()
         myTableView.reloadData()
     }
 
@@ -160,7 +167,26 @@ class RecipeListViewController: UIViewController {
 
     // MARK: Target / Action Methods
     
-    @IBAction func backBarButtonTouched(_ sender: UIBarButtonItem ) {
+    @IBAction func favoritesBarButtonTouched(_ sender: UIBarButtonItem ) {
+        logTrace()
+        if navigatorCentral.favoriteRecipesArray.count == 0 {
+            presentAlert( title  : NSLocalizedString( "AlertTitle.NoFavoriteRecipes",   comment: "You don't have any Favorites yet" ),
+                          message: NSLocalizedString( "AlertMessage.NoFavoriteRecipes", comment: "To create a Fovorite, just select a recipe from the list then select 'Add to Favorites' from the popup menu" ) )
+            return
+        }
+
+        showingFavorites = !showingFavorites
+        
+        if showingFavorites {
+            searchEnabled = false
+        }
+        
+        loadBarButtonItems()
+        myTableView.reloadData()
+    }
+
+    
+    @IBAction func hidePrimaryBarButtonTouched(_ sender: UIBarButtonItem ) {
         logTrace()
         appDelegate.hidePrimaryView( true )
     }
@@ -168,6 +194,10 @@ class RecipeListViewController: UIViewController {
     
     @IBAction func searchToggleBarButtonTouched(_ sender : UIBarButtonItem ) {
         searchEnabled = !searchEnabled
+        
+        if searchEnabled {
+            showingFavorites = false
+        }
         
         logVerbose( "searchEnabled[ %@ ]", stringFor( searchEnabled ) )
         myTextField.isHidden = !searchEnabled
@@ -186,6 +216,11 @@ class RecipeListViewController: UIViewController {
     }
     
     
+    @IBAction func settingsBarButtonTouched(_ sender : UIBarButtonItem ) {
+        launchSettingsViewController()
+    }
+    
+        
     @IBAction func showAllBarButtonTouched(_ sender : UIBarButtonItem ) {
         logVerbose( "[ %@ ]", stringFor( showAllSections ) )
         selectedSection = GlobalConstants.noSelection
@@ -228,18 +263,21 @@ class RecipeListViewController: UIViewController {
             return
         }
         
-        let recipeArray = navigatorCentral.recipeArrayOfArrays[0]   // When sorting by name or path, we know that there will always only be one array
-        
-        for recipe in recipeArray {
-            let     nameStartsWith: String = ( recipe.filename?.prefix(1).uppercased() )!
+        if !navigatorCentral.recipeArrayOfArrays.isEmpty {
+            let recipeArray = navigatorCentral.recipeArrayOfArrays[0]   // When sorting by name or path, we know that there will always only be one array
             
-            if nameStartsWith != currentTitle {
-                currentTitle = nameStartsWith
-                sectionTitleIndexes.append( index )
-                sectionIndexTitles .append( nameStartsWith )
+            for recipe in recipeArray {
+                let     nameStartsWith: String = ( recipe.filename?.prefix(1).uppercased() )!
+                
+                if nameStartsWith != currentTitle {
+                    currentTitle = nameStartsWith
+                    sectionTitleIndexes.append( index )
+                    sectionIndexTitles .append( nameStartsWith )
+                }
+                
+                index += 1
             }
-            
-            index += 1
+
         }
         
     }
@@ -283,30 +321,57 @@ class RecipeListViewController: UIViewController {
     }
     
     
+    private func launchSettingsViewController() {
+        guard let settingsVC: SettingsViewController = iPhoneViewControllerWithStoryboardId( storyboardId: StoryboardIds.settings ) as? SettingsViewController else {
+            logTrace( "Error!  Unable to load SettingsViewController!" )
+            return
+        }
+
+        logTrace()
+        navigationController?.pushViewController( settingsVC, animated: true )
+    }
+
+    
     private func loadBarButtonItems() {
 //        logTrace()
-        var leftBarButtonItems: [UIBarButtonItem] = []
-        let searchImage       = UIImage(named: myTextField.isHidden ? "magnifyingGlass" : "hamburger" )
-        let sortDescriptor    = navigatorCentral.sortDescriptor
-        let sortType          = sortDescriptor.0
-        
+        let arrowImage         = UIImage(named: showAllSections      ? "arrowUp"         : "arrowDown" )
+        let favoritesImage     = UIImage(named: showingFavorites     ? "closed-book"     : "open-book" )
+        let searchImage        = UIImage(named: myTextField.isHidden ? "magnifyingGlass" : "magnifyingGlassXout" )
+        let sortDescriptor     = navigatorCentral.sortDescriptor
+        let sortType           = sortDescriptor.0
+        var leftBarButtonItems : [UIBarButtonItem] = []
+        var rightBarButtonItems: [UIBarButtonItem] = []
+        let weHaveData         = navigatorCentral.numberOfRecipesLoaded > 0
+
+        navigationItem.title = showingFavorites ? NSLocalizedString( "Title.Favorites", comment: "Favorites" ) : NSLocalizedString( "Title.Recipes", comment: "Recipes" )
+
         if UIDevice.current.userInterfaceIdiom == .pad {
-            let title             = "< " + NSLocalizedString( "ButtonTitle.Back", comment: "Back" )
-            let backBarButtonItem = UIBarButtonItem.init( title: title, style: .plain, target: self, action: #selector( backBarButtonTouched(_: ) ) )
+            leftBarButtonItems.append( UIBarButtonItem.init( barButtonSystemItem: .close, target: self, action: #selector( hidePrimaryBarButtonTouched(_: ) ) ) )
+//            leftBarButtonItems.append( UIBarButtonItem.init( image: UIImage(named: "primaryView" ), style: .plain, target: self, action: #selector( hidePrimaryBarButtonTouched(_: ) ) ) )
+       }
 
-            leftBarButtonItems.append( backBarButtonItem )
+        if weHaveData && sortType != SortOptions.byFilename {
+            leftBarButtonItems.append( UIBarButtonItem.init( image: arrowImage, style: .plain, target: self, action: #selector( showAllBarButtonTouched(_:) ) ) )
         }
 
-        if sortType != SortOptions.byFilename {
-            let arrowImage        = UIImage(named: showAllSections ? "arrowUp" : "arrowDown" )
-            let leftBarButtonItem = UIBarButtonItem.init( image: arrowImage, style: .plain, target: self, action: #selector( showAllBarButtonTouched(_:) ) )
-            
-            leftBarButtonItems.append( leftBarButtonItem )
+        navigationItem.leftBarButtonItems  = leftBarButtonItems
+
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            rightBarButtonItems.append( UIBarButtonItem.init( image: UIImage(named: "settings" ), style: .plain, target: self, action: #selector( settingsBarButtonTouched(_:) ) ) )
         }
         
+        if weHaveData {
+            if !showingFavorites {
+                rightBarButtonItems.append( UIBarButtonItem.init( image: searchImage, style: .plain, target: self, action: #selector( searchToggleBarButtonTouched(_:) ) ) )
+            }
+            
+            if !searchEnabled {
+                rightBarButtonItems.append( UIBarButtonItem.init( image: favoritesImage, style: .plain, target: self, action: #selector( favoritesBarButtonTouched(_: ) ) ) )
+            }
+            
+        }
 
-        navigationItem.rightBarButtonItem = UIBarButtonItem.init( image: searchImage, style: .plain, target: self, action: #selector( searchToggleBarButtonTouched(_:) ) )
-        navigationItem.leftBarButtonItems = leftBarButtonItems
+        navigationItem.rightBarButtonItems = rightBarButtonItems
     }
     
     
@@ -370,6 +435,29 @@ class RecipeListViewController: UIViewController {
 
 
 
+// MARK: DataSourceCentralDelegate Methods
+
+extension RecipeListViewController: DataSourceCentralDelegate {
+    
+    func dataSourceCentral(_ dataSourceCentral: DataSourceCentral, didFetch: Bool, data: Data, from recipe: Recipe ) {
+        logVerbose( "[ %@ ]", stringFor( didFetch ) )
+       
+        if didFetch {
+            dataSourceCentral.saveViewerDataFileFrom( recipe, data )
+            navigatorCentral .addViewerRecipe(  recipe, self )
+        }
+        else {
+            presentAlert( title:   NSLocalizedString( "AlertTitle.Error", comment:  "Error" ),
+                          message: NSLocalizedString( "AlertMessage.CannotReadFileData", comment: "We cannot the data from this recipe." ) )
+        }
+        
+    }
+    
+
+}
+
+
+
 // MARK: NavigatorCentralDelegate Methods
 
 extension RecipeListViewController: NavigatorCentralDelegate {
@@ -389,6 +477,8 @@ extension RecipeListViewController: NavigatorCentralDelegate {
     
     func navigatorCentral(_ navigatorCentral: NavigatorCentral, didReloadRecipes: Bool ) {
         logVerbose( "loaded [ %d ] recipes", navigatorCentral.numberOfRecipesLoaded )
+        searchEnabled    = false
+        showingFavorites = false
         
         buildSectionTitleIndex()
         configureSortButtonTitle()
@@ -403,12 +493,26 @@ extension RecipeListViewController: NavigatorCentralDelegate {
     }
 
 
-    func navigatorCentralDidUpdateViewerRecipes(_ navigatorCentral: NavigatorCentral ) {
-        logVerbose( "loaded [ %d ] viewerRecipes", navigatorCentral.viewerRecipeArray.count )
+    func navigatorCentralDidUpdateFavoriteRecipes(_ navigatorCentral: NavigatorCentral ) {
+        logVerbose( "loaded [ %d ] Favorite Recipes", navigatorCentral.favoriteRecipesArray.count )
+        
+        if navigatorCentral.favoriteRecipesArray.count == 0 {
+            showingFavorites = false
+        }
+        
+        loadBarButtonItems()
         myTableView.reloadData()
     }
     
 
+    func navigatorCentralDidUpdateViewerRecipes(_ navigatorCentral: NavigatorCentral ) {
+        logVerbose( "loaded [ %d ] Viewer Recipes", navigatorCentral.viewerRecipeArray.count )
+        
+        loadBarButtonItems()
+        myTableView.reloadData()
+    }
+    
+    
 }
 
 
@@ -419,8 +523,8 @@ extension RecipeListViewController: QuickLookViewControllerDelegate {
     
     func quickLookViewControllerWantsToAddRecipeToViewer(_ quickLookViewController: QuickLookViewController, _ data: Data ) {
         logTrace()
-        navigatorCentral.addViewerRecipe( quickLookViewController.recipe, self )
-        navigatorCentral.saveFileDataFrom( quickLookViewController.recipe, data )
+        dataSourceCentral.saveViewerDataFileFrom( quickLookViewController.recipe, data )
+        navigatorCentral .addViewerRecipe(  quickLookViewController.recipe, self )
     }
     
     
@@ -497,12 +601,16 @@ extension RecipeListViewController: UIPopoverPresentationControllerDelegate {
 extension RecipeListViewController: UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return searchEnabled ? 1 : ( navigatorCentral.numberOfRecipesLoaded == 0 ) ? 0 : navigatorCentral.recipeArrayOfArrays.count
+        if navigatorCentral.numberOfRecipesLoaded == 0 {
+            return 0
+        }
+        
+        return ( searchEnabled || showingFavorites ) ? 1 : navigatorCentral.recipeArrayOfArrays.count
     }
     
     
     func sectionIndexTitles(for tableView: UITableView) -> [String]? {
-        return sectionIndexTitles
+        return ( searchEnabled || showingFavorites ) ? [] : sectionIndexTitles
     }
     
     
@@ -513,7 +621,14 @@ extension RecipeListViewController: UITableViewDataSource {
         }
         
         let     recipeListCell = cell as! RecipeListViewControllerCell
-        let     recipe         = searchEnabled ? searchResults[indexPath.row] : navigatorCentral.recipeAt( indexPath )
+        let     recipe: Recipe!
+        
+        if showingFavorites {
+            recipe = navigatorCentral.favoriteRecipesArray[indexPath.row]
+        }
+        else {
+            recipe = searchEnabled ? searchResults[indexPath.row] : navigatorCentral.recipeAt( indexPath )
+        }
         
         recipeListCell.initializeWith( recipe )
 
@@ -523,12 +638,16 @@ extension RecipeListViewController: UITableViewDataSource {
     
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if navigatorCentral.numberOfRecipesLoaded == 0 {
+            return 0
+        }
+        
         if searchEnabled {
             return searchResults.count
         }
         
-        if navigatorCentral.numberOfRecipesLoaded == 0 {
-            return 0
+        if showingFavorites {
+            return navigatorCentral.favoriteRecipesArray.count
         }
         
         var numberOfRows = 0
@@ -556,7 +675,21 @@ extension RecipeListViewController: UITableViewDataSource {
 
 extension RecipeListViewController: UITableViewDelegate {
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return navigatorCentral.dataStoreLocation == .device
+    }
+    
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        logVerbose( "[ %d, %d ]", indexPath.section, indexPath.row )
+        if editingStyle == .delete {
+            navigatorCentral.deleteDeviceRecipeAt( indexPath, self )
+        }
+        
+    }
+    
+    
+func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         logTrace()
         if deviceAccessControl.byMe {
             promptForActionOnCellAt( indexPath )
@@ -566,7 +699,7 @@ extension RecipeListViewController: UITableViewDelegate {
     
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if searchEnabled {
+        if searchEnabled || showingFavorites {
             return CGFloat.leastNormalMagnitude
         }
         
@@ -644,12 +777,37 @@ extension RecipeListViewController: UITableViewDelegate {
     private func promptForActionOnCellAt(_ indexPath: IndexPath ) {
         logTrace()
         let     alert  = UIAlertController.init( title: NSLocalizedString( "AlertTitle.ActionForRecipe", comment: "What would you like to do with this recipe?" ), message: nil, preferredStyle: .alert)
-        let     recipe = searchEnabled ? searchResults[indexPath.row] : navigatorCentral.recipeAt( indexPath )
+        var     recipe: Recipe!
+        
+        if showingFavorites {
+            recipe = navigatorCentral.favoriteRecipesArray[indexPath.row]
+        }
+        else {
+            recipe = searchEnabled ? searchResults[indexPath.row] : navigatorCentral.recipeAt( indexPath )
+        }
 
+        let addToFavoritesAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.AddToFavorites", comment: "Add to Favorites" ), style: .default )
+        { ( alertAction ) in
+            logTrace( "Add to Favorites Action" )
+            self.navigatorCentral.addToFavorites( recipe, self )
+        }
+        
+        let addToViewerAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.AddToViewer", comment: "Add to Viewer" ), style: .default )
+        { ( alertAction ) in
+            logTrace( "Add to Viewer Action" )
+            self.dataSourceCentral.requestViewerDataFor( recipe, self )
+        }
+        
         let quickLookAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.QuickLook", comment: "Quick Look" ), style: .default )
         { ( alertAction ) in
             logTrace( "Quick Look Action" )
             self.launchQuickLookViewControllerWith( recipe )
+        }
+        
+        let removeFromFavoritesAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.RemoveFromFavorites", comment: "Remove from Favorites" ), style: .default )
+        { ( alertAction ) in
+            logTrace( "Remove from Favorites Action" )
+            self.navigatorCentral.removeFromFavorites( recipe, self )
         }
         
         let removeFromViewerAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.RemoveFromViewer", comment: "Remove from Viewer" ), style: .destructive )
@@ -660,11 +818,19 @@ extension RecipeListViewController: UITableViewDelegate {
         
         let     cancelAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Cancel", comment: "Cancel" ), style: .cancel, handler: nil )
 
-        if navigatorCentral.viewerRecipeArray.contains( recipe ) {
-            alert.addAction( removeFromViewerAction )
+        if recipe.viewerRecipe == nil {
+            alert.addAction( addToViewerAction )
+            alert.addAction( quickLookAction )
         }
         else {
-            alert.addAction( quickLookAction )
+            alert.addAction( removeFromViewerAction )
+        }
+        
+        if recipe.favoriteRecipe == nil {
+            alert.addAction( addToFavoritesAction )
+        }
+        else {
+            alert.addAction( removeFromFavoritesAction )
         }
         
         alert.addAction( cancelAction )

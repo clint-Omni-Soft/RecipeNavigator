@@ -24,11 +24,11 @@ class ScanRepoViewController: UIViewController {
     
     // MARK: Private Variables
     
-    private let cloudCentral            = CloudCentral.sharedInstance
     private var connectedShare          : SMBShare!
     private var currentPath             = ""
+    private let dataSourceCentral       = DataSourceCentral.sharedInstance
     private var directoryArray          : [SMBFile] = []
-    private var directoryContentsArray  = [FileDescriptor].init()
+    private var fileDescriptorArray     = [FileDescriptor].init()
     private let fileManager             = FileManager.default
     private let nasCentral              = NASCentral.sharedInstance
     private var networkPath             = ""
@@ -36,8 +36,6 @@ class ScanRepoViewController: UIViewController {
     private var nasOutputString         = ""
     private var numberOfFilesSkipped    = 0
     private var numberOfRecipesAdded    = 0
-    private var rootUrl                 = URL.init( fileURLWithPath: "" )
-    private var startingUrl             = URL.init( fileURLWithPath: "" )
     private var scanning                = false
     
     
@@ -58,7 +56,8 @@ class ScanRepoViewController: UIViewController {
         super.viewWillAppear( animated )
         
         loadLabels()
-        configureControls()
+        
+        configureControls( hideStart: false, running: false )
     }
     
     
@@ -67,20 +66,15 @@ class ScanRepoViewController: UIViewController {
     
     @IBAction func startButtonTouched(_ sender: UIButton) {
         logTrace()
-        scanning = true
-        configureControls()
-        
+        configureControls( hideStart: true, running: true )
+
         myTextView.text = ""
 
         numberOfFilesSkipped = 0
         numberOfRecipesAdded = 0
-        navigatorCentral.flushViewerRecipes()
 
         if navigatorCentral.dataSourceLocation == .device {
             scanDevice()
-        }
-        else if navigatorCentral.dataSourceLocation == .iCloud || navigatorCentral.dataSourceLocation == .shareCloud {
-            scanCloud()
         }
         else {  // Must be NAS
             scanNAS()
@@ -90,17 +84,18 @@ class ScanRepoViewController: UIViewController {
     
     
     @IBAction func stopButtonTouched(_ sender: UIButton) {
-        scanning = false
-        configureControls()
+        configureControls( hideStart: true, running: false )
     }
     
     
     
     // MARK: Utility Methods
     
-    private func configureControls() {
-        startButton.isEnabled = !scanning
-        stopButton .isEnabled = scanning
+    private func configureControls( hideStart: Bool, running: Bool ) {
+        scanning = running
+        
+        startButton.isHidden = hideStart
+        stopButton .isHidden = !running
     }
     
     
@@ -109,10 +104,6 @@ class ScanRepoViewController: UIViewController {
         if navigatorCentral.dataSourceLocation == .device {
             deviceShareLabel.text = navigatorCentral.deviceName
             pathLabel       .text = NSLocalizedString( "Title.App", comment: "Recipe Navigator" )
-        }
-        else if navigatorCentral.dataSourceLocation == .iCloud || navigatorCentral.dataSourceLocation == .shareCloud {
-            deviceShareLabel.text = NSLocalizedString( "Title.iCloud", comment: "iCloud"           )
-            pathLabel       .text = NSLocalizedString( "Title.App",    comment: "Recipe Navigator" )
         }
         else {  // Must be NAS
             let descriptor = navigatorCentral.dataSourceDescriptor
@@ -126,6 +117,17 @@ class ScanRepoViewController: UIViewController {
     }
     
     
+    func scrollTextViewToBottom() {
+        if myTextView.text.count > 0 {
+            let location = myTextView.text.count - 1
+            let bottom = NSMakeRange(location, 1)
+            
+            myTextView.scrollRangeToVisible(bottom)
+        }
+        
+    }
+    
+    
 }
 
 
@@ -134,31 +136,9 @@ class ScanRepoViewController: UIViewController {
 
 extension ScanRepoViewController {
     
-    private func scanCloud() {
-        logTrace()
-        // TODO: Fill me in!
-        presentAlert(title: "ERROR!", message: "iCloud support NOT yet implemeted!" )
-    }
-    
-    
     private func scanDevice() {
         logTrace()
-        if let url = fileManager.urls( for: .documentDirectory, in: .userDomainMask ).first {
-            rootUrl     = url
-            startingUrl = url
-        }
-        else {
-            logTrace( "ERROR:  Unable to load documentDirectory URL" )
-            rootUrl     = URL( fileURLWithPath: "" )
-            startingUrl = URL( fileURLWithPath: "" )
-        }
-        
-        loadDirectoryContentsArray()
-        loadTextView()
-        navigatorCentral.reloadRecipesFrom( directoryContentsArray, self )
-        
-        scanning = false
-        configureControls()
+        navigatorCentral.deleteAllRecipes( self )
     }
     
     
@@ -172,68 +152,10 @@ extension ScanRepoViewController {
     
     // MARK: Device Scanning Utility Methods
     
-    private func loadDirectoryContentsArray() {
-        var contentsArray: [FileDescriptor] = []
-        var filenameArray: [String] = []
-        
-        do {
-            try filenameArray = fileManager.contentsOfDirectory( atPath: startingUrl.path )
-            
-            //            logTrace()
-            for filename in filenameArray {
-                let     index             = filename.index( filename.startIndex, offsetBy: 1)
-                let     startingSubstring = filename.prefix( upTo: index )
-                let     startingString    = String( startingSubstring )
-                
-                // Don't show hidden files or the Library folder
-                if startingString == "." || filename == "Library" || filename == "Logs" || filename.contains( "sqlite" ) {
-                    continue
-                }
-                
-                // Flag databases and directories
-                var     fileType     = DescriptorFileTypes.other
-                let     fileUrl      = startingUrl.appendingPathComponent( filename )
-                var     isaDirectory = ObjCBool( false )
-                
-                if fileManager.fileExists( atPath: fileUrl.path, isDirectory: &isaDirectory ) {
-                    if isaDirectory.boolValue {
-                        let storeContentUrl = fileUrl.appendingPathComponent( "StoreContent" )
-                        
-                        fileType = FileManager.default.fileExists( atPath: storeContentUrl.path ) ? .database : .directory
-                    }
-                    
-                }
-                
-                let fileExtension = extensionFrom( filename )
-                
-                if !fileExtension.isEmpty &&  GlobalConstants.supportedFilenameExtensions.contains( fileExtension ) {
-                    numberOfRecipesAdded += 1
-                    contentsArray.append( FileDescriptor.init( filename, "", fileUrl, fileType ) )
-                }
-                else if fileExtension == "DOC" || fileExtension == "DOCX" {
-                    numberOfFilesSkipped += 1
-                }
-                
-            }
-            
-        }
-        
-        catch let error as NSError {
-            logVerbose( "Error: [ %@ ]", error )
-        }
-        
-        directoryContentsArray = contentsArray.sorted(by:
-        { fileDescriptor1, fileDescriptor2 in
-            return fileDescriptor1.name < fileDescriptor2.name
-        })
-        
-    }
-    
-    
     private func loadTextView() {
         var newText = ""
         
-        for descriptor in directoryContentsArray {
+        for descriptor in fileDescriptorArray {
             newText.append( descriptor.name + "\n" )
         }
         
@@ -248,7 +170,7 @@ extension ScanRepoViewController {
         if let directory = directoryArray.first {
             currentPath = directory.path
             
-            logVerbose( "[ %@ ]", currentPath )
+            logVerbose( "[ %@ ]\n", currentPath )
             
             nasOutputString += "\n"
             nasOutputString.append( currentPath )
@@ -257,8 +179,9 @@ extension ScanRepoViewController {
             directoryArray.removeFirst()
         }
         else {
-            scanning = false
-            configureControls()
+            logVerbose( "End of Scan ... directoryArray.count[ %d ]\n", directoryArray.count )
+            configureControls( hideStart: true, running: false )
+
             navigatorCentral.reloadData( self )
         }
         
@@ -287,10 +210,10 @@ extension ScanRepoViewController: NASCentralDelegate {
     
     
     func nasCentral(_ nasCentral: NASCentral, didFetchDirectories: Bool, _ directoryArray: [SMBFile] ) {
-        logVerbose( "[ %@ ] got [ %d ]", stringFor( didFetchDirectories ), directoryArray.count )
+        logVerbose( "[ %@ ] adding [ %d ] directories to array [ %d ]", stringFor( didFetchDirectories ), directoryArray.count, self.directoryArray.count )
 
-        if didFetchDirectories {
-            self.directoryArray += directoryArray
+        if didFetchDirectories && directoryArray.count > 0 {
+            self.directoryArray.append(contentsOf: directoryArray )
         }
         
         exploreNextDirectory()
@@ -299,7 +222,8 @@ extension ScanRepoViewController: NASCentralDelegate {
     
     func nasCentral(_ nasCentral: NASCentral, didFetchFiles: Bool, _ fileArray: [SMBFile] ) {
         logVerbose( "[ %@ ] got [ %d ]", stringFor( didFetchFiles ), fileArray.count )
-        var filteredArray: [SMBFile] = []
+        var filteredArray     = [SMBFile]()
+        var directoryContents = currentPath + "\n"
 
         for file in fileArray {
             let fileExtension = extensionFrom( file.name )
@@ -307,8 +231,8 @@ extension ScanRepoViewController: NASCentralDelegate {
             if !fileExtension.isEmpty && GlobalConstants.supportedFilenameExtensions.contains( fileExtension ) {
                 filteredArray.append( file )
                 
-                nasOutputString += "\n    "
-                nasOutputString.append( file.name )
+                directoryContents += "\n    "
+                directoryContents.append( file.name )
             }
             else {
                 numberOfFilesSkipped += 1
@@ -316,10 +240,11 @@ extension ScanRepoViewController: NASCentralDelegate {
 
         }
         
-        nasOutputString += "\n"
+        directoryContents += "\n"
         
-        myTextView.text = nasOutputString
-        
+        myTextView.text.append( directoryContents )
+        scrollTextViewToBottom()
+
         navigatorCentral.addRecipesFrom( filteredArray, self )
         nasCentral.fetchDirectoriesFrom( connectedShare, currentPath, self )
     }
@@ -376,13 +301,24 @@ extension ScanRepoViewController: NavigatorCentralDelegate {
         logVerbose( "[ %@ ]", stringFor( didDeleteAllRecipes ) )
         
         if didDeleteAllRecipes {
-            nasCentral.fetchFilesAt( currentPath, self )
+            if navigatorCentral.dataSourceLocation == .device {
+                fileDescriptorArray = dataSourceCentral.scanDeviceRepo()
+                loadTextView()
+                configureControls( hideStart: true, running: false )
+
+                navigatorCentral.reloadRecipesFrom( fileDescriptorArray, self )
+            }
+            else {
+                nasCentral.fetchFilesAt( currentPath, self )
+            }
+            
         }
         else {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0 ) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5 ) {
                 self.presentAlert( title  : NSLocalizedString( "AlertTitle.UnableToDeleteRecipes",   comment: "Delete Failed!" ),
                                    message: NSLocalizedString( "AlertMessage.UnableToDeleteRecipes", comment: "We were unable to delete all of your recipes!  This may leave unwanted recipes in your database." ) )
             }
+            
         }
         
     }
@@ -392,11 +328,16 @@ extension ScanRepoViewController: NavigatorCentralDelegate {
         logVerbose( "loaded [ %d ] recipes", navigatorCentral.numberOfRecipesLoaded )
         
         if !scanning {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0 ) {
+            navigatorCentral.cleanUpAfterScan()
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5 ) {
                 self.presentAlert( title  :                 NSLocalizedString( "AlertTitle.ScanComplete",         comment: "Scan Complete" ),
-                                   message: String( format: NSLocalizedString( "AlertMessage.ScanCompleteFormat", comment: "Added %d recipes and skipped %d files." ), self.numberOfRecipesAdded, self.numberOfFilesSkipped ) )
+                                   message: String( format: NSLocalizedString( "AlertMessage.ScanCompleteFormat", comment: "Added %d recipes" ), self.navigatorCentral.numberOfRecipesLoaded ) )
             }
 
+        }
+        else {
+            logTrace( "ERROR!!!  SBH if still scanning!" )
         }
 
     }

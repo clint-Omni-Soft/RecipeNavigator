@@ -139,7 +139,7 @@ class TabBarViewController: UITabBarController {
             
         }
         else {
-            presentAlert( title:   NSLocalizedString( "AlertTitle.DeviceNameRequired",   comment: "Device Name is Required for NAS or iCloud" ),
+            presentAlert( title:   NSLocalizedString( "AlertTitle.DeviceNameRequired",   comment: "Device Name is Required for NAS" ),
                           message: NSLocalizedString( "AlertMessage.DeviceNameRequired", comment: "Please go to the Settings tab, tap on the 'User Assigned Device Name' entry in the table and enter a name for this device." ) )
         }
             
@@ -215,7 +215,7 @@ extension TabBarViewController : UITabBarControllerDelegate {
 
 
 
-// MARK: KitchenStockCentralDelegate Methods
+// MARK: NavigatorCentralDelegate Methods
 
 extension TabBarViewController: NavigatorCentralDelegate {
     
@@ -223,10 +223,7 @@ extension TabBarViewController: NavigatorCentralDelegate {
         logVerbose( "[ %@ ]", stringFor( didOpenDatabase ) )
         
         if didOpenDatabase {
-            if UIDevice.current.userInterfaceIdiom == .pad {
-                navigatorCentral.fetchRecipesWith( self )
-            }
-            
+            navigatorCentral.fetchRecipesWith( self )
         }
         else {
             presentAlert( title   : NSLocalizedString( "AlertTitle.Error",                comment: "Error!" ),

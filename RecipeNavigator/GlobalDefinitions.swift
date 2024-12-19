@@ -13,33 +13,32 @@ import UIKit
 
 enum DataLocation {
     case device
-    case iCloud
     case nas
     case notAssigned
-    case shareCloud
     case shareNas
 }
 
 struct DataLocationName {
     static let device       = "device"
-    static let iCloud       = "iCloud"
     static let nas          = "nas"
     static let notAssigned  = "notAssigned"
     static let shareCloud   = "shareCloud"
     static let shareNas     = "shareNas"
 }
 
-struct DirectoryNames {
+struct DirectoryNames {     // Configure for each app
     static let root       = "RecipeNavigator"
-    static let pictures   = "Photos"
+    static let pictures   = "Pictures"
+    static let recipes    = "Recipes"
     static let viewerData = "ViewerData"
 }
 
 struct EntityNames {
-    static let imageRequest   = "ImageRequest"
-    static let recipe         = "Recipe"
-    static let recipeKeywords = "RecipeKeywords"
-    static let viewerRecipes  = "ViewerRecipes"
+    static let favoriteRecipes = "FavoriteRecipes"
+    static let imageRequest    = "ImageRequest"
+    static let recipe          = "Recipe"
+    static let recipeKeywords  = "RecipeKeywords"
+    static let viewerRecipes   = "ViewerRecipes"
 }
 
 struct Filenames {
@@ -102,7 +101,6 @@ struct Notifications {
     static let recipeArrayReloaded          = "RecipeArrayReloaded"
     static let ready                        = "Ready"
     static let repoScanRequested            = "RepoScanRequested"
-    static let splitViewChanged             = "SplitViewChanged"
     static let transferringDatabase         = "TransferringDatabase"
     static let unableToConnect              = "UnableToConnect"
     static let updatingExternalDevice       = "UpdatingExternalDevice"
@@ -148,6 +146,7 @@ struct UserDefaultKeys {
     static let lastTabSelected          = "LastTabSelected"
     static let networkAccessGranted     = "NetworkAccessGranted"
     static let networkPath              = "NetworkPath"
+    static let repoDirectory            = "RepoDirectory"
     static let updatedOffline           = "UpdatedOffline"
 }
 
