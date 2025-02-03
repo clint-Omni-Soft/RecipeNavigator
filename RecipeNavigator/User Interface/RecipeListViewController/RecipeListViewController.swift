@@ -192,6 +192,14 @@ class RecipeListViewController: UIViewController {
     }
 
     
+    @IBAction func questionBarButtonTouched(_ sender: UIBarButtonItem ) {
+        let message = NSLocalizedString( "InfoText.RecipeList1", comment: "The navigation bar has Caret icons to open and close table sections, a Magnifying Glass to allow you to search recipes by name and, when you favorite recipes, a Book icon to view them.\n\n" )
+                    + NSLocalizedString( "InfoText.RecipeList2", comment: "The iPad also has a Gear icon to get to Settings and a (X) icon to close the primary view.  \n\nTouching on a table section header will also open and close that section." )
+        
+        presentAlert( title: NSLocalizedString( "AlertTitle.GotAQuestion", comment: "Got a Question?" ), message: message )
+    }
+
+    
     @IBAction func searchToggleBarButtonTouched(_ sender : UIBarButtonItem ) {
         searchEnabled = !searchEnabled
         
@@ -347,17 +355,18 @@ class RecipeListViewController: UIViewController {
 
         if UIDevice.current.userInterfaceIdiom == .pad {
             leftBarButtonItems.append( UIBarButtonItem.init( barButtonSystemItem: .close, target: self, action: #selector( hidePrimaryBarButtonTouched(_: ) ) ) )
-//            leftBarButtonItems.append( UIBarButtonItem.init( image: UIImage(named: "primaryView" ), style: .plain, target: self, action: #selector( hidePrimaryBarButtonTouched(_: ) ) ) )
        }
 
         if weHaveData && sortType != SortOptions.byFilename {
             leftBarButtonItems.append( UIBarButtonItem.init( image: arrowImage, style: .plain, target: self, action: #selector( showAllBarButtonTouched(_:) ) ) )
         }
 
+        leftBarButtonItems.append( UIBarButtonItem.init( image: UIImage(named: "question" ), style: .plain, target: self, action: #selector( questionBarButtonTouched(_:) ) ) )
+
         navigationItem.leftBarButtonItems  = leftBarButtonItems
 
         if UIDevice.current.userInterfaceIdiom == .pad {
-            rightBarButtonItems.append( UIBarButtonItem.init( image: UIImage(named: "settings" ), style: .plain, target: self, action: #selector( settingsBarButtonTouched(_:) ) ) )
+            rightBarButtonItems.append( UIBarButtonItem.init( image: UIImage(named: "gear" ), style: .plain, target: self, action: #selector( settingsBarButtonTouched(_:) ) ) )
         }
         
         if weHaveData {

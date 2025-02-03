@@ -9,7 +9,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Settings-->
+        <!--Settings View Controller-->
         <scene sceneID="fko-fE-8Cx">
             <objects>
                 <viewController storyboardIdentifier="SettingsViewController" id="3Ee-yY-bRC" customClass="SettingsViewController" customModule="RecipeNavigator" customModuleProvider="target" sceneMemberID="viewController">
@@ -54,7 +54,6 @@
                             <constraint firstItem="KTy-Fh-Lgc" firstAttribute="top" secondItem="nsT-yr-hnB" secondAttribute="top" id="iu5-g1-S6W"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Settings" selectedImage="settings" id="x2g-KA-oEN"/>
                     <navigationItem key="navigationItem" id="lFy-Sm-MCh"/>
                     <connections>
                         <outlet property="myTableView" destination="KTy-Fh-Lgc" id="aWA-53-RYx"/>
@@ -287,7 +286,7 @@
         <scene sceneID="wnl-Bq-igW">
             <objects>
                 <navigationController storyboardIdentifier="SettingsNavigationController" id="jT5-Xb-ue5" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Settings" image="settings" selectedImage="settings" id="cLc-jY-zcM"/>
+                    <tabBarItem key="tabBarItem" title="Settings" image="gear" id="cLc-jY-zcM"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="jVS-jP-iWg">
                         <rect key="frame" x="0.0" y="48" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -300,7 +299,7 @@
             </objects>
             <point key="canvasLocation" x="-506" y="270"/>
         </scene>
-        <!--Viewer-->
+        <!--Recipe Viewer View Controller-->
         <scene sceneID="QHy-Kl-cKD">
             <objects>
                 <viewController storyboardIdentifier="RecipeViewerViewController" id="rg6-r2-Ac7" customClass="RecipeViewerViewController" customModule="RecipeNavigator" customModuleProvider="target" sceneMemberID="viewController">
@@ -336,7 +335,6 @@
                             <constraint firstItem="600-qa-vE5" firstAttribute="trailing" secondItem="SEn-uF-ijH" secondAttribute="trailing" constant="20" identifier="viewPort" id="zHJ-Yo-NbK"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Viewer" image="viewer" id="Msk-px-29O"/>
                     <navigationItem key="navigationItem" id="dfx-Lm-ZAT"/>
                     <connections>
                         <outlet property="myPageControl" destination="XLr-BM-8GD" id="aBN-sn-CLo"/>
@@ -1569,15 +1567,14 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="yBF-2M-zbz"/>
+        <segue reference="M6C-It-sRp"/>
     </inferredMetricsTieBreakers>
     <resources>
+        <image name="gear" width="28" height="28"/>
         <image name="launchScreenImage" width="1920" height="1920"/>
         <image name="magnifyingGlass" width="28" height="28"/>
-        <image name="settings" width="28" height="28"/>
         <image name="shipsWheel" width="28" height="28"/>
         <image name="upOneLevel" width="24" height="20"/>
-        <image name="viewer" width="22" height="29"/>
         <systemColor name="groupTableViewBackgroundColor">
             <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
