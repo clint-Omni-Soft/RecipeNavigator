@@ -38,13 +38,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if navigatorCentral.dataStoreLocation != .device {
             showPleaseWaitScreen()
         }
+        else {
+            if UIDevice.current.userInterfaceIdiom == .pad {
+                getLinkToSplitViewController()
+            }
+
+        }
 
         if #available(iOS 15, *) {
             UITableView.appearance().sectionHeaderTopPadding = 0.0
-        }
-        
-        if UIDevice.current.userInterfaceIdiom == .pad {
-            getLinkToSplitViewController()
         }
         
         return true
