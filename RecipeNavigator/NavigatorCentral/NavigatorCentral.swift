@@ -53,6 +53,8 @@ class NavigatorCentral: NSObject {
     var didOpenDatabase                 = false
     var externalDeviceLastUpdatedBy     = ""
     var favoriteRecipesArray: [Recipe]  = []
+    var guidOfLastAddedRecipe           = ""
+    var indexOfLastAddedRecipe          = GlobalConstants.noSelection
     var missingDbFiles: [String]        = []
     var numberOfRecipesLoaded           = 0
     var pleaseWaiting                   = false
@@ -941,6 +943,8 @@ class NavigatorCentral: NSObject {
             self.bindViewerRecipe( recipe )
             self.saveContext()
             
+            self.guidOfLastAddedRecipe = recipe.guid!   // Later on we will use this to set the indexOfLastAddedRecipe for the viewer
+            
             self.refetchViewerRecipesAndNotifyDelegate()
         }
         
@@ -1056,6 +1060,23 @@ class NavigatorCentral: NSObject {
                     viewerRecipeArray = viewerRecipeArray.sorted(by: { (recipe1, recipe2) -> (Bool) in
                         return recipe1.filename!.uppercased() < recipe2.filename!.uppercased()
                     })
+                    
+                    // If we just added a recipe to the viewer, use the guidOfLastAddedRecipe to set the indexOfLastAddedRecipe so the viewer can slew to it when it reloads
+                    if guidOfLastAddedRecipe != "" {
+                        indexOfLastAddedRecipe = GlobalConstants.noSelection
+                        
+                        for index in 0..<viewerRecipeArray.count {
+                            let recipe = viewerRecipeArray[index]
+                            
+                            if recipe.guid == guidOfLastAddedRecipe {
+                                indexOfLastAddedRecipe = index
+                                break
+                            }
+                            
+                        }
+                        
+                        guidOfLastAddedRecipe = ""
+                    }
                     
                 }
                 

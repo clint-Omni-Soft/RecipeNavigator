@@ -41,10 +41,22 @@ class RecipeViewerViewController: UIViewController {
     private var changingOrientation         = false
     private let navigatorCentral            = NavigatorCentral.sharedInstance
     private let notificationCenter          = NotificationCenter.default
-    private var pageIndex                   = GlobalConstants.noSelection
     private var primaryWindowIsHidden       = false
     private var recipeDisplayViewControllers: [RecipeDisplayViewController] = []
     private var watingForViewWillAppear     = true
+
+    private var pageIndex: Int {
+        get {
+            let index = getIntValueFromUserDefaults( UserDefaultKeys.currentViewerPage )
+            
+            return index < 0 ? 0 : index
+        }
+        
+        set (index) {
+            setIntValueInUserDefaults( index, UserDefaultKeys.currentViewerPage )
+        }
+        
+    }
 
     
     
@@ -86,6 +98,7 @@ class RecipeViewerViewController: UIViewController {
         super.viewDidAppear( animated )
  
         loadBarButtonItems( false )
+        slewToLastAddedRecipe()
         setupPageViewController()
         
         if navigatorCentral.didOpenDatabase && navigatorCentral.viewerRecipeArray.count > 0 {
@@ -139,6 +152,7 @@ class RecipeViewerViewController: UIViewController {
     @objc func viewerRecipesUpdated( notification: NSNotification ) {
         logTrace()
         myPageViewController!.view.frame = viewPort.frame
+        slewToLastAddedRecipe()
         setupPageControl()
     }
 
@@ -236,14 +250,15 @@ class RecipeViewerViewController: UIViewController {
             navigatorCentral.reloadViewerRecipes = false
         }
         
-        var     index = 0
-        
         if changingOrientation {
+            logTrace( "changingOrientation" )
             changingOrientation = false
             pageIndex = myPageControl.currentPage
         }
         
         recipeDisplayViewControllers.removeAll()
+        
+        var index = 0
         
         for recipe in navigatorCentral.viewerRecipeArray {
             guard let recipeDisplayVC : RecipeDisplayViewController = iPhoneViewControllerWithStoryboardId( storyboardId: StoryboardIds.recipeDisplay ) as? RecipeDisplayViewController else {
@@ -298,6 +313,7 @@ class RecipeViewerViewController: UIViewController {
         let yesAction = UIAlertAction.init( title: NSLocalizedString( "ButtonTitle.Yes", comment: "Yes" ), style: .destructive )
         { ( alertAction ) in
             logTrace( "YES Action" )
+            self.pageIndex = 0
             self.navigatorCentral.removeViewerRecipe( recipe, self )
         }
         
@@ -323,19 +339,14 @@ class RecipeViewerViewController: UIViewController {
 
         myPageControl.isHidden = recipeDisplayViewControllers.isEmpty || recipeDisplayViewControllers.count == 1
         
-        if pageIndex != GlobalConstants.noSelection {
-            loadPageAt( pageIndex )
-            pageIndex = GlobalConstants.noSelection
-        }
-        else if recipeDisplayViewControllers.count != 0 {
-            loadPageAt( 0 )
-        }
-        
         if recipeDisplayViewControllers.count <= 0 {
             presentAlert( title:   NSLocalizedString( "AlertTitle.NoViewerRecipes",   comment: "No Viewer Recipes" ),
                           message: NSLocalizedString( "AlertMessage.NoViewerRecipes", comment: "Go to Recipes then tap on an item in the list and select Quick Look.  Touch the add button (+) to send one to the recipe viewer." ) )
 
             setupPageViewController()
+        }
+        else if recipeDisplayViewControllers.count != 0 {
+            loadPageAt( pageIndex )
         }
 
         loadBarButtonItems( true )
@@ -363,6 +374,17 @@ class RecipeViewerViewController: UIViewController {
         myPageViewController!.didMove( toParent: self )
     }
     
+
+    private func slewToLastAddedRecipe() {
+        // If we just added a new recipe to the viewer, slew to it
+        if navigatorCentral.indexOfLastAddedRecipe != GlobalConstants.noSelection {
+            logVerbose( "indexOfLastAddedRecipe[ %d ]", navigatorCentral.indexOfLastAddedRecipe )
+            pageIndex                               = navigatorCentral.indexOfLastAddedRecipe
+            navigatorCentral.indexOfLastAddedRecipe = GlobalConstants.noSelection
+        }
+
+    }
+    
     
 }
 
@@ -384,7 +406,6 @@ extension RecipeViewerViewController: NavigatorCentralDelegate {
     
     func navigatorCentral(_ navigatorCentral: NavigatorCentral, didReloadRecipes: Bool) {
         logVerbose( "[ @ ]", stringFor( didReloadRecipes ) )
-        
         self.setupPageControl()
     }
     
@@ -397,6 +418,7 @@ extension RecipeViewerViewController: NavigatorCentralDelegate {
     
     func navigatorCentralDidUpdateViewerRecipes(_ navigatorCentral: NavigatorCentral ) {
         logVerbose( "loaded [ %d ] viewerRecipes", navigatorCentral.viewerRecipeArray.count )
+        slewToLastAddedRecipe()
         setupPageControl()
     }
     
@@ -478,13 +500,14 @@ extension RecipeViewerViewController: UIPageViewControllerDelegate {
         if finished && completed {
             if let currentViewController = pageViewController.viewControllers?.first {
                 let recipeDisplayVC = currentViewController as! RecipeDisplayViewController
-                let index           = recipeDisplayViewControllers.firstIndex( of: recipeDisplayVC )
+                let index           = recipeDisplayViewControllers.firstIndex( of: recipeDisplayVC )!
                 
                 if UIDevice.current.userInterfaceIdiom == .pad {
                     recipeDisplayVC.reload()
                 }
 
-                configureForRecipeAt( index! )
+                pageIndex = index
+                configureForRecipeAt( index )
             }
             
         }

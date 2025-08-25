@@ -14,18 +14,32 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     
     // MARK: Public Definitions
-    var hidePrimary = false
-    var recipeViewer: RecipeViewerViewController!
-    var window      : UIWindow?
+    var hidePrimary        = false
+    var recipeViewer       : RecipeViewerViewController!
+    var splitViewController: UISplitViewController!
+    var window             : UIWindow?
     
     
     // MARK: Private Definitions
     private let navigatorCentral   = NavigatorCentral.sharedInstance
     private let notificationCenter = NotificationCenter.default
-    private var splitViewController: UISplitViewController!
     private let userDefaults       = UserDefaults.standard
 
-    
+    private var activeWindow: UIWindow? {
+        get {
+            var myWindow = window
+            
+            if myWindow == nil {
+                let sceneDelegate = (UIApplication.shared.connectedScenes.first as? UIWindowScene)!.delegate as! SceneDelegate
+                myWindow = sceneDelegate.window
+            }
+            
+            return myWindow
+        }
+        
+    }
+
+
     
     // MARK: UIApplication Lifecycle Methods
     
@@ -37,12 +51,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         if navigatorCentral.dataStoreLocation != .device {
             showPleaseWaitScreen()
-        }
-        else {
-            if UIDevice.current.userInterfaceIdiom == .pad {
-                getLinkToSplitViewController()
-            }
-
         }
 
         if #available(iOS 15, *) {
@@ -78,8 +86,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     // MARK: Public Interfaces
 
+    func configureSplitViewController() {
+        logTrace()
+        if haveLinkToSplitViewController() {
+            splitViewController.presentsWithGesture = false
+            
+            let minimumWidth = min( CGRectGetWidth( splitViewController.view.bounds ), CGRectGetHeight( splitViewController.view.bounds ) )
+            
+            splitViewController.minimumPrimaryColumnWidth = minimumWidth / 2
+            splitViewController.maximumPrimaryColumnWidth = minimumWidth;
+        }
+
+    }
+
+    
     func hidePrimaryView(_ isHidden: Bool ) {
-        if splitViewController != nil {
+        if haveLinkToSplitViewController() {
             hidePrimary = isHidden
 
             UIView.animate(withDuration: 0.5 ) { () -> Void in
@@ -95,37 +117,38 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             
         }
         
-//        logVerbose( "hidePrimary[ %@ ]", stringFor( hidePrimary ) )
     }
     
     
     func primaryIsHidden() -> Bool {
         var isHidden = true
         
-        if let splitVC = self.splitViewController {
-            isHidden = splitVC.isCollapsed
-            logVerbose( "instantiated - [ %@ ]", stringFor( isHidden ) )
+        if haveLinkToSplitViewController() {
+            isHidden = splitViewController.isCollapsed
         }
-        else {
-            logTrace( "NOT instantiated" )
-        }
-        
+
         return isHidden
     }
     
     
     func switchToMainApp() {
-        logTrace()
         let     storyboardName = UIDevice.current.userInterfaceIdiom == .pad ? "Main_iPad" : "Main_iPhone"
         let     storyboard     = UIStoryboard(name: storyboardName, bundle: .main )
 
+        logVerbose( "[ %@ ]", storyboardName )
+        splitViewController = nil
         navigatorCentral.didOpenDatabase = false
         
         if let initialViewController = storyboard.instantiateInitialViewController() {
             navigatorCentral.pleaseWaiting = false
 
-            window?.rootViewController = initialViewController
-            window?.makeKeyAndVisible()
+            activeWindow?.rootViewController = initialViewController
+            activeWindow?.makeKeyAndVisible()
+            
+            if UIDevice.current.userInterfaceIdiom == .pad {
+                configureSplitViewController()
+            }
+            
         }
         
     }
@@ -134,24 +157,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     // MARK: Utility Methods (Private)
     
-    private func getLinkToSplitViewController() {
-        DispatchQueue.main.asyncAfter(deadline: .now() ) {
-            if let splitVC = self.window!.rootViewController as? UISplitViewController {
-                self.splitViewController = splitVC
-                self.splitViewController.presentsWithGesture = false
-                
-                let minimumWidth = min( CGRectGetWidth(self.splitViewController.view.bounds), CGRectGetHeight(self.splitViewController.view.bounds) )
-                
-                self.splitViewController.minimumPrimaryColumnWidth = minimumWidth * 0.6;
-                self.splitViewController.maximumPrimaryColumnWidth = minimumWidth;
-                logTrace( "Captured pointer to SplitViewController" )
+    private func haveLinkToSplitViewController() -> Bool {
+        var foundIt = true
+        
+        if splitViewController == nil {
+            if let splitVC = self.activeWindow?.rootViewController as? UISplitViewController {
+                splitViewController = splitVC
             }
             else {
-                logTrace( "ERROR!  Could NOT capture pointer to SplitViewController!" )
+                foundIt = false
+                logVerbose( "NOT instantiated!" )
             }
 
         }
-
+        
+        return foundIt
     }
     
     
@@ -178,8 +198,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if let initialViewController = storyboard.instantiateInitialViewController() {
             navigatorCentral.pleaseWaiting = true
             
-            window?.rootViewController = initialViewController
-            window?.makeKeyAndVisible()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1 ) {
+                self.activeWindow?.rootViewController = initialViewController
+                self.activeWindow?.makeKeyAndVisible()
+            }
+
         }
 
     }

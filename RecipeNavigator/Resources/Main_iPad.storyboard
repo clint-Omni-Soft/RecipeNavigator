@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="22505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="d2f-QV-zxd">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="d2f-QV-zxd">
     <device id="ipad11_0rounded" orientation="landscape" layout="fullscreen" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22504"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
     </dependencies>
     <scenes>
         <!--RecipeListNavigationController-->
@@ -29,7 +29,7 @@
         <!--Split View Controller-->
         <scene sceneID="wnd-0q-3dq">
             <objects>
-                <splitViewController allowDoubleColumnStyle="YES" primaryBackgroundStyle="sidebar" id="d2f-QV-zxd" sceneMemberID="viewController">
+                <splitViewController storyboardIdentifier="SplitViewController" allowDoubleColumnStyle="YES" primaryBackgroundStyle="sidebar" id="d2f-QV-zxd" customClass="SplitViewController" customModule="RecipeNavigator" customModuleProvider="target" sceneMemberID="viewController">
                     <connections>
                         <segue destination="YQd-yy-mko" kind="relationship" relationship="masterViewController" id="iLA-dy-ZMs"/>
                         <segue destination="57r-wH-F9h" kind="relationship" relationship="detailViewController" id="XNo-EV-wtW"/>

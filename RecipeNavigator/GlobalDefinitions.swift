@@ -135,6 +135,7 @@ struct SupportedFilenameExtensions {
 
 struct UserDefaultKeys {
     static let currentSortOption        = "CurrentSortOption"
+    static let currentViewerPage        = "CurrentViewerPage"
     static let dataSourceDescriptor     = "DataSourceDescriptor"
     static let dataSourceLocation       = "DataSourceLocation"
     static let dataStoreDescriptor      = "DataStoreDescriptor"

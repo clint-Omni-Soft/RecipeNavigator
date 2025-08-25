@@ -18,6 +18,7 @@
 		F42177992BE2E51600B1D1AC /* TransferProgressViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F421778F2BE2E51600B1D1AC /* TransferProgressViewController.swift */; };
 		F421779A2BE2E51600B1D1AC /* NasLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42177922BE2E51600B1D1AC /* NasLoginViewController.swift */; };
 		F421779B2BE2E51600B1D1AC /* NasDriveSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42177932BE2E51600B1D1AC /* NasDriveSelectorViewController.swift */; };
+		F42FE9902E383689003E4BB1 /* SplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42FE98F2E383689003E4BB1 /* SplitViewController.swift */; };
 		F43FE1E52CCAFA0B0096AA30 /* DataSourceCentral.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43FE1E42CCAFA0B0096AA30 /* DataSourceCentral.swift */; };
 		F440FD582BFE95010039E4E2 /* Halibut with Fennel F&W 2001.JPG in Resources */ = {isa = PBXBuildFile; fileRef = F440FD512BFE95010039E4E2 /* Halibut with Fennel F&W 2001.JPG */; };
 		F440FD592BFE95010039E4E2 /* How to Make a Sourdough Starter from Scratch.txt in Resources */ = {isa = PBXBuildFile; fileRef = F440FD522BFE95010039E4E2 /* How to Make a Sourdough Starter from Scratch.txt */; };
@@ -28,7 +29,9 @@
 		F44842A82BCB244B00FC1585 /* RecipeListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F44842A32BCB244B00FC1585 /* RecipeListViewController.swift */; };
 		F44842A92BCB244B00FC1585 /* RecipeViewerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F44842A52BCB244B00FC1585 /* RecipeViewerViewController.swift */; };
 		F44842AA2BCB244B00FC1585 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F44842A72BCB244B00FC1585 /* SettingsViewController.swift */; };
+		F477E63E2E19A497003DFB5B /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F477E63D2E19A497003DFB5B /* WebKit.framework */; };
 		F49289112C389CC4008D538A /* QuickLookViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49289102C389CC4008D538A /* QuickLookViewController.swift */; };
+		F4A61F4B2E2EB7A7009E09E5 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A61F4A2E2EB7A7009E09E5 /* SceneDelegate.swift */; };
 		F4AA6ABA2C407A650015ED86 /* RecipeDisplayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AA6AB92C407A650015ED86 /* RecipeDisplayViewController.swift */; };
 		F4B18F632BE988EB0013371F /* RecipeLocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B18F622BE988EB0013371F /* RecipeLocationViewController.swift */; };
 		F4B9822E2C26315500AEBBA1 /* KeywordManagerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B9822D2C26315500AEBBA1 /* KeywordManagerViewController.swift */; };
@@ -95,6 +98,7 @@
 		F421778F2BE2E51600B1D1AC /* TransferProgressViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransferProgressViewController.swift; sourceTree = "<group>"; };
 		F42177922BE2E51600B1D1AC /* NasLoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NasLoginViewController.swift; sourceTree = "<group>"; };
 		F42177932BE2E51600B1D1AC /* NasDriveSelectorViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NasDriveSelectorViewController.swift; sourceTree = "<group>"; };
+		F42FE98F2E383689003E4BB1 /* SplitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitViewController.swift; sourceTree = "<group>"; };
 		F43FE1E42CCAFA0B0096AA30 /* DataSourceCentral.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSourceCentral.swift; sourceTree = "<group>"; };
 		F440FD512BFE95010039E4E2 /* Halibut with Fennel F&W 2001.JPG */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "Halibut with Fennel F&W 2001.JPG"; sourceTree = "<group>"; };
 		F440FD522BFE95010039E4E2 /* How to Make a Sourdough Starter from Scratch.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "How to Make a Sourdough Starter from Scratch.txt"; sourceTree = "<group>"; };
@@ -108,7 +112,9 @@
 		F44842A32BCB244B00FC1585 /* RecipeListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecipeListViewController.swift; sourceTree = "<group>"; };
 		F44842A52BCB244B00FC1585 /* RecipeViewerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecipeViewerViewController.swift; sourceTree = "<group>"; };
 		F44842A72BCB244B00FC1585 /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
+		F477E63D2E19A497003DFB5B /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		F49289102C389CC4008D538A /* QuickLookViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickLookViewController.swift; sourceTree = "<group>"; };
+		F4A61F4A2E2EB7A7009E09E5 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		F4AA6AB92C407A650015ED86 /* RecipeDisplayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeDisplayViewController.swift; sourceTree = "<group>"; };
 		F4B18F622BE988EB0013371F /* RecipeLocationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeLocationViewController.swift; sourceTree = "<group>"; };
 		F4B9822D2C26315500AEBBA1 /* KeywordManagerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeywordManagerViewController.swift; sourceTree = "<group>"; };
@@ -160,6 +166,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F477E63E2E19A497003DFB5B /* WebKit.framework in Frameworks */,
 				F4F96EE52BCA020A00AD534F /* SMBClient.framework in Frameworks */,
 				F4F96EE32BCA01EA00AD534F /* CoreData.framework in Frameworks */,
 			);
@@ -384,6 +391,7 @@
 		F4F96EB92BC9C99800AD534F /* User Interface */ = {
 			isa = PBXGroup;
 			children = (
+				F42FE98F2E383689003E4BB1 /* SplitViewController.swift */,
 				F4C69BD92BD9BF3100B7CD89 /* TabBarViewController.swift */,
 				F4F96EBA2BC9C9AD00AD534F /* Application */,
 				F4F311E12BDB114500665440 /* Please Wait */,
@@ -399,6 +407,7 @@
 			isa = PBXGroup;
 			children = (
 				F4F96EA52BC9C91E00AD534F /* AppDelegate.swift */,
+				F4A61F4A2E2EB7A7009E09E5 /* SceneDelegate.swift */,
 			);
 			path = Application;
 			sourceTree = "<group>";
@@ -471,6 +480,7 @@
 		F4F96EE12BCA01EA00AD534F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				F477E63D2E19A497003DFB5B /* WebKit.framework */,
 				F4F96EE42BCA020A00AD534F /* SMBClient.framework */,
 				F4F96EE22BCA01EA00AD534F /* CoreData.framework */,
 			);
@@ -514,7 +524,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1520;
-				LastUpgradeCheck = 1520;
+				LastUpgradeCheck = 1640;
 				TargetAttributes = {
 					F4F96EA12BC9C91E00AD534F = {
 						CreatedOnToolsVersion = 15.2;
@@ -590,12 +600,14 @@
 				F4F96EDD2BCA01A600AD534F /* SMBCentral.swift in Sources */,
 				F44842A82BCB244B00FC1585 /* RecipeListViewController.swift in Sources */,
 				F4099B0A2BFC19D600339544 /* RecipeListViewControllerCell.swift in Sources */,
+				F42FE9902E383689003E4BB1 /* SplitViewController.swift in Sources */,
 				F4AA6ABA2C407A650015ED86 /* RecipeDisplayViewController.swift in Sources */,
 				F4C48D192CC960E800B65F10 /* Recipe+CoreDataProperties.swift in Sources */,
 				F4F96EC22BC9CA2C00AD534F /* UIKitExtensions.swift in Sources */,
 				F4B18F632BE988EB0013371F /* RecipeLocationViewController.swift in Sources */,
 				F4F96EC42BC9CA2C00AD534F /* LogViewController.swift in Sources */,
 				F421779A2BE2E51600B1D1AC /* NasLoginViewController.swift in Sources */,
+				F4A61F4B2E2EB7A7009E09E5 /* SceneDelegate.swift in Sources */,
 				F4F96EC32BC9CA2C00AD534F /* UIImage+Cropping.swift in Sources */,
 				F4F96EE02BCA01A600AD534F /* DeviceAccessControl.swift in Sources */,
 				F4B982312C263AED00AEBBA1 /* RecipeKeywords.swift in Sources */,
@@ -688,6 +700,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = YEJQTHXY7Y;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -753,6 +766,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = YEJQTHXY7Y;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -783,7 +797,6 @@
 				CODE_SIGN_ENTITLEMENTS = RecipeNavigator/RecipeNavigator.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = YEJQTHXY7Y;
 				"EXCLUDED_ARCHS[sdk=*]" = x86_64;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
 				FRAMEWORK_SEARCH_PATHS = "../ZKits/ZKits-Debug";
@@ -797,13 +810,13 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = NO;
-				MARKETING_VERSION = 1.2;
+				MARKETING_VERSION = 1.3;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.Omni-Soft.RecipeNavigator";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
@@ -822,7 +835,6 @@
 				CODE_SIGN_ENTITLEMENTS = RecipeNavigator/RecipeNavigator.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = YEJQTHXY7Y;
 				FRAMEWORK_SEARCH_PATHS = "../ZKits/ZKits-Debug";
 				GCC_PREFIX_HEADER = "Recipe Navigator/RecipeNavigator-Prefix.pch";
 				GENERATE_INFOPLIST_FILE = YES;
@@ -834,13 +846,13 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = NO;
-				MARKETING_VERSION = 1.2;
+				MARKETING_VERSION = 1.3;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.Omni-Soft.RecipeNavigator";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
