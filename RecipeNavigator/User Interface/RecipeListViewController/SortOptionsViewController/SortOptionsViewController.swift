@@ -55,9 +55,6 @@ class SortOptionsViewController: UIViewController {
         titleLabel        .text = NSLocalizedString( "Title.SelectSortOptions",   comment: "Select Sort Options" )
         sortAscendingLabel.text = NSLocalizedString( "ButtonTitle.SortAscending", comment: "Sort Ascending"      )
         
-        cancelButton.setTitle( NSLocalizedString( "ButtonTitle.Cancel", comment: "Cancel" ), for: .normal )
-        saveButton  .setTitle( NSLocalizedString( "ButtonTitle.Save",   comment: "Save"   ), for: .normal )
-        
         saveButton.isHidden = !somethingChanged
         
         originalOptionTuple = navigatorCentral.sortDescriptor
@@ -76,6 +73,16 @@ class SortOptionsViewController: UIViewController {
         logTrace()
         super.viewWillAppear(animated)
         
+        configurePopoverViewBorder( view )
+        
+        expandImageToFit( cancelButton )
+        expandImageToFit( saveButton   )
+        
+        myTableView.clipsToBounds      = true
+        myTableView.layer.borderColor  = ControlViewBorder.color.cgColor
+        myTableView.layer.borderWidth  = ControlViewBorder.width
+        myTableView.layer.cornerRadius = ControlViewBorder.cornerRadius
+
         sortAscendingSwitch.isOn = originalOptionTuple.1
         myTableView.reloadData()
     }

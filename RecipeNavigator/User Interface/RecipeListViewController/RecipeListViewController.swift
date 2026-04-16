@@ -39,6 +39,7 @@ class RecipeListViewController: UIViewController {
     
     private let appDelegate         = UIApplication.shared.delegate as! AppDelegate
     private var application         = UIApplication.shared
+    private let customDelegate      = CustomTransitioningDelegate( CGRect(x: 0, y: 0, width: 1, height: 1) )
     private let dataSourceCentral   = DataSourceCentral.sharedInstance
     private let deviceAccessControl = DeviceAccessControl.sharedInstance
     private var fileData            : Data!
@@ -342,14 +343,12 @@ class RecipeListViewController: UIViewController {
     
     private func loadBarButtonItems() {
 //        logTrace()
-        let arrowImage         = UIImage(named: showAllSections      ? "arrowUp"         : "arrowDown" )
-        let favoritesImage     = UIImage(named: showingFavorites     ? "closed-book"     : "open-book" )
-        let searchImage        = UIImage(named: myTextField.isHidden ? "magnifyingGlass" : "magnifyingGlassXout" )
-        let sortDescriptor     = navigatorCentral.sortDescriptor
-        let sortType           = sortDescriptor.0
-        var leftBarButtonItems : [UIBarButtonItem] = []
-        var rightBarButtonItems: [UIBarButtonItem] = []
-        let weHaveData         = navigatorCentral.numberOfRecipesLoaded > 0
+        var leftBarButtonItems  : [UIBarButtonItem] = []
+        var rightBarButtonItems : [UIBarButtonItem] = []
+        let searchBarButtonItem = UIBarButtonItem.init( image: UIImage(systemName: "magnifyingglass" ), style: .plain, target: self, action: #selector( searchToggleBarButtonTouched(_:) ) )
+        let sortDescriptor      = navigatorCentral.sortDescriptor
+        let sortType            = sortDescriptor.0
+        let weHaveData          = navigatorCentral.numberOfRecipesLoaded > 0
 
         navigationItem.title = showingFavorites ? NSLocalizedString( "Title.Favorites", comment: "Favorites" ) : NSLocalizedString( "Title.Recipes", comment: "Recipes" )
 
@@ -357,24 +356,29 @@ class RecipeListViewController: UIViewController {
             leftBarButtonItems.append( UIBarButtonItem.init( barButtonSystemItem: .close, target: self, action: #selector( hidePrimaryBarButtonTouched(_: ) ) ) )
        }
 
+        leftBarButtonItems.append( UIBarButtonItem.init( image: UIImage(systemName: "questionmark.circle" ), style: .plain, target: self, action: #selector( questionBarButtonTouched(_:) ) ) )
+
         if weHaveData && sortType != SortOptions.byFilename {
+            let arrowImage = UIImage(systemName: showAllSections  ? "arrow.up" : "arrow.down" )
+
             leftBarButtonItems.append( UIBarButtonItem.init( image: arrowImage, style: .plain, target: self, action: #selector( showAllBarButtonTouched(_:) ) ) )
         }
-
-        leftBarButtonItems.append( UIBarButtonItem.init( image: UIImage(named: "question" ), style: .plain, target: self, action: #selector( questionBarButtonTouched(_:) ) ) )
 
         navigationItem.leftBarButtonItems  = leftBarButtonItems
 
         if UIDevice.current.userInterfaceIdiom == .pad {
-            rightBarButtonItems.append( UIBarButtonItem.init( image: UIImage(named: "gear" ), style: .plain, target: self, action: #selector( settingsBarButtonTouched(_:) ) ) )
+            rightBarButtonItems.append( UIBarButtonItem.init( image: UIImage(systemName: "gearshape" ), style: .plain, target: self, action: #selector( settingsBarButtonTouched(_:) ) ) )
         }
         
         if weHaveData {
             if !showingFavorites {
-                rightBarButtonItems.append( UIBarButtonItem.init( image: searchImage, style: .plain, target: self, action: #selector( searchToggleBarButtonTouched(_:) ) ) )
+                searchBarButtonItem.tintColor = myTextField.isHidden  ? .black : .blue
+                rightBarButtonItems.append( searchBarButtonItem )
             }
             
             if !searchEnabled {
+                let favoritesImage = UIImage(systemName: showingFavorites ? "book.closed" : "book" )
+                
                 rightBarButtonItems.append( UIBarButtonItem.init( image: favoritesImage, style: .plain, target: self, action: #selector( favoritesBarButtonTouched(_: ) ) ) )
             }
             
@@ -393,14 +397,15 @@ class RecipeListViewController: UIViewController {
         logTrace()
         sortOptionsVC.delegate = self
         
-        sortOptionsVC.modalPresentationStyle = .popover
-        sortOptionsVC.preferredContentSize   = CGSize(width: myTableView.frame.width, height: 300 )
-
-        sortOptionsVC.popoverPresentationController!.delegate                 = self
-        sortOptionsVC.popoverPresentationController?.permittedArrowDirections = .any
-        sortOptionsVC.popoverPresentationController?.sourceRect               = sortButton.frame
-        sortOptionsVC.popoverPresentationController?.sourceView               = sortButton
+        let customSize = CGSize(width: myTableView.frame.width - 20, height: 340 )
+        let x          = (view.bounds.width  - customSize.width ) / 2
+        let y          = (view.bounds.height - customSize.height) / 2
         
+        customDelegate.customFrame = CGRect(x: x, y: y, width: customSize.width, height: customSize.height )
+        
+        sortOptionsVC.modalPresentationStyle = .custom
+        sortOptionsVC.transitioningDelegate  = customDelegate
+
         present( sortOptionsVC, animated: true, completion: nil )
     }
     

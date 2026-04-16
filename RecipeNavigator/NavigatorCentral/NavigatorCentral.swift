@@ -69,6 +69,7 @@ class NavigatorCentral: NSObject {
     var sessionActive                   = false
     var stayOffline                     = false
     let userDefaults                    = UserDefaults.standard
+    var userNotificationsAllowed        = false
     var viewerRecipeArray: [Recipe]     = []
     
     var dataSourceDescriptor: NASDescriptor {
@@ -293,7 +294,6 @@ class NavigatorCentral: NSObject {
     // MARK: Private Variables & Definitions
     
     private var canSeeNasInProgress         = false
-    private var databaseUpdated             = false
     private var dataSourceLocationBacking   = DataLocation.notAssigned
     private var dataStoreLocationBacking    = DataLocation.notAssigned
     private var favoriteRecipesObject      : FavoriteRecipes!
@@ -335,6 +335,23 @@ class NavigatorCentral: NSObject {
     var offlineImageRequestQueue: [ImageRequest] = []                             // This queue is used to flush offline NAS image transactions to disk after we reconnect
     var openInProgress          = false
     var persistentContainer     : NSPersistentContainer!
+    
+    var databaseUpdated: Bool {
+        get {
+            return flagIsPresentInUserDefaults( UserDefaultKeys.databaseUpdated )
+        }
+        
+        set ( setFlag ) {
+            if setFlag {
+                setFlagInUserDefaults( UserDefaultKeys.databaseUpdated )
+            }
+            else {
+                removeFlagFromUserDefaults( UserDefaultKeys.databaseUpdated )
+            }
+            
+        }
+        
+    }
     
     var updatedOffline: Bool {
         get {
@@ -1368,7 +1385,6 @@ class NavigatorCentral: NSObject {
                         updatedOffline = true
                     }
                     
-                    createLastUpdatedFile()
                 }
                 
             }
@@ -1993,9 +2009,11 @@ extension NavigatorCentral {
                     logTrace( "We are updating ... do nothing!" )
                 }
                 else if self.databaseUpdated {
-                    self.databaseUpdated = false
                     logVerbose( "databaseUpdated[ true ]\n    %@", self.deviceAccessControl.descriptor() )
 
+                    self.databaseUpdated = false
+                    self.createLastUpdatedFile()
+                    
                     logTrace( "copying database to NAS" )
                     self.nasCentral.copyDatabaseFromDeviceToNas( self )
                 }
@@ -2023,6 +2041,13 @@ extension NavigatorCentral {
             timer.invalidate()
         }
 
+        if !deviceAccessControl.byMe {
+            logTrace( "do nothing!" )
+            self.nasCentral.emptyQueue()
+            self.nasCentral.unlockNas( self )
+            return
+        }
+        
         logVerbose( "databaseUpdated[ %@ ]\n    %@", stringFor( databaseUpdated ), deviceAccessControl.descriptor() )
         
         if databaseUpdated {
@@ -2050,20 +2075,27 @@ extension NavigatorCentral {
                         self.deviceAccessControl.updating = true
                         
                         logTrace( "copying database to NAS" )
+                        self.createLastUpdatedFile()
+                        
+                        self.nasCentral.emptyQueue()
                         self.nasCentral.copyDatabaseFromDeviceToNas( self )
                     }
                     
                 }
 
             }
-            
-        }
-        else {
-            if !deviceAccessControl.byMe {
-                logTrace( "do nothing!" )
-                return
+            else {
+                if self.userNotificationsAllowed {
+                    DispatchQueue.main.async() {
+                        UIApplication.shared.applicationIconBadgeNumber = 1
+                    }
+                    
+                }
+
             }
-            
+
+        }
+        else {      // !databaseUpdated
             if !stayOffline {
                 DispatchQueue.global().async {
 
@@ -2074,6 +2106,13 @@ extension NavigatorCentral {
                         }
 
                         logTrace( "We ran out of time!  Ending background task #2..." )
+                        if self.userNotificationsAllowed {
+                            DispatchQueue.main.async() {
+                                UIApplication.shared.applicationIconBadgeNumber = 2
+                            }
+                            
+                        }
+                        
                         UIApplication.shared.endBackgroundTask( self.backgroundTaskID )
                         
                         self.backgroundTaskID = UIBackgroundTaskIdentifier.invalid
@@ -2084,6 +2123,7 @@ extension NavigatorCentral {
                     }
                     else {
                         logTrace( "removing lock file" )
+                        self.nasCentral.emptyQueue()
                         self.nasCentral.unlockNas( self )
                     }
                     

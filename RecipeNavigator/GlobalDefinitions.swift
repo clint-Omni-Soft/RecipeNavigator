@@ -11,6 +11,12 @@ import UIKit
 
 // MARK: Public Variables & Definitions
 
+struct ControlViewBorder {
+    static let color       : UIColor = .lightGray
+    static let cornerRadius: CGFloat = 10.0
+    static let width       : CGFloat = 2.0
+}
+
 enum DataLocation {
     case device
     case nas
@@ -55,6 +61,7 @@ struct GlobalConstants {
     static let fileExtensionSeparator           = "."
     static let filePathSeparator                = "/"
     static let groupedTableViewBackgroundColor  = UIColor.init( red: 239/255, green: 239/255, blue: 244/255, alpha: 1.0 )
+    static let lastUpdatedVersionString         = "V2"
     static let newRecipe                        = -1
     static let noGuid                           = "No GUID"
     static let noSelection                      = -1
@@ -94,6 +101,7 @@ struct Notifications {
     static let cannotReadAllDbFiles         = "CannotReadAllDbFiles"
     static let cannotSeeExternalDevice      = "CannotSeeExternalDevice"
     static let connectingToExternalDevice   = "ConnectingToExternalDevice"
+    static let databaseOutOfDate            = "DatabaseOutOfDate"
     static let deviceNameNotSet             = "DeviceNameNotSet"
     static let enteringBackground           = "EnteringBackground"
     static let enteringForeground           = "EnteringForeground"
@@ -105,6 +113,12 @@ struct Notifications {
     static let unableToConnect              = "UnableToConnect"
     static let updatingExternalDevice       = "UpdatingExternalDevice"
     static let viewerRecipesArrayReloaded   = "ViewerRecipesArrayReloaded"
+}
+
+struct PopoverViewBorder {
+    static let color       : UIColor = .lightGray
+    static let cornerRadius: CGFloat = 20.0
+    static let width       : CGFloat = 4.0
 }
 
 struct SortOptions {
@@ -136,6 +150,7 @@ struct SupportedFilenameExtensions {
 struct UserDefaultKeys {
     static let currentSortOption        = "CurrentSortOption"
     static let currentViewerPage        = "CurrentViewerPage"
+    static let databaseUpdated          = "DatabaseUpdated"
     static let dataSourceDescriptor     = "DataSourceDescriptor"
     static let dataSourceLocation       = "DataSourceLocation"
     static let dataStoreDescriptor      = "DataStoreDescriptor"
@@ -144,10 +159,12 @@ struct UserDefaultKeys {
     static let dontRemindMeAgain        = "DontRemindMeAgain"
     static let howToUseShown            = "HowToUseShown"
     static let lastAccessedRecipesGuid  = "LastAccessedPinsGuid"
+    static let lastDbUpdate             = "LastDbUpdate"
     static let lastTabSelected          = "LastTabSelected"
     static let networkAccessGranted     = "NetworkAccessGranted"
     static let networkPath              = "NetworkPath"
     static let repoDirectory            = "RepoDirectory"
     static let updatedOffline           = "UpdatedOffline"
+    static let workOffline              = "WorkOffline"
 }
 

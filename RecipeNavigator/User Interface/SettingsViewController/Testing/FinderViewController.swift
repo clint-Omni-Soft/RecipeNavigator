@@ -129,15 +129,7 @@ class FinderViewController: UIViewController {
     private func loadBarButtonItems() {
         logTrace()
         configureBackBarButtonItem()
-        
-//        if startingUrl.path == rootUrl.path {
-//            navigationItem.rightBarButtonItem = UIBarButtonItem.init( barButtonSystemItem: .organize, target: self, action: #selector( organizeBarButtonItemTouched ) )
-//        }
-//        else {
-            upBarButtonItem = UIBarButtonItem.init( barButtonSystemItem: .reply, target: self, action: #selector( upBarButtonItemTouched ) )
-            navigationItem.rightBarButtonItem = upBarButtonItem
-//        }
-        
+        navigationItem.rightBarButtonItem = UIBarButtonItem.init( barButtonSystemItem: .reply, target: self, action: #selector( upBarButtonItemTouched ) )
     }
     
     

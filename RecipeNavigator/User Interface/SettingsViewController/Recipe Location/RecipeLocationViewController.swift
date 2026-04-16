@@ -97,6 +97,12 @@ class RecipeLocationViewController: UIViewController {
     
     // MARK: Target/Action Methods
     
+    @IBAction func backBarButtonTouched(_ sender: UIBarButtonItem ) {
+        logTrace()
+        navigationController?.popViewController(animated: true )
+    }
+    
+    
     @IBAction func questionBarButtonTouched(_ sender : UIBarButtonItem ) {
         let    message = NSLocalizedString( "InfoText.RecipeRepository",  comment: "Use this utility to specify where your recipes are located.  They can be on either (a) on this device or (b) on a Network Accessible Storage (NAS) drive.\n\nThis app ONLY recognizes recipes the following file formats: JPG, JPEG, HTM, HTML, PDF, PNG or TXT." )
 
@@ -109,8 +115,12 @@ class RecipeLocationViewController: UIViewController {
     
     private func loadBarButtonItems() {
 //        logTrace()
-        configureBackBarButtonItem()
-        navigationItem.rightBarButtonItem = UIBarButtonItem.init(image: UIImage(named: "question" ), style: .plain, target: self, action: #selector( questionBarButtonTouched(_:) ) )
+        var leftBarButtonItems = [UIBarButtonItem]()
+        
+        leftBarButtonItems.append( backBarButtonItem( #selector( backBarButtonTouched(_:) ) ) )
+        leftBarButtonItems.append( UIBarButtonItem.init( image: UIImage(systemName: "questionmark.circle" ), style: .plain, target: self, action: #selector( questionBarButtonTouched(_:) ) ) )
+        
+        navigationItem.leftBarButtonItems = leftBarButtonItems
     }
     
 

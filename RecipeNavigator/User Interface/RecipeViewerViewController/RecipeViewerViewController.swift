@@ -214,10 +214,12 @@ class RecipeViewerViewController: UIViewController {
 
         if UIDevice.current.userInterfaceIdiom == .pad {
             if primaryWindowIsHidden || calledFromSetupPageControl {
-                leftBarButtonItemArray.append( UIBarButtonItem.init(image: UIImage(named: "hamburger" ), style: .plain, target: self, action: #selector( showPrimaryBarButtonItemTouched(_:) ) ) )
+                leftBarButtonItemArray.append( UIBarButtonItem.init(image: UIImage(systemName: "sidebar.left" ), style: .plain, target: self, action: #selector( showPrimaryBarButtonItemTouched(_:) ) ) )
             }
             
         }
+        
+        leftBarButtonItemArray.append( UIBarButtonItem.init( image: UIImage(systemName: "questionmark.circle" ),style: .plain, target: self, action: #selector( questionBarButtonTouched(_:) ) ) )
         
         if recipeDisplayViewControllers.count > 0 {
             let favoriteIconName = navigatorCentral.viewerRecipeArray[myPageControl.currentPage].favoriteRecipe != nil ? "heart-selected" : "heart-empty"
@@ -225,8 +227,6 @@ class RecipeViewerViewController: UIViewController {
             rightBarButtonItemArray.append( trashBarButtonItem )
             rightBarButtonItemArray.append( UIBarButtonItem.init( image: UIImage(named: favoriteIconName ), style: .plain, target: self, action: #selector( favoriteBarButtonTouched(_:) ) ) )
         }
-        
-        rightBarButtonItemArray.append( UIBarButtonItem.init( image: UIImage(named: "question" ),style: .plain, target: self, action: #selector( questionBarButtonTouched(_:) ) ) )
         
         navigationItem.leftBarButtonItems  = leftBarButtonItemArray
         navigationItem.rightBarButtonItems = rightBarButtonItemArray

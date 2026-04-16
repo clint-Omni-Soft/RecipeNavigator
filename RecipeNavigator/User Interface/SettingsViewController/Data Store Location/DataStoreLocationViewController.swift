@@ -112,7 +112,7 @@ class DataLocationViewController: UIViewController {
     private func loadBarButtonItems() {
 //        logTrace()
         configureBackBarButtonItem()
-        navigationItem.rightBarButtonItem = UIBarButtonItem.init(image: UIImage(named: "question" ), style: .plain, target: self, action: #selector( questionBarButtonTouched(_:) ) )
+        navigationItem.rightBarButtonItem = UIBarButtonItem.init(image: UIImage(systemName: "questionmark.circle" ), style: .plain, target: self, action: #selector( questionBarButtonTouched(_:) ) )
     }
     
 

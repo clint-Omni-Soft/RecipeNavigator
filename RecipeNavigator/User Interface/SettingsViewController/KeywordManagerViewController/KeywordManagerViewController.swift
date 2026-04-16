@@ -92,10 +92,9 @@ class KeywordManagerViewController: UIViewController {
 
     private func loadBarButtonItems() {
         logTrace()
-        let title                 = "< " + NSLocalizedString( "ButtonTitle.Back", comment: "Back" )
-        let addBarButtonItem      = UIBarButtonItem.init( barButtonSystemItem: .add,                         target: self, action: #selector( addBarButtonTouched(_:     ) ) )
-        let backBarButtonItem     = UIBarButtonItem.init( title: title,                       style: .plain, target: self, action: #selector( backBarButtonTouched(_:    ) ) )
-        let questionBarButtonItem = UIBarButtonItem.init( image: UIImage(named: "question" ), style: .plain, target: self, action: #selector( questionBarButtonTouched(_:) ) )
+        let addBarButtonItem      = UIBarButtonItem.init( barButtonSystemItem: .add, target: self, action: #selector( addBarButtonTouched(_:) ) )
+        let backBarButtonItem     = backBarButtonItem( #selector( backBarButtonTouched(_:) ) )
+        let questionBarButtonItem = UIBarButtonItem.init( image: UIImage(systemName: "questionmark.circle" ), style: .plain, target: self, action: #selector( questionBarButtonTouched(_:) ) )
         
         navigationItem.leftBarButtonItems = [ backBarButtonItem, questionBarButtonItem ]
         navigationItem.rightBarButtonItem = addBarButtonItem

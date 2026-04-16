@@ -243,28 +243,33 @@ import CoreData
 
 extension NavigatorCentral {
     
-    func createLastUpdatedFile() {
+    func createLastUpdatedFile( saveVersion: Bool = false ) {
         if let documentDirectoryURL = fileManager.urls( for: .documentDirectory, in: .userDomainMask ).first {
-            let     fileUrl   = documentDirectoryURL.appendingPathComponent( Filenames.lastUpdated )
-            let     formatter = DateFormatter()
+            let fileUrl            = documentDirectoryURL.appendingPathComponent( Filenames.lastUpdated )
+            var lastDbUpdateString = getStringFromUserDefaults( UserDefaultKeys.lastDbUpdate )
+            let lastDbUpdate       =  1 + ( Int( lastDbUpdateString ) ?? 0 )
             
-            formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+            lastDbUpdateString  = String( lastDbUpdate )
             
-            let     dateString   = formatter.string( from: Date() )
-            let     outputString = dateString + GlobalConstants.separatorForLastUpdatedString + deviceName
-            let     data         = outputString.data( using: .utf8 )
+            let outputString = GlobalConstants.lastUpdatedVersionString + GlobalConstants.separatorForLastUpdatedString + lastDbUpdateString + GlobalConstants.separatorForLastUpdatedString + deviceName
+            let data         = outputString.data( using: .utf8 )
             
             if !fileManager.createFile( atPath: fileUrl.path, contents: data, attributes: nil ) {
                 logTrace( "ERROR!  Create failed!" )
             }
             
+            if saveVersion {
+                userDefaults.set( lastDbUpdateString, forKey: UserDefaultKeys.lastDbUpdate )
+            }
+            
+            logVerbose( "[ %@ ]", outputString )
         }
         else {
             logTrace( "ERROR!  Unable to unwrap documentDirectoryURL" )
         }
         
     }
-    
+
 
     func dataLocationFor(_ locationString: String ) -> DataLocation {
         var     location: DataLocation = .notAssigned
