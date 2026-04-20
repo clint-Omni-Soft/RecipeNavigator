@@ -26,6 +26,16 @@ class RecipeViewerViewController: UIViewController {
         primaryWindowIsHidden = isHidden
         
         loadBarButtonItems( false )
+        slewToLastAddedRecipe()
+        setupPageViewController()
+        
+        if navigatorCentral.didOpenDatabase && navigatorCentral.viewerRecipeArray.count > 0 {
+            DispatchQueue.main.asyncAfter(deadline: .now() + ( UIDevice.current.userInterfaceIdiom == .phone ? 0.1 : 1.0 ) ) {
+                self.setupPageControl()
+            }
+
+        }
+        
     }
     
     
