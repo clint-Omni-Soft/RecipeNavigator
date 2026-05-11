@@ -34,8 +34,6 @@ class RecipeLocationViewController: UIViewController {
         static let nasSelector = "NasDriveSelectorViewController"
     }
     
-    private var canSeeNasDataSourceFolders  = false
-    private var canSeeCount                 = 0
     private let nasCentral                  = NASCentral.sharedInstance
     private var navigatorCentral            = NavigatorCentral.sharedInstance
     private var notificationCenter          = NotificationCenter.default
@@ -67,29 +65,14 @@ class RecipeLocationViewController: UIViewController {
             default:           logTrace( "ERROR!  SBH!" )
         }
 
+        myActivityIndicator.isHidden = true
     }
     
     
     override func viewWillAppear(_ animated: Bool) {
         logTrace()
         super.viewWillAppear( animated )
-        
-        canSeeCount = 1
-        canSeeNasDataSourceFolders = false
-        
-        if selectedOption == CellIndexes.nas {
-            nasCentral.canSeeNasDataSourceFolders( self )
-        }
-        else {  // Currently on the device 
-            canSeeCount = 0
-            nasCentral.canSeeNasDataSourceFolders( self )
-        }
 
-        if selectedOption != CellIndexes.device {
-            myActivityIndicator.isHidden = false
-            myActivityIndicator.startAnimating()
-        }
-        
         loadBarButtonItems()
     }
 
@@ -104,7 +87,8 @@ class RecipeLocationViewController: UIViewController {
     
     
     @IBAction func questionBarButtonTouched(_ sender : UIBarButtonItem ) {
-        let    message = NSLocalizedString( "InfoText.RecipeRepository",  comment: "Use this utility to specify where your recipes are located.  They can be on either (a) on this device or (b) on a Network Accessible Storage (NAS) drive.\n\nThis app ONLY recognizes recipes the following file formats: JPG, JPEG, HTM, HTML, PDF, PNG or TXT." )
+        let     message = NSLocalizedString( "InfoText.DataStoreLocation1", comment: "DATA STORE LOCATION\n\nWe provide support for two different storage location options...\n\n   (a) on your device (default) or \n   (b) on a Network Accessible Storage (NAS) unit that supports SMB 1.0.\n\n" ) +
+                          NSLocalizedString( "InfoText.DataStoreLocation2", comment: "The key point here is that there is no sharing on the device.  If you chose NAS then anyone who has access to your Wi-Fi can access it.\n" )
 
         presentAlert( title: NSLocalizedString( "AlertTitle.GotAQuestion", comment: "Got a question?" ), message: message )
     }
@@ -134,11 +118,6 @@ extension RecipeLocationViewController: NASCentralDelegate {
     
     func nasCentral(_ nasCentral: NASCentral, canSeeNasDataSourceFolders: Bool) {
         logVerbose( "[ %@ ]", stringFor( canSeeNasDataSourceFolders ) )
-        
-        self.canSeeNasDataSourceFolders = canSeeNasDataSourceFolders
-
-        myActivityIndicator.stopAnimating()
-        myActivityIndicator.isHidden = true
 
         myTableView.reloadData()
     }
@@ -171,7 +150,7 @@ extension RecipeLocationViewController: UITableViewDataSource {
     
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let     useDetailCell = ( indexPath.row == CellIndexes.nas ) && canSeeNasDataSourceFolders && ( selectedOption == CellIndexes.nas )
+        let     useDetailCell = ( indexPath.row == CellIndexes.nas ) && ( selectedOption == CellIndexes.nas )
         let     cellID        = useDetailCell ? CellIDs.detail : CellIDs.basic
         
         guard let cell = tableView.dequeueReusableCell( withIdentifier: cellID ) else {
@@ -216,14 +195,7 @@ extension RecipeLocationViewController: UITableViewDelegate {
             promptToScanNow()
 
         case CellIndexes.nas:
-            if canSeeNasDataSourceFolders {
-                launchNasSelectorViewController()
-            }
-            else {
-                presentAlert( title   : NSLocalizedString( "AlertTitle.Error",                     comment:  "Error" ),
-                              message : NSLocalizedString( "AlertMessage.CannotSeeExternalDevice", comment: "We cannot see your external device.  Move closer to your WiFi network and try again." ) )
-            }
-
+            launchNasSelectorViewController()
 
         default:
             logTrace( "ERROR!  SBH!" )

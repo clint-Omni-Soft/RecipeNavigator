@@ -58,7 +58,8 @@ class ScanRepoViewController: UIViewController {
         loadLabels()
         
         configureControls( hideStart: false, running: false )
-    }
+        configureControlViewBorder( myTextView )
+   }
     
     
     

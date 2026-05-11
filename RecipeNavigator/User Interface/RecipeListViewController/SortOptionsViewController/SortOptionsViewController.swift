@@ -78,10 +78,7 @@ class SortOptionsViewController: UIViewController {
         expandImageToFit( cancelButton )
         expandImageToFit( saveButton   )
         
-        myTableView.clipsToBounds      = true
-        myTableView.layer.borderColor  = ControlViewBorder.color.cgColor
-        myTableView.layer.borderWidth  = ControlViewBorder.width
-        myTableView.layer.cornerRadius = ControlViewBorder.cornerRadius
+        configureControlViewBorder( myTableView )
 
         sortAscendingSwitch.isOn = originalOptionTuple.1
         myTableView.reloadData()

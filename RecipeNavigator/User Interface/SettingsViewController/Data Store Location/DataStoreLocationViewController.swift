@@ -80,17 +80,9 @@ class DataLocationViewController: UIViewController {
         logTrace()
         super.viewWillAppear( animated )
         
-//        canSeeCount      = 0
-//        canSeeCloud      = false
         canSeeNasFolders = false
-        
-//        cloudCentral.canSeeCloud( self )
-        
-        // TODO: we don't need to do this here... should be when we select the NAS option
+        myActivityIndicator.isHidden = true
         nasCentral.canSeeNasFolders( self )
-        
-        myActivityIndicator.isHidden = false
-        myActivityIndicator.startAnimating()
         
         loadBarButtonItems()
     }
@@ -100,7 +92,8 @@ class DataLocationViewController: UIViewController {
     // MARK: Target/Action Methods
     
     @IBAction func questionBarButtonTouched(_ sender : UIBarButtonItem ) {
-        let     message = NSLocalizedString( "InfoText.DataStoreLocation", comment: "This app gives you the option to store your data either on...\n\n   (a) on your device (default) or\n   (b) on a Network Accessible Storage (NAS) drive. \n\nThe key point here is that there is no sharing on the device. If you prefer to use a NAS then anyone who has this app and access to your Wi-Fi can access your data." )
+        let     message = NSLocalizedString( "InfoText.DataStoreLocation1", comment: "DATA STORE LOCATION\n\nWe provide support for two different storage location options...\n\n   (a) on your device (default) or \n   (b) on a Network Accessible Storage (NAS) unit that supports SMB 1.0.\n\n" ) +
+                          NSLocalizedString( "InfoText.DataStoreLocation2", comment: "The key point here is that there is no sharing on the device.  If you chose NAS then anyone who has access to your Wi-Fi can access it.\n" )
 
         presentAlert( title: NSLocalizedString( "AlertTitle.GotAQuestion", comment: "Got a question?" ), message: message )
     }
@@ -126,9 +119,7 @@ extension DataLocationViewController : NASCentralDelegate {
     
     func nasCentral(_ nasCentral: NASCentral, canSeeNasFolders: Bool) {
         logVerbose( "[ %@ ]", stringFor( canSeeNasFolders ) )
-        
-        myActivityIndicator.stopAnimating()
-        myActivityIndicator.isHidden = true
+
         myTableView.reloadData()
     }
 

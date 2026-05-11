@@ -47,7 +47,9 @@ class KeywordManagerViewController: UIViewController {
         logTrace()
         super.viewWillAppear( animated )
         
+        configureControlViewBorder( myTableView )
         loadBarButtonItems()
+        
         keywordArray = navigatorCentral.recipeKeywords
         
         keywordArray = keywordArray.sorted(by: { (keyword1, keyword2) -> (Bool) in

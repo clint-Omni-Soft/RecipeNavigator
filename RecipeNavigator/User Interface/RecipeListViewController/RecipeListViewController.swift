@@ -93,6 +93,8 @@ class RecipeListViewController: UIViewController {
         logTrace()
         super.viewWillAppear( animated )
         
+        configureControlViewBorder( myTableView )
+        
         if navigatorCentral.didDeleteAddRecipes {
             navigatorCentral.didDeleteAddRecipes = false
 
@@ -353,7 +355,7 @@ class RecipeListViewController: UIViewController {
         navigationItem.title = showingFavorites ? NSLocalizedString( "Title.Favorites", comment: "Favorites" ) : NSLocalizedString( "Title.Recipes", comment: "Recipes" )
 
         if UIDevice.current.userInterfaceIdiom == .pad {
-            leftBarButtonItems.append( UIBarButtonItem.init( barButtonSystemItem: .close, target: self, action: #selector( hidePrimaryBarButtonTouched(_: ) ) ) )
+            leftBarButtonItems.append( UIBarButtonItem.init( image: UIImage(systemName: "sidebar.left" ), style: .plain, target: self, action: #selector( hidePrimaryBarButtonTouched(_:) ) ) )
        }
 
         leftBarButtonItems.append( UIBarButtonItem.init( image: UIImage(systemName: "questionmark.circle" ), style: .plain, target: self, action: #selector( questionBarButtonTouched(_:) ) ) )

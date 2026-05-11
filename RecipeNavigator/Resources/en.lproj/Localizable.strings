@@ -112,12 +112,13 @@
 "ButtonTitle.SetAsRecipeRepository"         = "Set as Recipe Repository";
 "ButtonTitle.Yes"                           = "Yes";
 
-"InfoText.DataStoreLocation"                = "This app gives you the option to store your data either on...\n\n   (a) on your device (default) or\n   (b) on a Network Accessible Storage (NAS) drive. \n\nThe key point here is that there is no sharing on the device. If you prefer to use a NAS then anyone who has this app and access to your Wi-Fi can access your data.";
+"InfoText.DataStoreLocation1"               = "DATA STORE LOCATION\n\nWe provide support for two different storage location options...\n\n   (a) on your device (default) or \n   (b) on a Network Accessible Storage (NAS) unit that supports SMB 1.0.\n\n";
+"InfoText.DataStoreLocation2"               = "The key point here is that there is no sharing on the device.  If you chose NAS then anyone who has access to your Wi-Fi can access it.\n\n";
 "InfoText.FirstThingsFirst"                 = "Before you start using this app, you should consider where we can find your recipes (see Recipe Repository for details).";
 "InfoText.KeywordManager"                   = "This is where you manage (add/modify/delete) the keywords that you want to use to search and organize the titles of your recipes.";
 "InfoText.RecipeList1"                      = "The navigation bar has Caret icons to open and close table sections, a Magnifying Glass to allow you to search recipes by name and, when you favorite recipes, a Book icon to view them.\n\n";
 "InfoText.RecipeList2"                      = "The iPad also has a Gear icon to get to Settings and a (X) icon to close the primary view.  \n\nTouching on a table section header will also open and close that section.";
-"InfoText.RecipeRepository"                 = "Use this utility to specify where your recipes are located.  They can be on either (a) on this device or (b) on a Network Accessible Storage (NAS) drive.\n\nThis app ONLY recognizes recipes the following file formats: JPG, JPEG, HTM, HTML, PDF, PNG or TXT.";
+"InfoText.RecipeRepository"                 = "Use this utility to specify where your recipes are located.  They can be on either (a) on this device or (b) on a Network Accessible Storage (NAS) drive that supports SMB 1.0.\n\nThis app ONLY recognizes recipes the following file formats: JPG, JPEG, HTM, HTML, PDF, PNG or TXT.";
 "InfoText.ScanRecipeRepository"             = "Once you have specified where your recipes are located (your repository), you can this utility to scan the designated location and create a database on this device for easy access.\n\nThe time it takes to access and display a recipe will depend on where you store your recipe files.";
 "InfoText.Viewer"                           = "Touch the Trash icon to remove this recipe from the viewer (this will NOT delete the file in your repo).  Touch the Heart icon to add/remove the recipe from your favorites.\n\nTouching the Hamburger icon on the iPad will show the Recipe List";
 

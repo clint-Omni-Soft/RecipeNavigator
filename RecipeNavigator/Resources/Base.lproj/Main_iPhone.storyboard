@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="NoX-CZ-pyM">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24765" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="NoX-CZ-pyM">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24743"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -1261,35 +1261,6 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dt3-s0-kPE">
-                                <rect key="frame" x="20" y="689" width="107" height="35"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="35" id="nVG-es-2Ya"/>
-                                </constraints>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" title="Start"/>
-                                <connections>
-                                    <action selector="startButtonTouched:" destination="c2u-qQ-kuT" eventType="touchUpInside" id="5q9-Mq-uZ9"/>
-                                </connections>
-                            </button>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="i9x-wl-LPa" userLabel="spacerView">
-                                <rect key="frame" x="143" y="689" width="107" height="35"/>
-                                <color key="backgroundColor" systemColor="opaqueSeparatorColor"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="35" id="Lil-MB-pKB"/>
-                                </constraints>
-                            </view>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oaB-Ky-hnH">
-                                <rect key="frame" x="266" y="689" width="107" height="35"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="35" id="aBo-4J-NcR"/>
-                                </constraints>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" title="Stop"/>
-                                <connections>
-                                    <action selector="stopButtonTouched:" destination="c2u-qQ-kuT" eventType="touchUpInside" id="QEh-97-apz"/>
-                                </connections>
-                            </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Path" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="NMY-qC-hYB">
                                 <rect key="frame" x="20" y="216" width="353" height="25"/>
                                 <constraints>
@@ -1307,9 +1278,38 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dt3-s0-kPE">
+                                <rect key="frame" x="20" y="689" width="107" height="35"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="35" id="nVG-es-2Ya"/>
+                                </constraints>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" image="play.fill" catalog="system"/>
+                                <connections>
+                                    <action selector="startButtonTouched:" destination="c2u-qQ-kuT" eventType="touchUpInside" id="5q9-Mq-uZ9"/>
+                                </connections>
+                            </button>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="i9x-wl-LPa" userLabel="spacerView">
+                                <rect key="frame" x="143" y="689" width="107" height="35"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="35" id="Lil-MB-pKB"/>
+                                </constraints>
+                            </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oaB-Ky-hnH">
+                                <rect key="frame" x="266" y="689" width="107" height="35"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="35" id="aBo-4J-NcR"/>
+                                </constraints>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" image="stop.fill" catalog="system"/>
+                                <connections>
+                                    <action selector="stopButtonTouched:" destination="c2u-qQ-kuT" eventType="touchUpInside" id="QEh-97-apz"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Ia6-1A-KEN"/>
-                        <color key="backgroundColor" systemColor="opaqueSeparatorColor"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="Ia6-1A-KEN" firstAttribute="bottom" secondItem="i9x-wl-LPa" secondAttribute="bottom" constant="11" id="5Rg-my-ueB"/>
                             <constraint firstItem="oaB-Ky-hnH" firstAttribute="width" secondItem="i9x-wl-LPa" secondAttribute="width" id="8Lg-D7-Opu"/>
@@ -1567,6 +1567,8 @@
         <image name="gearshape" catalog="system" width="128" height="123"/>
         <image name="helm" catalog="system" width="128" height="124"/>
         <image name="launchScreenImage" width="1920" height="1920"/>
+        <image name="play.fill" catalog="system" width="120" height="128"/>
+        <image name="stop.fill" catalog="system" width="128" height="113"/>
         <image name="viewer" width="22" height="29"/>
         <image name="xmark" catalog="system" width="128" height="113"/>
         <image name="xmark" width="128" height="128"/>
@@ -1578,9 +1580,6 @@
         </systemColor>
         <systemColor name="linkColor">
             <color red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </systemColor>
-        <systemColor name="opaqueSeparatorColor">
-            <color red="0.77647058820000003" green="0.77647058820000003" blue="0.7843137255" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

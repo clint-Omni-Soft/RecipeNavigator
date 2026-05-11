@@ -161,6 +161,7 @@ struct UserDefaultKeys {
     static let lastAccessedRecipesGuid  = "LastAccessedPinsGuid"
     static let lastDbUpdate             = "LastDbUpdate"
     static let lastTabSelected          = "LastTabSelected"
+    static let nasConnectAttempted      = "NasConnectAttempted"
     static let networkAccessGranted     = "NetworkAccessGranted"
     static let networkPath              = "NetworkPath"
     static let repoDirectory            = "RepoDirectory"
